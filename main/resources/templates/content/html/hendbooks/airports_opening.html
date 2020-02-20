@@ -1,0 +1,78 @@
+﻿<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-type" Content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>
+Аэропорты
+</title>
+	<link rel="stylesheet" href="/bootstrap/css/bootstrap.css" >
+</head>
+<Body>
+<div id="header" th:insert="/content/html/nmenu.html"></div>
+
+
+ <div id="content" class="container-fluid">
+ 
+ 
+ 
+        <div class="row" >
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+		
+		<h2 class="text-center" th:text="#{airports.title_tab}">Таблица аэропортов</h2>
+		
+<div class="table-responsive">
+<table class="table table-striped table-bordered">
+<thead>
+<tr> <th></th><th th:text="#{airports.name_ru}">Название(RU)</th>
+  <th th:text="#{airports.name_eng}">Название(EN)</th> 
+  <th th:text="#{airports.name_ch}" >Название(CH)</th>
+  <th th:text="#{airports.gmt_time}" >Отклонение метного времени по Гринвичу</th>
+  <th>ICAO</th>
+  <th>IATA</th></tr>
+</thead>
+<tr th:each="airport : ${airports}">
+<td  ><input type="checkbox" th:id="${airport.airporty_id}" name="ch[]" form="form"></td>
+<td><label th:for="${airport.airporty_id}" th:text="${airport.airporty_name_rus}"> </label></td>
+<td><label th:for="${airport.airporty_id}" th:text="${airport.airporty_name_eng}"> </label></td>
+<td><label th:for="${airport.airporty_id}" th:text="${airport.airporty_name_china}"> </label></td>
+<td><label th:for="${airport.airporty_id}" th:text="${airport.GMT}"> </label></td>
+<td><label th:for="${airport.airporty_id}" th:text="${airport.airporty_ICAO}"> </label></td>
+<td><label th:for="${airport.airporty_id}" th:text="${airport.airporty_IATA}"> </label></td>
+</tr>
+<tr >
+<td colspan="7" style="text-align:left;">  <input type='checkbox' id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выделить все </label></td>
+</tr>
+</table>
+</div>
+
+</div>
+
+<div class="col-4"></div>
+<div class="col-4">
+<form action="" method="POST" id="form" role="form" >
+<div class="btn-group">
+
+
+ <input type="submit" name="add" th:value="#{buttons.add_bt}" class="btn btn-primary">
+ <input type="submit" name="redact" th:value="#{buttons.red_bt}" class="btn btn-warning">
+ <input type="submit" name="delete" th:value="#{buttons.del_bt}" class="btn btn-danger">
+ </div>
+ 
+ 
+</form>
+
+</div>
+<div class="col-4"></div>
+ </div>
+ </div>
+   
+ 
+<script src="/js/jquery/jquery-3.3.1.min.js"></script>
+<script src="/bootstrap/js/popper_min.js" ></script>
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+<script src="/js/fire_check.js"></script>
+ 
+</Body>
+</html>
+

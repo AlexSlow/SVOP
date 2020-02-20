@@ -1,0 +1,198 @@
+﻿<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="menu">
+    <link rel="stylesheet" href="/js/jquery/jquery-ui/jquery-ui.min.css">
+<style>
+ .dropdown-menu .dropdown-menu {
+	top: auto;
+	left: 100%;
+	transform: translateY(-2rem);
+}
+
+.dropdown-item.submenu::after {
+	content: '▸';
+	margin-left: 0.5rem;
+}
+
+.navbar-brand img{
+width:150px;
+}
+
+
+.page-header {
+  padding-bottom: 9px;
+  margin: 40px 0 20px;
+  border-bottom: 1px solid #eee;
+}
+#leng_change{
+margin-left:0.1rem;
+max-width:50em;
+}
+  </style>
+  
+ 
+ 
+ <nav class="navbar navbar-extend-md navbar-light bg-light stickly-top">
+ <div  class="container-fluid">
+
+ <div class="dropdown">
+<button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" th:text="#{menu.navbutton}">Навигация
+</button>
+	<div class="dropdown-menu" id="0">
+		<a class="dropdown-item" href="#" 			th:text="#{menu.main_page}">Главная страница</a>
+		<a class="dropdown-item submenu"  href="#" 	th:text="#{menu.hendbook}" >Справочники</a>
+		<div class="dropdown-menu" id="1">
+			<a class="dropdown-item" href="#" th:text="#{menu.rout}"  >Маршруты</a>
+			<a class="dropdown-item" href="/content/html/hendbooks/airports_opening.html" th:text="#{menu.airport}" >Аэрапорты</a>
+			<a class="dropdown-item" href="#"  	th:text="#{menu.aircompany}" >Авиакомпании</a>
+			<a class="dropdown-item" href="#" 	th:text="#{menu.nomer_reys}" >Номера рейсов</a>
+		</div>
+	
+		<a class="dropdown-item submenu" href="#" th:text="#{menu.sezon_ras}" >Сезонное расписание</a>
+		<div class="dropdown-menu" id="1">
+			<a class="dropdown-item" href="#"   th:text="#{menu.regular_reys}" >Регулярные рейсы</a>
+			<a class="dropdown-item" href="#" 	th:text="#{menu.charter_reys}" >Чартерные рейсы</a>
+			<a class="dropdown-item" href="#"   th:text="#{menu.forming_sezon}">Формирование</a>
+		</div>
+		<a class="dropdown-item submenu"  href="#" th:text="#{menu.daly_ras}" >Суточное расписание</a>
+		<div class="dropdown-menu" id="1">
+			<a class="dropdown-item" href="#" th:text="#{menu.dayly_forming}" >Формирование расписания</a>
+			<a class="dropdown-item" href="#" th:text="#{menu.flight_plan}" >Графики полетов</a>
+		</div>
+		<a class="dropdown-item submenu" href="#" th:text="#{menu.tehn_plan}">Технологические графики</a>
+		<div class="dropdown-menu" id="1">
+			<a class="dropdown-item" href="#"  th:text="#{menu.temlate_forming}" >Формирование шаблонов</a>
+			<a class="dropdown-item" href="#" th:text="#{menu.init}" >Инициализация</a>
+		</div>
+		
+		<a class="dropdown-item submenu" href="#" th:text="#{menu.io}" >Система вывода</a>
+		<div class="dropdown-menu" id="1">
+			<a class="dropdown-item" href="#"  th:text="#{menu.tablo_sezon}">Табло сезонного расписания</a>
+			<a class="dropdown-item" href="#"  th:text="#{menu.tablo_dayly}">Суточное расписание</a>
+		</div>
+		<a class="dropdown-item submenu" href="#"  th:text="#{menu.document}">Документация</a>
+		<a class="dropdown-item submenu" href="#"  th:text="#{menu.admin}">Администрирование</a>
+		<div class="dropdown-menu" id="1">
+			<a class="dropdown-item" href="#"  th:text="#{menu.users}">Пользователи</a>
+			<a class="dropdown-item" href="#"  th:text="#{menu.user_role}">Роли</a>
+			<a class="dropdown-item submenu" href="#"  th:text="#{menu.journal}">Журнал</a>
+		<div class="dropdown-menu" id="2">
+			<a class="dropdown-item" href="#"  th:text="#{menu.log}">Лог</a>
+			<a class="dropdown-item" href="#"  th:text="#{menu.rout}">Маршруты</a>
+			<a class="dropdown-item" href="#"  th:text="#{menu.airport}">Аэрапорты</a>
+			<a class="dropdown-item" href="#"  th:text="#{menu.aircompany}">Авиакомпании</a>
+			<a class="dropdown-item" href="#"   th:text="#{menu.nomer_reys}">Номера рейсов</a>
+					<a class="dropdown-item" href="#"  th:text="#{menu.log_procedures}">Процедуры</a>
+			<a class="dropdown-item" href="#"  th:text="#{menu.io}">Востановление системы</a>
+		</div>
+		</div>
+		<a class="dropdown-item" href="#"  th:text="#{buttons.exit}">Выход</a>
+	</div>
+</div>
+
+		<div class="page-header col-auto" >
+  <h2 th:text="#{menu.title}">Портал аэропорта г.Барнаула имени Г.С Титова 
+  </h2>
+</div>
+
+
+<a href="#" class="navbar-brand"><img src="/img/logo.png"/></a>
+
+ 
+</div>
+</nav>
+
+<div class="header_second">
+<div  class="container-fluid">
+ <div class="row">
+ <div class="col-7">
+ </div>
+ 
+ <div class="col-5">
+ <form role="form" method="post" action="" class="form-inline">
+ <div class="form-group" >
+
+ <label for="user" class="control-label" th:text="#{menu.current_user}">Пользователь:</label>
+      <span class="form-control-static  ml-2">имя_пользователя</span> 
+	 </div>
+	 
+	  <div class="form-group ml-2 ">
+	 <select  id="selectmenu" name="flags" >
+	 <option value="ru" style="background-image:/img/flags/ru.png"><img src="/img/flags/ru.png"/></option>
+	 <option value="fr" style="background-image:/img/flags/fr.png"><img src="/img/flags/fr.png"/></option>
+	 <option value="en" style="background-image:/img/flags/en.png"><img src="/img/flags/en.png"/></option>
+	 <option value="de" style="background-image:/img/flags/de.png"><img src="/img/flags/de.png"/></option>
+	  <option value="none"><img src="/img/flags/none.png"/></option>
+	 </select>
+	 </div>
+	 <div class="form-group ml-2 ">
+	 <input type="submit" name="leng_change"  id="leng_change"
+	 th:value="#{menu.select_language}" class="btn btn-info btn-sm ml-2 w-40"/>
+	 <input type="submit" name="exit"  th:value="#{buttons.exit}" class="btn btn-info ml-2  btn-sm ">
+	</div>
+ 
+ 
+ </form>
+  </div>
+ </div>
+ </div>
+ </div>
+ <script src="/js/jquery/jquery-3.3.1.min.js"></script>
+ <script src="/js/jquery/jquery-ui/jquery-ui.min.js"></script>
+  
+<script>
+$("selectmenu").selectmenu();
+// установим обработчики, элементу 
+var level=0;
+$('.dropdown-item').hover(
+function(){
+	
+	 level=$(this).parent(".dropdown-menu").attr("id");
+	clean();
+	
+	//console.log("level"+" "+level); 
+	$(this).next(".dropdown-menu").css("display", "block");
+
+}
+	
+,
+function(){
+	//$(this).next(".dropdown-menu").css("display", "none");
+});
+
+
+$('.dropdown-menu').hover(
+function(){
+
+},
+function(){
+
+//alert(level);
+
+	$('.submenu').each(function(){
+$(this).next(".dropdown-menu").css("display", "none");
+});
+
+level=0;
+
+}
+);
+
+function clean()
+{
+$('.dropdown-menu').each(function(){
+	let level_temp=$(this).attr("id");
+	
+	//console.log(level_temp+" "+level+" "+$(this).text()); 
+	
+	if (level<level_temp)
+	{
+	$(this).css("display", "none");
+	}
+});
+}
+</script>
+</div>
+</html>
+  
+
