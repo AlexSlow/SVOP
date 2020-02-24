@@ -1,7 +1,8 @@
 ﻿<!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="menu">
-    <link rel="stylesheet" href="/js/jquery/jquery-ui/jquery-ui.min.css">
+   
+	
 <style>
  .dropdown-menu .dropdown-menu {
 	top: auto;
@@ -28,6 +29,7 @@ width:150px;
 margin-left:0.1rem;
 max-width:50em;
 }
+
   </style>
   
  
@@ -43,7 +45,7 @@ max-width:50em;
 		<a class="dropdown-item submenu"  href="#" 	th:text="#{menu.hendbook}" >Справочники</a>
 		<div class="dropdown-menu" id="1">
 			<a class="dropdown-item" href="#" th:text="#{menu.rout}"  >Маршруты</a>
-			<a class="dropdown-item" href="/content/html/hendbooks/airports_opening.html" th:text="#{menu.airport}" >Аэрапорты</a>
+			<a class="dropdown-item" href="http://localhost:8080/svop/airports" th:text="#{menu.airport}" >Аэрапорты</a>
 			<a class="dropdown-item" href="#"  	th:text="#{menu.aircompany}" >Авиакомпании</a>
 			<a class="dropdown-item" href="#" 	th:text="#{menu.nomer_reys}" >Номера рейсов</a>
 		</div>
@@ -70,12 +72,11 @@ max-width:50em;
 			<a class="dropdown-item" href="#"  th:text="#{menu.tablo_sezon}">Табло сезонного расписания</a>
 			<a class="dropdown-item" href="#"  th:text="#{menu.tablo_dayly}">Суточное расписание</a>
 		</div>
-		<a class="dropdown-item submenu" href="#"  th:text="#{menu.document}">Документация</a>
+		<a class="dropdown-item" href="#"  th:text="#{menu.document}">Документация</a>
 		<a class="dropdown-item submenu" href="#"  th:text="#{menu.admin}">Администрирование</a>
 		<div class="dropdown-menu" id="1">
-			<a class="dropdown-item" href="#"  th:text="#{menu.users}">Пользователи</a>
-			<a class="dropdown-item" href="#"  th:text="#{menu.user_role}">Роли</a>
-			<a class="dropdown-item submenu" href="#"  th:text="#{menu.journal}">Журнал</a>
+		
+				<a class="dropdown-item submenu" href="#"  th:text="#{menu.journal}">Журнал</a>
 		<div class="dropdown-menu" id="2">
 			<a class="dropdown-item" href="#"  th:text="#{menu.log}">Лог</a>
 			<a class="dropdown-item" href="#"  th:text="#{menu.rout}">Маршруты</a>
@@ -85,6 +86,10 @@ max-width:50em;
 					<a class="dropdown-item" href="#"  th:text="#{menu.log_procedures}">Процедуры</a>
 			<a class="dropdown-item" href="#"  th:text="#{menu.io}">Востановление системы</a>
 		</div>
+		
+			<a class="dropdown-item" href="#"  th:text="#{menu.users}">Пользователи</a>
+			<a class="dropdown-item" href="#"  th:text="#{menu.user_role}">Роли</a>
+	
 		</div>
 		<a class="dropdown-item" href="#"  th:text="#{buttons.exit}">Выход</a>
 	</div>
@@ -102,14 +107,14 @@ max-width:50em;
 </div>
 </nav>
 
-<div class="header_second">
+<div class="header_second" style="margin-top:1rem; margin-bottom:1rem;">
 <div  class="container-fluid">
- <div class="row">
- <div class="col-7">
+ <div class="row h-75">
+ <div class=" col-md-8 col-lg-8">
  </div>
  
- <div class="col-5">
- <form role="form" method="post" action="" class="form-inline">
+ <div class="col-md-4 col-lg-4">
+ <form role="form" method="post" action="http://localhost:8080/svop/greeting" class="form-inline">
  <div class="form-group" >
 
  <label for="user" class="control-label" th:text="#{menu.current_user}">Пользователь:</label>
@@ -117,17 +122,9 @@ max-width:50em;
 	 </div>
 	 
 	  <div class="form-group ml-2 ">
-	 <select  id="selectmenu" name="flags" >
-	 <option value="ru" style="background-image:/img/flags/ru.png"><img src="/img/flags/ru.png"/></option>
-	 <option value="fr" style="background-image:/img/flags/fr.png"><img src="/img/flags/fr.png"/></option>
-	 <option value="en" style="background-image:/img/flags/en.png"><img src="/img/flags/en.png"/></option>
-	 <option value="de" style="background-image:/img/flags/de.png"><img src="/img/flags/de.png"/></option>
-	  <option value="none"><img src="/img/flags/none.png"/></option>
-	 </select>
+	  <div id="flags"></div>
 	 </div>
 	 <div class="form-group ml-2 ">
-	 <input type="submit" name="leng_change"  id="leng_change"
-	 th:value="#{menu.select_language}" class="btn btn-info btn-sm ml-2 w-40"/>
 	 <input type="submit" name="exit"  th:value="#{buttons.exit}" class="btn btn-info ml-2  btn-sm ">
 	</div>
  
@@ -137,21 +134,21 @@ max-width:50em;
  </div>
  </div>
  </div>
+
  <script src="/js/jquery/jquery-3.3.1.min.js"></script>
- <script src="/js/jquery/jquery-ui/jquery-ui.min.js"></script>
+  <script src="/js/jquery/select_plagin.js"></script>
   
 <script>
-$("selectmenu").selectmenu();
+
 // установим обработчики, элементу 
 var level=0;
 $('.dropdown-item').hover(
 function(){
 	
-	 level=$(this).parent(".dropdown-menu").attr("id");
+	level=$(this).parent(".dropdown-menu").attr("id");
 	clean();
-	
 	//console.log("level"+" "+level); 
-	$(this).next(".dropdown-menu").css("display", "block");
+	$(this).next(".dropdown-menu").show(100);
 
 }
 	
@@ -160,8 +157,8 @@ function(){
 	//$(this).next(".dropdown-menu").css("display", "none");
 });
 
-
-$('.dropdown-menu').hover(
+/*
+$('.dropdown-menu').hover(   //Если мы покидаем меню
 function(){
 
 },
@@ -174,23 +171,83 @@ $(this).next(".dropdown-menu").css("display", "none");
 });
 
 level=0;
-
 }
 );
-
+*/
 function clean()
 {
 $('.dropdown-menu').each(function(){
 	let level_temp=$(this).attr("id");
 	
-	//console.log(level_temp+" "+level+" "+$(this).text()); 
+	
 	
 	if (level<level_temp)
 	{
-	$(this).css("display", "none");
+	console.log(level_temp+" "+level+" "+$(this).text()); 
+	$(this).hide(100);
 	}
 });
 }
+
+</script>
+
+
+
+
+
+<script th:inline="javascript">
+
+//Работа с списком флагов 
+var ddData = [
+    {
+        text: "",
+        value: "ru",
+        selected: [[${language.ru}]],
+        description: "",
+        imageSrc: "/img/flags/ru.png"
+    },
+    {
+        text: "",
+        value: "en",
+        selected: [[${language.en}]],
+        description: "",
+        imageSrc: "/img/flags/en.png"
+    },
+    {
+        text: "",
+        value: "fr",
+        selected: [[${language.fr}]],
+        description: "",
+        imageSrc: "/img/flags/fr.png"
+    },
+    {
+        text: "",
+        value: "de",
+        selected: [[${language.de}]],
+        description: "",
+        imageSrc: "/img/flags/de.png"
+    },
+	 {
+        text: "",
+        value: "none",
+        selected: [[${language.none}]],
+        description: "",
+        imageSrc: "/img/flags/none.png"
+    }
+];
+
+$('#flags').ddslick({
+    data:ddData,
+    width:70,
+	background :'white',
+    selectText: "",
+    imagePosition:"center",
+    onSelected: function(selectedData){
+        //callback function: do something with selectedData;
+		//console.log(selectedData.selectedData.value);
+		$.post("http://localhost:8080/svop/greeting",{flags:selectedData.selectedData.value,page:document.location.pathname});
+    }   
+});
 </script>
 </div>
 </html>

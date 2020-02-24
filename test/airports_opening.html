@@ -6,38 +6,13 @@
 <title>
 Аэропорты
 </title>
-    
-	<script src="jquery-3.3.1.min.js"></script>
-	
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" 
-	integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<link rel="stylesheet" href="bootstrap.css" >
 </head>
 <Body>
-<div id="header"></div>
-<div class="header_second">
-<div  class="container-fluid">
- <div class="row">
- <div class="col-8">
- </div>
- 
- <div class="col-4">
- <form role="form" method="post" action="" class="form-inline">
- <div class="form-group" >
 
- <label for="user" class="control-label col">Пользователь:</label>
-    <div class="col-auto">
-      <span class="form-control-static">имя_пользователя</span>
-	 
-    </div> 
-	 <input type="submit" name="exit" value="Выход" class="btn btn-info col btn-sm ">
- </div>
- 
- 
- </form>
-  </div>
- </div>
- </div>
- </div>
+
+<div id="header" th:insert="/content/html/nmenu.html"></div>
+
 
  <div id="content" class="container-fluid">
  
@@ -45,50 +20,365 @@
  
         <div class="row" >
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+		<div id="filter"  th:insert="/content/html/filter.html">
 		
-		<h2 class="text-center">Таблица аэропортов</h2>
+		</div>
+		<h2 class="text-center" th:text="#{airports.title_tab}">Таблица аэропортов</h2>
 		
 <div class="table-responsive">
-<table class="table table-striped table-bordered">
-<thead>
-<tr> <th></th><th>Название(RU)</th>  <th>Название(EN)</th> <th>Название(CH)</th><th>Отклонение метного времени по Гринвичу</th><th>ICAO</th><th>IATA</th></tr>
-</thead>
-<tr><td></td><td>Сэм</td> <td>Шу</td> <td>Макс</td> <td>Коля</td> <td>12)</td> <td>66</td> </tr>
-<tr><td></td><td>Сэм</td><td>Шу</td>  <td>Макс</td> <td>Коля</td> <td>12)</td> <td>66</td> </tr>
-<tr><td></td><td>Сэм</td> <td>Шу</td>  <td>Макс</td> <td>Коля</td> <td>12)</td> <td>66</td> </tr>
-<tr >
-<td colspan="7" style="text-align:left;">  <input type='checkbox' id="maincheck"> <label for="maincheck"> Выделить все </label></td>
+<table class="table table-striped table-bordered mb-5" id="content_table">
+<thead >
+<tr> <th  name="id"></th><th name="NameRu"  data-type="text">Название(RU)</th>
+  <th data-type="text" name="NameEng">Название(EN)</th> 
+  <th data-type="text" name="NameCh">Название(CH)</th>
+  <th data-type="text" name="GMT">Отклонение метного времени по Гринвичу</th>
+  <th data-type="text" name="ICAO">ICAO</th>
+  <th data-type="text" name="IATA">IATA</th></tr>
+</thead >
+<tbody id="filter_table">
+
+<tr>
+
+<td><input type="checkbox" id="ch1" value="1" name="ch[]" form="form"></td>
+<td><label for="ch1">Барнаул</label></td>
+<td><label for="ch1">Barnaul</label></td>
+<td><label for="ch1">Barnaul</label></td>
+<td><label for="ch1">+6</label></td>
+<td><label for="ch1">BAX</label></td>
+<td><label for="ch1">BAX</label></td>
 </tr>
+<tr>
+
+<td><input type="checkbox" id="ch2" value="2" name="ch[]" form="form"></td>
+<td><label for="ch2">Новосибирск</label></td>
+<td><label for="ch2">Novosibirsk</label></td>
+<td><label for="ch2">Novosib</label></td>
+<td><label for="ch2">+8</label></td>
+<td><label for="ch2">NOV</label></td>
+<td><label for="ch2">NOV</label></td>
+</tr>
+<tr>
+
+<td><input type="checkbox" id="ch3" value="3" name="ch[]" form="form"></td>
+<td><label for="ch3">Москва</label></td>
+<td><label for="ch3">Moscow</label></td>
+<td><label for="ch3">Moscow</label></td>
+<td><label for="ch3">+4</label></td>
+<td><label for="ch3">MSK</label></td>
+<td><label for="ch3">MSK</label></td>
+</tr>
+<tr>
+
+<td><input type="checkbox" id="ch4" value="4" name="ch[]" form="form"></td>
+<td><label for="ch4">Иркутск</label></td>
+<td><label for="ch4">Ircutsk</label></td>
+<td><label for="ch4"></label></td>
+<td><label for="ch4"></label></td>
+<td><label for="ch4"></label></td>
+<td><label for="ch4"></label></td>
+</tr>
+<tr>
+
+<td><input type="checkbox" id="ch5" value="5" name="ch[]" form="form"></td>
+<td><label for="ch5">Казань</label></td>
+<td><label for="ch5">Kazan</label></td>
+<td><label for="ch5"></label></td>
+<td><label for="ch5"></label></td>
+<td><label for="ch5"></label></td>
+<td><label for="ch5"></label></td>
+</tr>
+<tr>
+<td colspan="7" style="text-align:left;">  <input type="checkbox" id="maincheck"> <label for="maincheck">выделить все</label></td>
+</tr>
+
+<tr >
+<td colspan="7" style="text-align:left;">  <input type='checkbox' 
+id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выделить все </label></td>
+</tr>
+</tbody>
 </table>
 </div>
 
 </div>
-<div class="col-4"></div>
-<div class="col-4">
+
+
 <form action="" method="POST" id="form" role="form" >
-<div class="btn-group">
+<div class="btn-group fixed-bottom w-75 m-auto">
 
 
- <input type="submit" name="add" value="добавить" class="btn btn-primary">
- <input type="submit" name="redact" value="редактировать" class="btn btn-warning">
- <input type="submit" name="delete" value="удалить" class="btn btn-danger">
+ <input type="button" name="add" data-toggle="modal" data-target="#addModal" data-content="add" th:value="#{buttons.add_bt}"
+ class="btn btn-primary"  >
+ <input type="button" name="redact" data-content="redact" data-toggle="modal" data-target="#addModal" th:value="#{buttons.red_bt}" class="btn btn-warning">
+ <input type="submit" name="delete" th:value="#{buttons.del_bt}" 
+ class="btn btn-danger" formaction="http://localhost:8080/svop/airports/delete">
  </div>
  
  
 </form>
 
 </div>
-<div class="col-4"></div>
  </div>
- </div>
+
+ 
+ 
+ 
+   
+   
    
  
+<script src="jquery-3.3.1.min.js"></script>
+<script src="popper_min.js" ></script>
+<script src="bootstrap.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+
+
+
+<div id="addModal" class="modal fade" tabindex="-1">
+ <div class="modal-dialog modal-lg">
+ <div class="modal-content">
+ <div class="modal-header">
  
-<script >$("#header").load("nmenu_test.html")</script>
+ <h4 id="modal_title"></h4>
+ </div>
+ 
+	<div class="modal-body">
+	<div class="table-responsive">
+	<table class="table  mb-5" id="modal_table">
+	<thead><tr></tr></thead>
+	<tbody></tbody>
+	</table>
+	</div>
+	</div>
+ 
+ <div class="modal-footer">
+ 
+ <div id="content" class="container-fluid">
+        <div class="row mb-3 d-none" id="add_buttons">
+<div class="col"></div>
+<div class="col">
+ <button id="add_str" class="btn-info">добавить строку</button>
+ <button id="remove_str" class="btn-warning">убрать строку</button>
+</div>
+ </div>
+ <div class="row">
+ <div class="col"></div>
+<div class="col">
+  <button id="save" class="btn-success">Применить</button>
+ <button class="btn-danger" data-dismiss="modal">закрыть</button>
+ </div>
+ </div>
+
+ 
+ </div>
+ </div>
+ </div>
+</div>  
+ </div>
+ <script>
+ var Headers = new Map();  
+ var Names = new Map(); 
+ var content;
+ $('#addModal').on('show.bs.modal', function (event) {
+
+ clean();
+  // получить кнопку, которая его открыло
+  var button = $(event.relatedTarget)
+
+  // извлечь информацию из атрибута data-content
+   content= button.data('content') 
+  // вывести колонки таблицы
+  $("#modal_table thead").append("<tr></tr>");
+  $("#content_table thead tr").children("th").each(function(){
+  if ($(this).text()!="")
+  {
+  Headers.set($(this).text(),$(this).attr('data-type'));
+  Names.set($(this).text(),$(this).attr('name'));
+$("#modal_table thead tr").append("<th>"+$(this).text()+"</th>");
+}
+  
+  });
+  
+  //console.log(Headers);
+  if (content=="add")
+  {
+  $("#modal_title").text("Операция добавления элемента");
+  $("#add_buttons").removeClass("d-none");
+  
+   $("#modal_table tbody ").append("<tr></tr>");
+   //console.log(Headers);
+	for (let key of Headers.keys()) {
+	let val=Headers.get(key);
+	let name=Names.get(key);
+	$("#modal_table tbody tr:last-child").append("<td>"+"<input class='control-sm'  name='"+name+"'  type='"+val+"'+  /></td>");
+}
+  
+  
+  }
+  
+  
+  
+  
+  else
+  {
+  //Добавим колонку под id
+   $("#modal_table thead tr ").prepend("<th></th>");
+   $("#modal_title").text("Операция редактирования элемента");
+   $("#add_buttons").addClass("d-none");
+   
+   //Выбор строк для редактирования
+    $("#content_table tbody tr").each(function(){
+	if ($(this).children("td:first-child").children("input").prop('checked')) //Если строка выбрана
+	{
+	let id=$(this).children("td:first-child").children("input").val();
+	let data=[];
+	
+	$(this).children("td").each(function(){
+	
+	
+$(this).children("label").each(function(){
+	//Получение полей
+	data.push($(this).text());
+	});
+	});
+
+	//console.log(data);
+	//Вставим строку
+	 $("#modal_table tbody ").append("<tr></tr>");
+	 $("#modal_table tbody tr:last-child ").append("<td>"+"<input class='control-sm d-none' value='"+id+"' type='text'/></td>");
+	 let i=0;
+	for (let key of Headers.keys()) {
+	let name=Names.get(key);
+	let val=Headers.get(key);
+	let input_value=data[i];
+	$("#modal_table tbody tr:last-child").append("<td>"+"<input class='control-sm' name='"+name+"' value='"+input_value+"' type='"+val+"'/></td>");
+	i++;
+	  }
+ }
+ });
+   
+   
+  }//конец else
+   });
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    //Добавить строку
+   $("#add_str").on('click', function(e) {
+   
+   $("#modal_table tbody ").append("<tr></tr>");
+   
+   //console.log(Headers);
+	for (let key of Headers.keys()) {
+	let val=Headers.get(key);
+	let name=Names.get(key);
+	$("#modal_table tbody tr:last-child").append("<td>"+"<input class='control-sm'  name='"+name+"'  type='"+val+"'+  /></td>");
+
+}
+   });
+   
+    //Удалить строку
+   $("#remove_str").on('click', function(e) {
+   $("#modal_table tbody tr:last-child").remove();
+
+   });
+   
+   
+   //Сохраняем в массив объектов
+    $("#save").on('click', function(e) {
+	var ajax_array =[]
+
+    $("#modal_table tbody tr").each(function(){
+	let ajax_object ={}
+	$(this).children("td").each(function(){
+	//Индекс столбца и инодекс поля
+
+	//let collumn=$("#modal_table thead tr").children("th").eq($(this).index()).attr('name');
+	let collumn=$(this).children("input").attr('name');
+	if (collumn==null) collumn="id";
+
+	ajax_object[collumn]=$(this).children("input").val();
+	//console.log(collumn);
+
+	
+	
+	});
+	//console.log(ajax_object);
+	ajax_array.push(ajax_object);
+	});
+	//Мы получили объект запроса
+	
+	
+	ajax_array.forEach(function(item, i, arr) {
+	console.log(item);
+	 });
+	
+	
+	/*
+	let post="";
+	 ajax_array.forEach(function(item, i, arr) {
+	 for (var key in item) {
+	 post=post+key +':'+ item[key]+"&";
+  //console.log(post);
+}
+ 
+});
+	console.log(post);
+	*/
+	
+	
+	if (content=="add")
+	{
+	//send_add_request(ajax_array);
+	}
+	else{
+	//send_update_request(ajax_array);
+	}
+	
+   });
+   
+   
+   function clean()
+   {
+   $("#modal_table tbody").empty();
+    $("#modal_table thead").empty();
+   Headers.clear();
+   Names.clear();
+   //ajax_array.clear();
+
+   }
+   
+   
+  function send_add_request(strings_array)
+  {
+   $.post("http://localhost:8080/svop/airports/ajax_add",strings_array);
+   	$('#addModal').modal('hide');
+   }
+   function send_update_request(strings_array)
+  {
+   $.post("http://localhost:8080/svop/airports/ajax_update",strings_array);
+   	$('#addModal').modal('hide');
+   }
+
+ 
+ </script> 
+
+
+ 
 </Body>
 </html>
+<script>
+</script>
+
 
 

@@ -65,7 +65,7 @@ grid.onclick = function(e) {
 	  }
 	
 	 
-	  
+	  //alert(" "+e.target.getAttribute('data-type')+Vector);
       sortGrid(e.target.cellIndex, e.target.getAttribute('data-type'),Vector);
     };
 
@@ -74,7 +74,7 @@ grid.onclick = function(e) {
 
       // Составить массив из TR
       var rowsArray = [].slice.call(tbody.rows);
-
+		//alert("ra"+rowsArray);
       // определить функцию сравнения, в зависимости от типа
       var compare;
 
@@ -95,6 +95,8 @@ grid.onclick = function(e) {
           compare = function(rowA, rowB) {
 			  if (Vector=="U")
 			  {
+				  	//alert("rowsA"+rowA.cells[colNum].innerHTML);
+					//alert("rowsB"+rowB.cells[colNum].innerHTML);
             return rowA.cells[colNum].innerHTML > rowB.cells[colNum].innerHTML;
 			  }else if(Vector=="D")
 			  {
