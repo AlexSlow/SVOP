@@ -1,9 +1,8 @@
-package com.svop.HeadProcessing;
+package com.svop.other.HeadProcessing;
 
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 public class Localformatter {
 //Locale def_locale= Locale.getDefault();

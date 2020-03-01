@@ -1,4 +1,4 @@
-package com.svop.Repository.Handbooks;
+package com.svop.tables.Handbooks;
 
 import com.svop.tables.Handbooks.Airporty;
 import org.springframework.data.jpa.repository.Modifying;
