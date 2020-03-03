@@ -22,8 +22,7 @@ public class User {
     @Column(name="locale")
     private String locale;
 
-    @Column(name="active")
-    private Boolean active;
+
 
     @Transient
     private String confirmPassword;
@@ -52,11 +51,10 @@ public class User {
         this.roles = roles;
     }
 
-    public User(String username, String password, String locale, Boolean active, Set<Role> roles) {
+    public User(String username, String password, String locale, Set<Role> roles) {
         this.username = username;
         this.password = password;
         this.locale = locale;
-        this.active = active;
         this.roles = roles;
     }
 
@@ -103,13 +101,7 @@ public class User {
         this.locale = locale;
     }
 
-    public Boolean getActive() {
-        return active;
-    }
 
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
 
     @Override
     public String toString() {

@@ -1,3 +1,10 @@
+
+ $.ajaxSetup({
+        headers: {
+            'X-Csrf-Token':token
+        }
+    });
+
 var Headers = new Map(); // Заголовки главной таблицы
  var Names = new Map(); //Атрибуты name заголовков главной таблицы, они не зависят от языка
  var content;
@@ -113,7 +120,7 @@ $(this).children("label").each(function(){
 	$(this).children("td").each(function(){
 	//Индекс столбца и инодекс поля
 	let collumn=$(this).children("input").attr('name');
-	if (collumn==null) collumn="id";
+	if (collumn==null) collumn="id";//колонка с нулеваым именем это id
 
 	ajax_object[collumn]=$(this).children("input").val();
 	});
@@ -145,41 +152,51 @@ $(this).children("label").each(function(){
    
   function send_add_request(ajax_array)
   {
-
+	 
 	ajax_array.forEach(function(item, i, arr) {
-  $.post("http://localhost:8080/svop/airports/add",{NameRu:item["NameRu"]
+  $.post(service+"add/",{NameRu:item["NameRu"]
   ,NameEng:item["NameEng"],
   NameCh:item["NameCh"],
   GMT:item["GMT"],
   ICAO:item["ICAO"],
   IATA:item["IATA"]});
-  
   console.log(item);
 });
 	$('#addModal').modal('hide');
+	 window.setTimeout(function(){location.reload()},3000);
    }
+   
+   
    function send_update_request(ajax_array)
-  {
+  { 
+  //alert(service+"test/"+" "+header+" "+token);
+	  /*
  	 ajax_array.forEach(function(item, i, arr) {
-  $.post("http://localhost:8080/svop/api/airports/update",{id:item["id"],NameRu:item["NameRu"]
+  $.post("http://localhost:5000/svop/api/airports/update",{id:item["id"],NameRu:item["NameRu"]
   ,NameEng:item["NameEng"],
   NameCh:item["NameCh"],
   GMT:item["GMT"],
   ICAO:item["ICAO"],
-  IATA:item["IATA"]}, function(data) {
-  alert(data);
-
-     $('body').append( "Name: " + data.name ) // John
-
-              .append( "Time: " + data.time ); //  2pm
-
-   }, "json");
-
-  
-  //console.log(item);
+  IATA:item["IATA"]});
+  });
+//$('#addModal').modal('hide');
+// window.setTimeout(function(){location.reload()},3000);
+ */
+ var request = $.ajax({
+type: "POST",
+  url: service_api,
+  cache: false,
+	data: { }
 });
-$('#addModal').modal('hide');
- //$( "#hide_bt" ).click();
- window.setTimeout(function(){location.reload()},3000)
+
+
+request.done(function(msg) {
+  alert("done "+msg)
+});
+ 
+request.fail(function(jqXHR, textStatus) {
+  alert( "Request failed: " + textStatus+"  "+header+" "+token );
+});
 
    }
+   

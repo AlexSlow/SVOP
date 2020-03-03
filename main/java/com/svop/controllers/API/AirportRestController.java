@@ -28,9 +28,13 @@ public class AirportRestController {
                          Model model) {
 
        int success=AirportsRepositiry.updateAirport(Integer.parseInt(id),NameRu,NameEng,NameCh,GMT,ICAO,IATA);
-
         return "{response :"+Integer.toString(success)+"}";
 
     }
-
+    @RequestMapping(value="/test")
+    public String test(@RequestParam(name="json",required = false)String id,Model model)
+    {
+        System.out.println("there test");
+        return "{response :1}";
+    }
 }

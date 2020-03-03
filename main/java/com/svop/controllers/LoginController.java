@@ -35,7 +35,9 @@ public class LoginController {
 
     @RequestMapping(value="/svop/registration",method = RequestMethod.POST)
   //  public String registration(@ModelAttribute("User") User userForm, BindingResult bindingResult,Model model) {
-    public String registration( String  username,String password,String confirm_password,Model model) {
+    public String registration( @RequestParam(name = "username") String  username,
+                                @RequestParam(name = "password") String password,
+                                @RequestParam(name = "confirmPassword") String confirm_password,Model model) {
 
         if (password.equals(confirm_password))
         {

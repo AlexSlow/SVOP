@@ -20,7 +20,7 @@ public class StartController {
     @RequestMapping("/svop/")
     public String index(Model model)
     {
-        System.out.println(userService.getUserAccountsInfo());
+        //System.out.println(userService.getUserAccountsInfo());
         Head_parser.setModel(model);
         model.addAttribute("usersAccounts",userService.getUserAccountsInfo());
         return "/html/start_page";

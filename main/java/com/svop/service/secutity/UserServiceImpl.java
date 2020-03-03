@@ -34,6 +34,7 @@ public class UserServiceImpl implements UserService {
     
     @Override
     public void save(User user) {
+        System.out.println("user "+user);
            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
            Set<Role> roles=new HashSet<>();
            roles.add(roleRepository.getOne(0L));
@@ -57,6 +58,11 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    /**
+     * получение информации о текущих сессиях
+     * @Autor(Terehov A.C)
+     * @return
+     */
     @Override
     public List<Map<String, String>>  getUserAccountsInfo() {
         List<String> user_session_tostring = sessionRegistry.getAllPrincipals().stream()

@@ -154,26 +154,7 @@ function(){
 	
 ,
 function(){
-	//$(this).next(".dropdown-menu").css("display", "none");
 });
-
-/*
-$('.dropdown-menu').hover(   //Если мы покидаем меню
-function(){
-
-},
-function(){
-
-//alert(level);
-
-	$('.submenu').each(function(){
-$(this).next(".dropdown-menu").css("display", "none");
-});
-
-level=0;
-}
-);
-*/
 function clean()
 {
 $('.dropdown-menu').each(function(){
@@ -245,7 +226,7 @@ $('#flags').ddslick({
     onSelected: function(selectedData){
         //callback function: do something with selectedData;
 		//console.log(selectedData.selectedData.value);
-		$.post("http://localhost:8080/svop/greeting",{flags:selectedData.selectedData.value,page:document.location.pathname});
+		//$.post("http://localhost:8080/svop/greeting",{flags:selectedData.selectedData.value,page:document.location.pathname});
     }   
 });
 </script>

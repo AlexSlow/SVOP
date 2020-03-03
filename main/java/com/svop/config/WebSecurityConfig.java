@@ -49,14 +49,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                //.logoutSuccessUrl("/svop/login") //default is /login?logout
                 .logoutSuccessHandler(svopLogoutSuccessHandler)
                 .permitAll()
-                .and()
-                .sessionManagement().sessionFixation().migrateSession() //Защита от фиксации сессии. При создании новой сессии атрибуты старой будут копированы
-                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)//Сессия создается если ее нет
-                .maximumSessions(1).sessionRegistry(sessionRegistry())//Только одна сессия
-                .expiredUrl("/svop/login")
+               // .and()
+                //.sessionManagement().sessionFixation().migrateSession() //Защита от фиксации сессии. При создании новой сессии атрибуты старой будут копированы
+               // .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)//Сессия создается если ее нет
+               // .maximumSessions(1).sessionRegistry(sessionRegistry())//Только одна сессия
+              //  .expiredUrl("/svop/login")
+
         ;
 
         http.exceptionHandling().accessDeniedPage("/svop/403");
+
 
         //Сессии
        //Если сессия истекла
