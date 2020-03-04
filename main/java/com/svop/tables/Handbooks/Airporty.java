@@ -12,81 +12,93 @@ public class Airporty implements Serializable {
     private Integer id;
 
     @Column(name="airporty_name_rus")
-    private String NameRu;
+    private String nameRu;
     @Column(name="airporty_name_eng")
-    private String NameEng;
+    private String nameEng;
     @Column(name="airporty_name_china")
-    private String NameCh;
-    private String GMT;
+    private String nameCh;
+    private String gmt;
     @Column(name="airporty_ICAO")
-    private String ICAO;
+    private String icao;
     @Column(name="airporty_IATA")
-    private String IATA;
+    private String iata;
 
-    public Airporty(){}
-
-    public Airporty(String nameRu, String nameEng, String nameCh, String GMT, String ICAO, String IATA) {
-        NameRu = nameRu;
-        NameEng = nameEng;
-        NameCh = nameCh;
-        this.GMT = GMT;
-        this.ICAO = ICAO;
-        this.IATA = IATA;
+    public Integer getId() {
+        return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
     }
 
-    public void setNameRu(String nameRu) {
-        NameRu = nameRu;
-    }
-
-    public void setNameEng(String nameEng) {
-        NameEng = nameEng;
-    }
-
-    public void setNameCh(String nameCh) {
-        NameCh = nameCh;
-    }
-
-    public void setGMT(String GMT) {
-        this.GMT = GMT;
-    }
-
-    public void setICAO(String ICAO) {
-        this.ICAO = ICAO;
-    }
-
-    public void setIATA(String IATA) {
-        this.IATA = IATA;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
     public String getNameRu() {
-        return NameRu;
+        return nameRu;
+    }
+
+    public void setNameRu(String nameRu) {
+        this.nameRu = nameRu;
     }
 
     public String getNameEng() {
-        return NameEng;
+        return nameEng;
+    }
+
+    public void setNameEng(String nameEng) {
+        this.nameEng = nameEng;
     }
 
     public String getNameCh() {
-        return NameCh;
+        return nameCh;
     }
 
-    public String getGMT() {
-        return GMT;
+    public void setNameCh(String nameCh) {
+        this.nameCh = nameCh;
     }
 
-    public String getICAO() {
-        return ICAO;
+    public String getGmt() {
+        return gmt;
     }
 
-    public String getIATA() {
-        return IATA;
+    public void setGmt(String gmt) {
+        this.gmt = gmt;
+    }
+
+    public String getIcao() {
+        return icao;
+    }
+
+    public void setIcao(String icao) {
+        this.icao = icao;
+    }
+
+    public String getIata() {
+        return iata;
+    }
+
+    public void setIata(String iata) {
+        this.iata = iata;
+    }
+    public Airporty(){}
+    public Airporty(String nameRu, String nameEng, String nameCh, String gmt, String icao, String iata) {
+        this.nameRu = nameRu;
+        this.nameEng = nameEng;
+        this.nameCh = nameCh;
+        this.gmt = gmt;
+        this.icao = icao;
+        this.iata = iata;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Airporty{" +
+                "id=" + id +
+                ", nameRu='" + nameRu + '\'' +
+                ", nameEng='" + nameEng + '\'' +
+                ", nameCh='" + nameCh + '\'' +
+                ", gmt='" + gmt + '\'' +
+                ", icao='" + icao + '\'' +
+                ", iata='" + iata + '\'' +
+                '}';
     }
 }

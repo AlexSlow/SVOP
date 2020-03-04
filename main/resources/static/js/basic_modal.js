@@ -129,13 +129,16 @@ $(this).children("label").each(function(){
 	});
 	//Мы получили объект запроса
 	//console.log(ajax_array);
+
 	if (content=="add")
 	{
-	send_add_request(ajax_array);
+	send_request(ajax_array,service_api_add);
 	}
 	else{
-	send_update_request(ajax_array);
+	send_request(ajax_array,service_api_update);
 	}
+	
+	
    });
    
    
@@ -150,52 +153,19 @@ $(this).children("label").each(function(){
    }
    
    
-  function send_add_request(ajax_array)
-  {
-	 
-	ajax_array.forEach(function(item, i, arr) {
-  $.post(service+"add/",{NameRu:item["NameRu"]
-  ,NameEng:item["NameEng"],
-  NameCh:item["NameCh"],
-  GMT:item["GMT"],
-  ICAO:item["ICAO"],
-  IATA:item["IATA"]});
-  console.log(item);
-});
-	$('#addModal').modal('hide');
-	 window.setTimeout(function(){location.reload()},3000);
-   }
+  
    
-   
-   function send_update_request(ajax_array)
+   function send_request(ajax_array,adress)
   { 
-  //alert(service+"test/"+" "+header+" "+token);
-	  /*
- 	 ajax_array.forEach(function(item, i, arr) {
-  $.post("http://localhost:5000/svop/api/airports/update",{id:item["id"],NameRu:item["NameRu"]
-  ,NameEng:item["NameEng"],
-  NameCh:item["NameCh"],
-  GMT:item["GMT"],
-  ICAO:item["ICAO"],
-  IATA:item["IATA"]});
-  });
-//$('#addModal').modal('hide');
-// window.setTimeout(function(){location.reload()},3000);
- */
- var request = $.ajax({
-type: "POST",
-  url: service_api,
-  cache: false,
-	data: { }
-});
-
-
-request.done(function(msg) {
-  alert("done "+msg)
-});
- 
-request.fail(function(jqXHR, textStatus) {
-  alert( "Request failed: " + textStatus+"  "+header+" "+token );
+  $.ajax({
+  type: "POST",
+  url: service_api_update,
+	data: JSON.stringify(ajax_array),
+	contentType: 'application/json',
+	success: function(data) {
+    //if(data.status == 'OK') alert('Person has been added');
+   // else alert('Failed adding person: ' + data.status + ', ' + data.errorMessage);
+  }
 });
 
    }

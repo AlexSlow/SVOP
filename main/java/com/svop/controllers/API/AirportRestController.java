@@ -1,18 +1,22 @@
 package com.svop.controllers.API;
 
+import com.svop.tables.Handbooks.Airporty;
 import com.svop.tables.Handbooks.AirportyRepo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+
 
 //Нужно будет доделать!
 @RestController
-@RequestMapping("svop/api/airports")
+@RequestMapping(value="svop/api/airports",headers = {"Content-type=application/json"})
 public class AirportRestController {
     @Autowired
     private AirportyRepo AirportsRepositiry;
@@ -32,9 +36,11 @@ public class AirportRestController {
 
     }
     @RequestMapping(value="/test")
-    public String test(@RequestParam(name="json",required = false)String id,Model model)
+   // public String test(@RequestBody Person person)
+    public String test(@RequestBody ArrayList<Airporty> airporty)
     {
-        System.out.println("there test");
+      //  System.out.println("there test"+person);
+        System.out.println("there test"+airporty);
         return "{response :1}";
     }
 }
