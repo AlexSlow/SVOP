@@ -1,4 +1,4 @@
-
+//поместить токен csrf
  $.ajaxSetup({
         headers: {
             'X-Csrf-Token':token
@@ -7,6 +7,7 @@
 
 var Headers = new Map(); // Заголовки главной таблицы
  var Names = new Map(); //Атрибуты name заголовков главной таблицы, они не зависят от языка
+  var is_null_map = new Map(); //Атрибуты name заголовков главной таблицы, они не зависят от языка
  var content;
  $('#addModal').on('show.bs.modal', function (event) {
 
@@ -23,6 +24,7 @@ var Headers = new Map(); // Заголовки главной таблицы
   {
   Headers.set($(this).text(),$(this).attr('data-type'));
   Names.set($(this).text(),$(this).attr('name'));
+  is_null_map.set($(this).text(),$(this).attr('data-notnull'));
 $("#modal_table thead tr").append("<th>"+$(this).text()+"</th>");
 }
   
@@ -38,7 +40,8 @@ $("#modal_table thead tr").append("<th>"+$(this).text()+"</th>");
 	for (let key of Headers.keys()) {
 	let val=Headers.get(key);
 	let name=Names.get(key);
-	$("#modal_table tbody tr:last-child").append("<td>"+"<input class='control-sm'  name='"+name+"'  type='"+val+"'+  /></td>");
+	let is_null=is_null_map.get(key);
+	$("#modal_table tbody tr:last-child").append("<td>"+"<input class='control-sm'  name='"+name+"' data-notnull='"+is_null+"' type='"+val+"'+  /></td>");
 }
   }
   
@@ -74,14 +77,13 @@ $(this).children("label").each(function(){
 	for (let key of Headers.keys()) {
 	let name=Names.get(key);
 	let val=Headers.get(key);
+	let is_null=is_null_map.get(key);
 	let input_value=data[i];
-	$("#modal_table tbody tr:last-child").append("<td>"+"<input class='control-sm' name='"+name+"' value='"+input_value+"' type='"+val+"'/></td>");
+	$("#modal_table tbody tr:last-child").append("<td>"+"<input class='control-sm' name='"+name+"' data-notnull='"+is_null+"' value='"+input_value+"' type='"+val+"'/></td>");
 	i++;
 	  }
  }
  });
-   
-   
   }//конец else
    });
   
@@ -92,18 +94,14 @@ $(this).children("label").each(function(){
    $("#modal_table tbody ").append("<tr></tr>");
    
    //Выставить все цвета нейтральным
-   //.text-danger
-   
-   
    //console.log(Headers);
 	for (let key of Headers.keys()) {
 	let val=Headers.get(key);
 	let name=Names.get(key);
-	$("#modal_table tbody tr:last-child").append("<td>"+"<input class='control-sm'  name='"+name+"'  type='"+val+"'+  /></td>");
-
+	let is_null=is_null_map.get(key);
+	$("#modal_table tbody tr:last-child").append("<td>"+"<input class='control-sm' data-notnull='"+is_null+"' name='"+name+"'  type='"+val+"'+  /></td>");
 }
-   });
-   
+ }); 
     //Удалить строку
    $("#remove_str").on('click', function(e) {
    $("#modal_table tbody tr:last-child").remove();
@@ -113,6 +111,14 @@ $(this).children("label").each(function(){
    
    //Сохраняем в массив объектов
     $("#save").on('click', function(e) {
+		
+		if (check()==true)
+		{
+			//console.log("Выход");
+			$("#modal_error").text("Ошибка. Неккоректные данные");
+			return;
+		}
+		
 	var ajax_array =[]
 
     $("#modal_table tbody tr").each(function(){
@@ -130,13 +136,9 @@ $(this).children("label").each(function(){
 	//Мы получили объект запроса
 	//console.log(ajax_array);
 
-	if (content=="add")
-	{
-	send_request(ajax_array,service_api_add);
-	}
-	else{
-	send_request(ajax_array,service_api_update);
-	}
+	//Отправка Ajax запроса
+	send_request(ajax_array,service_api_save);
+
 	
 	
    });
@@ -148,8 +150,37 @@ $(this).children("label").each(function(){
     $("#modal_table thead").empty();
    Headers.clear();
    Names.clear();
-   //ajax_array.clear();
+   is_null_map.clear();
+   }
+   // Проверка на соответствие данных анотациям таблицы
+   function check()
+   {
+	   	$("#modal_error").text("");
+	   //Очистим строки от подцветки
+	   $("#modal_table tbody tr").each(function(){
+	$(this).children("td").each(function(){
+		$(this).parent("tr").css("background-color","white");
+	});
+	});
+	   
+	   let is_error=false;
+	$("#modal_table tbody tr").each(function(){
 
+	$(this).children("td").each(function(){
+	
+	let value =$(this).children("input").val();
+	let is_not_null_attr=$(this).children("input").attr("data-notnull");
+	
+	if (is_not_null_attr==1){ if (value==""){
+		//console.log("isnull "+is_not_null_attr+" "+value);
+		$(this).parent("tr").css("background-color","red");
+		is_error=true;
+	}
+	}
+	});
+	});  
+	   //console.log("true");
+	   return is_error;
    }
    
    
@@ -159,12 +190,12 @@ $(this).children("label").each(function(){
   { 
   $.ajax({
   type: "POST",
-  url: service_api_update,
+  url: adress,
 	data: JSON.stringify(ajax_array),
 	contentType: 'application/json',
 	success: function(data) {
-    //if(data.status == 'OK') alert('Person has been added');
-   // else alert('Failed adding person: ' + data.status + ', ' + data.errorMessage);
+   // alert(data);
+	location.reload();
   }
 });
 

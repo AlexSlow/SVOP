@@ -3,6 +3,8 @@
 <head>
     <meta http-equiv="Content-type" Content="text/html; charset=utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta th:name="_csrf" th:content="${_csrf.token}"/>
+	<meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
     <link rel="/img/icons/shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
     <title th:text="#{sp.title}">

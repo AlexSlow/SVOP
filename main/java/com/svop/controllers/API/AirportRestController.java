@@ -1,14 +1,13 @@
 package com.svop.controllers.API;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.svop.service.handbooks.AirportsService;
 import com.svop.tables.Handbooks.Airporty;
 import com.svop.tables.Handbooks.AirportyRepo;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -19,28 +18,19 @@ import java.util.ArrayList;
 @RequestMapping(value="svop/api/airports",headers = {"Content-type=application/json"})
 public class AirportRestController {
     @Autowired
-    private AirportyRepo AirportsRepositiry;
+    private AirportsService airportsService;
 
-    @RequestMapping(value="/update",produces= MediaType.APPLICATION_JSON_VALUE)
-    public String update(@RequestParam(name="id",required = true)String id,
-                         @RequestParam(name="NameRu",required = true)String NameRu,
-                         @RequestParam(name="NameEng",required = false)String NameEng,
-                         @RequestParam(name="NameCh",required = false)String NameCh,
-                         @RequestParam(name="GMT",required = false)String GMT,
-                         @RequestParam(name="ICAO",required = false)String ICAO,
-                         @RequestParam(name="IATA",required = false)String IATA,
-                         Model model) {
+    @ResponseBody
+    @RequestMapping(value="/save")
+    public  String update(@RequestBody ArrayList<Airporty> airporty) {
 
-       int success=AirportsRepositiry.updateAirport(Integer.parseInt(id),NameRu,NameEng,NameCh,GMT,ICAO,IATA);
-        return "{response :"+Integer.toString(success)+"}";
-
+        return airportsService.save(airporty);
     }
-    @RequestMapping(value="/test")
-   // public String test(@RequestBody Person person)
-    public String test(@RequestBody ArrayList<Airporty> airporty)
-    {
-      //  System.out.println("there test"+person);
-        System.out.println("there test"+airporty);
-        return "{response :1}";
+    @ResponseBody
+    @RequestMapping(value="/delete")
+    public  String delete(@RequestBody ArrayList<Integer> airporty_id) {
+        return  airportsService.delete(airporty_id);
     }
+
+
 }

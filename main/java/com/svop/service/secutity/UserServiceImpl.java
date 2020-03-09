@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
     
     @Override
     public void save(User user) {
-        System.out.println("user "+user);
+        //System.out.println("user "+user);
            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
            Set<Role> roles=new HashSet<>();
            roles.add(roleRepository.getOne(0L));
@@ -50,12 +50,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String getLocale(String username) {
+        //System.out.println("uuuser"+userRepository.findByUsername(username));
         return (userRepository.findByUsername(username).getLocale());
     }
 
     @Override
     public void setLocale(String username,String locale) {
-
+    userRepository.setLocale(username,locale);
     }
 
     /**

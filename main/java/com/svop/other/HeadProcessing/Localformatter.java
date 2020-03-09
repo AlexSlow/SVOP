@@ -6,10 +6,15 @@ import java.util.Map;
 
 public class Localformatter {
 //Locale def_locale= Locale.getDefault();
-   public  Map<String,Boolean> getLocallabel( )
+   public  Map<String,Boolean> getLocallabel( String localeStr)
     {
-//
-      Locale locale=Locale.getDefault();
+        Locale locale;
+     if(localeStr==null){locale=Locale.getDefault();}
+     else
+     {
+         locale=new Locale(localeStr);
+     }
+
        // Locale locale=new Locale("fr");
        HashMap<String,Boolean> map=new HashMap<>();
         map.put("ru",false);
@@ -41,8 +46,4 @@ public class Localformatter {
        }
        return map;
     }
-    public void setLocal(String locale){
-        Locale.setDefault(new Locale(locale));
-    }
-
 }

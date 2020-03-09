@@ -3,6 +3,7 @@ package com.svop.config;
 
 import com.svop.service.secutity.SvopAuthenticationSuccessHandler;
 import com.svop.service.secutity.SvopLogoutSuccessHandler;
+import com.svop.service.secutity.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,8 +33,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     SvopLogoutSuccessHandler svopLogoutSuccessHandler;
     @Autowired
     SvopAuthenticationSuccessHandler svopAuthenticationSuccessHandler;
+    @Autowired
+    UserService userService;
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         http
                 .authorizeRequests()
                 .antMatchers("/","/svop/login","/svop/registration").permitAll()
@@ -41,7 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginPage("/svop/login")
-                //.successHandler(svopAuthenticationSuccessHandler) //Обработчик входа пользователя
+                .successHandler(svopAuthenticationSuccessHandler) //Обработчик входа пользователя
                 .permitAll()
                 .and()
                 .logout()
@@ -49,11 +53,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                //.logoutSuccessUrl("/svop/login") //default is /login?logout
                 .logoutSuccessHandler(svopLogoutSuccessHandler)
                 .permitAll()
-               // .and()
-                //.sessionManagement().sessionFixation().migrateSession() //Защита от фиксации сессии. При создании новой сессии атрибуты старой будут копированы
-               // .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)//Сессия создается если ее нет
-               // .maximumSessions(1).sessionRegistry(sessionRegistry())//Только одна сессия
-              //  .expiredUrl("/svop/login")
+                .and()
+                .sessionManagement().sessionFixation().migrateSession() //Защита от фиксации сессии. При создании новой сессии атрибуты старой будут копированы
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)//Сессия создается если ее нет
+                .maximumSessions(1).sessionRegistry(sessionRegistry())//Только одна сессия
+                .expiredUrl("/svop/login")
 
         ;
 
