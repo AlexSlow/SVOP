@@ -1,13 +1,13 @@
 ﻿<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
 <meta http-equiv="Content-type" Content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <meta th:name="_csrf" th:content="${_csrf.token}"/>
 <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
-<title th:text="#{airports.title}">
-Аэропорты
+<title th:text="#{routs.title}">
+Routs
 </title>
 	<link rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
 </head>
@@ -26,41 +26,38 @@
 		<div id="filter"  th:insert="/html/filter.html">
 		
 		</div>
-		<h2 class="text-center" th:text="#{airports.title_tab}">Таблица аэропортов</h2>
+		<h2 class="text-center" th:text="#{routs.title_tab}">Таблица маршрутов</h2>
 		
 <div class="table-responsive">
-<table class="table table-striped table-bordered mb-5" id="content_table">
+<table class="table table-striped table-bordered table-condensed mb-8 mw-50 " style="text-align:center width:50%;" id="content_table">
 <thead>
 <tr> <th name="id"></th>
-<th  name="nameRu" data-notnull="1" data-type="text" th:text="#{airports.name_ru}">Название(RU)</th>
-  <th name="nameEng" data-notnull="1" data-type="text" th:text="#{airports.name_eng}">Название(EN)</th> 
-  <th name="nameCh" data-notnull="1" data-type="text" th:text="#{airports.name_ch}" >Название(CH)</th>
-  <th name="gmt" data-notnull="0" data-type="text" th:text="#{airports.gmt_time}" >Отклонение метного времени по Гринвичу</th>
-  <th name="icao" data-notnull="0" data-type="text" >ICAO</th>
-  <th name="iata" data-notnull="0" data-type="text" >IATA</th></tr>
-</thead >
+<th  name="nameRu" data-notnull="1" data-type="text" th:text="#{routs.name_ru}">Имя Маршрута</th>
+ 
+</thead ></tr>
 <tbody id="filter_table">
-<tr th:each="airport : ${airports}">
+<tr th:each="rout : ${routs}">
 
-<td  ><input type="checkbox" th:id="ch+${airport.id}" th:value="${airport.id}" name="ch[]" th:form="form"></td>
-<td><label th:for="ch+${airport.id}" th:text="${airport.nameRu}"> </label></td>
-<td><label th:for="ch+${airport.id}" th:text="${airport.nameEng}"> </label></td>
-<td><label th:for="ch+${airport.id}" th:text="${airport.nameCh}"> </label></td>
-<td><label th:for="ch+${airport.id}" th:text="${airport.gmt}"> </label></td>
-<td><label th:for="ch+${airport.id}" th:text="${airport.icao}"> </label></td>
-<td><label th:for="ch+${airport.id}" th:text="${airport.iata}"> </label></td>
+<td><input type="checkbox" th:id="ch+${rout.id}" th:value="${rout.id}" name="ch[]" th:form="form"></td>
+<td><label th:for="ch+${rout.id}" th:text="${rout.name}"> </label></td>
+
 </tr>
 <tr >
-<td colspan="7" style="text-align:left;">  <input type='checkbox' 
+<td colspan="2" style="text-align:left;">  <input type='checkbox' 
 id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выделить все </label></td>
 </tr>
 </tbody>
 </table>
+<select id="airports" class="form-control d-none">
+<option th:each="airport : ${airports}" th:value="${airport.id}" th:text="${airport.nameRu}">
+
+</option>
+</select>
 </div>
 </div>
 
 
-<form th:action="@{/svop/airports/delete}" method="POST" id="form" role="form" >
+<form th:action="@{/svop/routs/delete}" method="POST" id="form" role="form" >
 
 <div class="btn-group fixed-bottom w-75 m-auto">
 
@@ -78,14 +75,6 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
 
 </div>
  </div>
-
- 
- 
- 
-   
-   
-   
- 
 <script src="/js/jquery/jquery-3.3.1.min.js"></script>
 <script src="/bootstrap/js/popper_min.js" ></script>
 <script src="/bootstrap/js/bootstrap.min.js"></script>
@@ -98,15 +87,16 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
   //Заголовки для вывода интернационализованного текста
   var head_add_title=[[#{modal.header_add}]];
   var head_red_title=[[#{modal.header_red}]];
+   var add_airport=[[#{modal.bt_add}]];
+  var remove_airport=[[#{modal.bt_remove}]];
   
   //csrf токены
 var token = $("meta[name='_csrf']").attr("content"); 
 var header = $("meta[name='_csrf_header']").attr("content");
-var service_api_save="http://localhost:5000/svop/api/airports/save";
+var service_api_save="http://localhost:5000/svop/api/routes/save";
 var error=[[#{modal.error}]];
-  
  </script>
-   <script src="/js/basic_modal.js">
+   <script src="/js/routes_modal.js">
    </script>
    
    

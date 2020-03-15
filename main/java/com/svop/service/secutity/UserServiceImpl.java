@@ -5,10 +5,14 @@ import com.svop.tables.Users.Role;
 import com.svop.tables.Users.RoleRepository;
 import com.svop.tables.Users.User;
 import com.svop.tables.Users.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,9 +23,9 @@ import java.util.stream.Collectors;
  * @autor Terekhov A.S
  * @version 1.0
  */
-@Component
+@Configuration
 public class UserServiceImpl implements UserService {
-
+private static Logger logger= LoggerFactory.getLogger(UserServiceImpl.class.getName());
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -34,6 +38,7 @@ public class UserServiceImpl implements UserService {
     
     @Override
     public void save(User user) {
+        logger.info("Сохранение пользователя");
         //System.out.println("user "+user);
            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
            Set<Role> roles=new HashSet<>();
@@ -50,6 +55,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String getLocale(String username) {
+        logger.info("плучение локали");
         //System.out.println("uuuser"+userRepository.findByUsername(username));
         return (userRepository.findByUsername(username).getLocale());
     }
@@ -66,6 +72,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<Map<String, String>>  getUserAccountsInfo() {
+        logger.info("получение списка всех пользователей");
         List<String> user_session_tostring = sessionRegistry.getAllPrincipals().stream()
                 .filter(u -> !sessionRegistry.getAllSessions(u, false).isEmpty())
                 .map(Object::toString)

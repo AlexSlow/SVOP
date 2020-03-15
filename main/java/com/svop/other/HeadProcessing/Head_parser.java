@@ -9,12 +9,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
 import java.util.Locale;
-
 public class Head_parser {
-
     public  void setModel(UserService userService,Model model)
     {
-
         Localformatter localformatter=new Localformatter();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String locale=userService.getLocale(auth.getName());

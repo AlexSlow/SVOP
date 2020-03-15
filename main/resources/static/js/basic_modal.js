@@ -7,14 +7,13 @@
 
 var Headers = new Map(); // Заголовки главной таблицы
  var Names = new Map(); //Атрибуты name заголовков главной таблицы, они не зависят от языка
-  var is_null_map = new Map(); //Атрибуты name заголовков главной таблицы, они не зависят от языка
+  var is_null_map = new Map(); //валидация не пустых элементов
  var content;
  $('#addModal').on('show.bs.modal', function (event) {
 
  clean();
   // получить кнопку, которая его открыло
   var button = $(event.relatedTarget)
-
   // извлечь информацию из атрибута data-content
    content= button.data('content') 
   // вывести колонки таблицы
@@ -27,15 +26,13 @@ var Headers = new Map(); // Заголовки главной таблицы
   is_null_map.set($(this).text(),$(this).attr('data-notnull'));
 $("#modal_table thead tr").append("<th>"+$(this).text()+"</th>");
 }
-  
   });
   
   if (content=="add")
   {
   $("#modal_title").text(head_add_title);
-  $("#add_buttons").removeClass("d-none");
-  
-   $("#modal_table tbody ").append("<tr></tr>");
+ // $("#add_buttons").removeClass("d-none");
+  $("#modal_table tbody ").append("<tr></tr>");
    //console.log(Headers);
 	for (let key of Headers.keys()) {
 	let val=Headers.get(key);

@@ -1,8 +1,4 @@
-﻿<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-<div th:fragment="menu">
-   
-	
+﻿<div th:fragment="menu">	
 <style>
  .dropdown-menu .dropdown-menu {
 	top: auto;
@@ -43,7 +39,7 @@ max-width:50em;
 		<a class="dropdown-item" th:href="@{'/svop?lang='+${current_language}}" 			th:text="#{menu.main_page}">Главная страница</a>
 		<a class="dropdown-item submenu"  href="#" 	th:text="#{menu.hendbook}" >Справочники</a>
 		<div class="dropdown-menu" id="1">
-			<a class="dropdown-item" href="#" th:text="#{menu.rout}"  >Маршруты</a>
+			<a class="dropdown-item" th:href="@{'/svop/routs?lang='+${current_language}}" th:text="#{menu.routs}"  >Маршруты</a>
 			<a class="dropdown-item" th:href="@{'/svop/airports?lang='+${current_language}}"  th:text="#{menu.airport}" >Аэрапорты</a>
 			<a class="dropdown-item" href="#"  	th:text="#{menu.aircompany}" >Авиакомпании</a>
 			<a class="dropdown-item" href="#" 	th:text="#{menu.nomer_reys}" >Номера рейсов</a>
@@ -284,6 +280,6 @@ $('#flags').ddslick({
 
 </script>
 </div>
-</html>
+
   
 
