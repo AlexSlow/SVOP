@@ -60,7 +60,7 @@
 	   $("#modal_table tbody tr:last-child td:last-child")
 	   .append('<input type="button" class="addAiroport" value="'+"+"+'"/><input type="button" class="removeAirport" value="'+"-"+'"/>');  
 		   array.forEach(function(item, i, array) {
-  $("#modal_table tbody tr:last-child td:last-child").append(airports.cloneNode(true));
+  $("#modal_table tbody tr:last-child td:last-child").append($("#airports").clone());
   $("#modal_table tbody tr:last-child td:last-child select:last-child").removeClass("d-none");
   $("#modal_table tbody tr:last-child td:last-child select:last-child  :contains('"+item+"')").attr('selected', 'true').text(item);
 	
@@ -76,7 +76,7 @@
 	   .append('<input type="button" class="addAiroport" value="'+"+"+'"/><input type="button" class="removeAirport" value="'+"-"+'"/>');
 	   for (let i=0;i<2;i++)
   {
-	$("#modal_table tbody tr:last-child td:last-child").append(airport=airports.cloneNode(true));
+	$("#modal_table tbody tr:last-child td:last-child").append($("#airports").clone());
 	$("#modal_table tbody tr:last-child td:last-child select:last-child").removeClass("d-none");
   }
 	    $("#modal_table tbody tr:last-child td:last-child").append("</td>");
@@ -93,7 +93,7 @@
    //Добавить Аэропорт
    $(function addAiroport() {
         $(document).on('click touchstart', '.addAiroport', function(){ 
-           $(this).parent("td").append(airports.cloneNode(true));
+           $(this).parent("td").append($("#airports").clone());
 		   $("#modal_table tbody tr:last-child td:last-child select:last-child").removeClass("d-none");
         });
     });

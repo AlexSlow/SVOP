@@ -8,6 +8,8 @@ import com.svop.tables.Handbooks.RoutesRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,23 +29,34 @@ public class RoutesService {
      * @param id Отвечает за возможность сохраненеия
      * @return Возвращает В случае успеха строку о успехе
      */
-    public String save(String airports_sequence,Integer id)
+    public ResponseEntity<String> save(String airports_sequence, Integer id)
     {
         List<Airporty> airporty = airportyRepo.findByNameRu("Барнаул");
 
         if (airporty.size()!=1)
         {
-            logger.error("Ошибка. Не найден целевой аэропорт или присудствет его дубликат!");
-            System.out.println("Ошибка");
-            return null;
+            logger.error("Ошибка. Не найден целевой аэропорт в Базе данных");
+            return new ResponseEntity<String>("Не найден целевой аэропорт в БД", HttpStatus.BAD_REQUEST);
         }
         Airporty airport=airporty.get(0);//get Barnaul
         String[] airports_id=airports_sequence.split("/");
+
         if (airports_id.length<2)
         {
             logger.error("Ошибка.Мало параметров в маршруте");
-            return null;
+            return new ResponseEntity<String>("Мало параметров для построения маршрута",
+                    HttpStatus.BAD_REQUEST);
         }
+        boolean isBax=false;
+        for(String item:airports_id)
+    {
+if (Integer.parseInt(item)==airport.getId()) {isBax=true;break;}
+    }
+        if (!isBax)
+            {
+                logger.error("Ошибка. Не найден целевой аэропорт или присудствет его дубликат!");
+                return new ResponseEntity<String>("Не найден целевой аэропорт", HttpStatus.BAD_REQUEST);
+            }
        // System.out.println(item);
         Integer arrival=null;
         Integer deporture=null;
@@ -71,7 +84,11 @@ public class RoutesService {
                 }
             }
         }
-        if (bax==null){logger.error("Не найден целевой аэропорт!"); return "error";}
+        if (bax==null){
+            logger.error("Не найден целевой аэропорт!");
+                return  new ResponseEntity<String>("Не найден целевой аэропорт!",
+                HttpStatus.BAD_REQUEST);
+        }
         if((arrival!=null)&&(route_vilet!=null)) {route_prilet=route_vilet=airports_sequence;}
         else if(arrival!=null){route_vilet=arrival+"/"+airports_id[bax]; route_prilet=airports_id[bax]+"/"+arrival;}
         else if(deporture!=null){route_prilet=deporture+"/"+airports_id[bax]; route_vilet=airports_id[bax]+"/"+deporture;}
@@ -83,18 +100,20 @@ public class RoutesService {
         if (id!=null) routes.setId(id);
         routesRepository.save(routes);
         logger.info("Формирование маршрута прошло успешно");
-        return "success";
+        return new ResponseEntity<String>("Маршрут успешно сформирован",
+                HttpStatus.OK);
 
     }
-    public String save(ArrayList<RoutesView> routesViewArrayList){
+    public ResponseEntity<String> save(ArrayList<RoutesView> routesViewArrayList){
         if (routesViewArrayList==null) {
             logger.error("Ошибка. Передана пустаня ссылка маршрутов!");
-            return null;};
+            return  new ResponseEntity<String>("Пустой список!",
+                    HttpStatus.BAD_REQUEST);};
         for (RoutesView item:routesViewArrayList) {
             //System.out.println(item);
             this.save(item.getName(), item.getId());
         }
-        return "Success";
+        return new ResponseEntity<>("Сохранение успешно завершено",HttpStatus.OK);
     }
 
 
@@ -104,6 +123,7 @@ public class RoutesService {
     {
         routesRepository.deleteByIdIn(idl);
     }
+
     public ArrayList<RoutesView> getRouts(){
         List<Routes> routs=routesRepository.findAll();
         ArrayList<RoutesView> output_routes=new ArrayList<>();

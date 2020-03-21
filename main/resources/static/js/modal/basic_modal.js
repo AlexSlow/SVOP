@@ -96,7 +96,7 @@ $(this).children("label").each(function(){
 	let val=Headers.get(key);
 	let name=Names.get(key);
 	let is_null=is_null_map.get(key);
-	$("#modal_table tbody tr:last-child").append("<td>"+"<input class='control-sm' data-notnull='"+is_null+"' name='"+name+"'  type='"+val+"'+  /></td>");
+	$("#modal_table tbody tr:last-child").append("<td>"+"<input class='control-sm' data-notnull='"+is_null+"' name='"+name+"'  type='"+val+"'/></td>");
 }
  }); 
     //Удалить строку
@@ -185,6 +185,7 @@ $(this).children("label").each(function(){
    
    function send_request(ajax_array,adress)
   { 
+ 
   $.ajax({
   type: "POST",
   url: adress,

@@ -6,8 +6,8 @@
 
 <meta th:name="_csrf" th:content="${_csrf.token}"/>
 <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
-<title th:text="#{routs.title}">
-Routs
+<title th:text="#{aircompanies.title}">
+Аэропорты
 </title>
 	<link rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
 </head>
@@ -26,40 +26,67 @@ Routs
 		<div id="filter"  th:insert="/html/filter.html">
 		
 		</div>
-		<h2 class="text-center" th:text="#{routs.title_tab}">Таблица маршрутов</h2>
+		<h2 class="text-center" th:text="#{aircompanies.title_tab}">Таблица Авиакомпаний</h2>
 		
 <div class="table-responsive">
-<table class="table table-striped table-bordered table-condensed mb-8 mw-50 " style="text-align:center width:50%;" id="content_table">
+<table class="table table-striped table-bordered mb-8" id="content_table">
 <thead>
 <tr> <th name="id"></th>
-<th  name="nameRu" data-notnull="1" data-type="text" th:text="#{routs.name_ru}">Имя Маршрута</th>
- 
-</thead ></tr>
+<th  th:text="#{aircompanies.longname}">Полное название</th>
+  <th th:text="#{aircompanies.shprtname}">Короткое название</th> 
+  <th th:text="#{aircompanies.logo}" >Логотип</th>
+</thead >
 <tbody id="filter_table">
-<tr th:each="rout : ${routs}">
-
-<td><input type="checkbox" th:id="ch+${rout.id}" th:value="${rout.id}" name="ch[]" th:form="form"></td>
-<td><label th:for="ch+${rout.id}" th:text="${rout.name}"> </label></td>
-
+<tr th:each="aircompany : ${aircompanies}">
+<td  ><input type="checkbox" th:id="ch+${aircompany.id}" th:value="${aircompany.id}" name="ch[]" th:form="form"></td>
+<td><label th:for="ch+${aircompany.id}" th:text="${aircompany.nameLong}"> </label></td>
+<td><label th:for="ch+${aircompany.id}" th:text="${aircompany.nameShort}"> </label></td>
+<td><label th:for="ch+${aircompany.id}"> <img th:src="${aircompany.logo}"/> </label></td>
 </tr>
 <tr >
-<td colspan="2" style="text-align:left;">  <input type='checkbox' 
+<td colspan="7" style="text-align:left;">  <input type='checkbox' 
 id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выделить все </label></td>
 </tr>
 </tbody>
 </table>
-<select id="airports" class="form-control d-none">
-<option th:each="airport : ${airports}" th:value="${airport.id}" th:text="${airport.nameRu}">
-
-</option>
-</select>
-</div>
 </div>
 
 
-<form th:action="@{/svop/routs/delete}" method="POST" id="form" role="form" >
+<script>
+/*
+$.ajaxSetup({
+        headers: {
+            'X-Csrf-Token':token
+        }
+    });
+$('.btn').click(function( event ){
 
-<div class="btn-group fixed-bottom w-75 m-auto">
+    var file_data = $('#file').prop('files')[0];
+    var form_data = new FormData();
+    form_data.append('file', file_data);
+    alert(form_data);
+    $.ajax({
+                url: 'http://localhost:5000/svop/api/aircompanies/save',
+                dataType: 'text',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: form_data,
+                type: 'post',
+                success: function(php_script_response){
+                    alert(php_script_response);
+                }
+     });
+ 
+});
+*/
+</script>
+</div>
+
+
+<form th:action="@{/svop/aircompanies/delete}" method="POST" id="form" role="form" >
+
+<div class="btn-group fixed-bottom w-75 m-auto mt-5">
 
 
  <input type="button" name="add" data-toggle="modal" data-target="#addModal" data-content="add" th:value="#{buttons.add_bt}" 
@@ -75,6 +102,8 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
 
 </div>
  </div>
+
+
 <script src="/js/jquery/jquery-3.3.1.min.js"></script>
 <script src="/bootstrap/js/popper_min.js" ></script>
 <script src="/bootstrap/js/bootstrap.min.js"></script>
@@ -82,29 +111,24 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
 <script src="/js/filter.js"></script>
 
 
-<div th:insert="/html/modal/base_modal.html" ></div>
+<div th:insert="/html/modal/aircompanies_modal.html" ></div>
   <script th:inline="javascript">
   //Заголовки для вывода интернационализованного текста
   var head_add_title=[[#{modal.header_add}]];
   var head_red_title=[[#{modal.header_red}]];
-   var add_airport=[[#{modal.bt_add}]];
-  var remove_airport=[[#{modal.bt_remove}]];
   
   //csrf токены
 var token = $("meta[name='_csrf']").attr("content"); 
 var header = $("meta[name='_csrf_header']").attr("content");
-var service_api_save="http://localhost:5000/svop/api/routes/save";
 var error=[[#{modal.error}]];
+  
  </script>
-   <script src="/js/modal/routes_modal.js">
+   <script src="/js/modal/aircompanies_modal.js">
    </script>
-   
-   
- 
+    
 </Body>
 </html>
-<script>
-</script>
+
 
 
 

@@ -31,15 +31,10 @@ public class RouteHttpController {
 
 
     @RequestMapping(value="svop/routs/delete")
-    public String delete(@RequestParam(name="ch[]",required = false) List<String> id_list, Model model) {
+    public String delete(@RequestParam(name="ch[]",required = false) List<Integer> id_list, Model model) {
 
-        if (id_list!=null) {
-            List<Integer> ids = new ArrayList<>();
-            for (String id_str : id_list) {
-                ids.add(Integer.valueOf(id_str));
-            }
-            routesService.delete(ids);
-        }
+
+        routesService.delete(id_list);
         return "redirect:/svop/routs";
     }
 }

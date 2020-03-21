@@ -2,10 +2,11 @@ package com.svop.service.handbooks;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.svop.other.JSON.ResponseParser;
 import com.svop.tables.Handbooks.Airporty;
 import com.svop.tables.Handbooks.AirportyRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -13,51 +14,44 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-public class AirportsService implements HandBooks {
+public class AirportsService  {
     @Autowired
     AirportyRepo airportyRepo;
-    @Autowired
-    ResponseParser responseParser;
 
-
-    @Override
-    public String save(Object note) {
+    public ResponseEntity<String> save(Object note) {
         Airporty aiporty=(Airporty)note;
       if(airportyRepo.save(aiporty)==null){
-          return "success";
+          return new ResponseEntity<String>("Сохранение завершено", HttpStatus.OK);
       }else
-          return "failure";
+          return new ResponseEntity<String>("Сохраненить не удалось", HttpStatus.BAD_REQUEST);
 
     }
 
-    @Override
-    public String save(List<?> notes) {
-        String isfailure="success";
+    public ResponseEntity<String> save(List<?> notes) {
+        ResponseEntity<String> response= new ResponseEntity<>("Сохранение произошло успешно",HttpStatus.OK);
             for (Object note : notes) {
                 Airporty aiporty = (Airporty) note;
 
                 if (airportyRepo.save(aiporty) == null) {
-                 isfailure="failure";
+                    response=new ResponseEntity<>("Сохранение произошло с ошибкой", HttpStatus.BAD_REQUEST);
                 }
             }
-        return isfailure;
+        return response;
     }
 
-    @Override
-    public String delete(List<?> notes) {
-        String isfailure="success";
+    public ResponseEntity<String> delete(List<?> notes) {
+        ResponseEntity<String> response= new ResponseEntity<>("Сохранение произошло успешно",HttpStatus.OK);
         for (Object note : notes) {
             Airporty aiporty = (Airporty) note;
             airportyRepo.delete(aiporty);
         }
-        return isfailure;
+        return response;
     }
 
-    @Override
-    public String delete(Object note) {
-        String isfailure="success";
+    public ResponseEntity<String> delete(Object note) {
+        ResponseEntity<String> response= new ResponseEntity<>("Сохранение произошло успешно",HttpStatus.OK);
         Airporty aiporty=(Airporty)note;
         airportyRepo.delete(aiporty);
-        return isfailure;
+        return response;
     }
 }

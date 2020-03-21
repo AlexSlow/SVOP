@@ -5,6 +5,7 @@ import com.svop.service.handbooks.AirportsService;
 import com.svop.tables.Handbooks.Airporty;
 import com.svop.tables.Handbooks.AirportyRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,13 +23,13 @@ public class AirportRestController {
 
     @ResponseBody
     @RequestMapping(value="/save")
-    public  String update(@RequestBody ArrayList<Airporty> airporty) {
+    public ResponseEntity<String> update(@RequestBody ArrayList<Airporty> airporty) {
 
         return airportsService.save(airporty);
     }
     @ResponseBody
     @RequestMapping(value="/delete")
-    public  String delete(@RequestBody ArrayList<Integer> airporty_id) {
+    public  ResponseEntity<String> delete(@RequestBody ArrayList<Integer> airporty_id) {
         return  airportsService.delete(airporty_id);
     }
 
