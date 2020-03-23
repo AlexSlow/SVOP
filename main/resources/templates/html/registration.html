@@ -17,7 +17,7 @@
         </div>
         <div class="login-page">
   <div class="form">
-    <form class="register-form" th:action="@{/svop/registration}" method="post">
+    <form class="register-form" th:action="@{/svop/registration}" autocomplete="off" method="post">
 	
 	<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 	
@@ -28,6 +28,12 @@
       <p class="message"><span th:text="#{registration.already_reg_msg}" >Already registered? </span>
 	  <a  th:href="@{/svop/login}"  th:text="#{registration.sign_in}" >Sign In</a></p>
     </form>
+	<div style="color:red;">
+	<div th:if="${username_size_error}" th:text="#{registration.error.username.size}"></div>
+	<div th:if="${username_unique_error}" th:text="#{registration.error.username.unique}"></div>
+	<div th:if="${password_size_error}" th:text="#{registration.error.password.size}"></div>
+	<div th:if="${password_confirm_error}" th:text="#{registration.error.password.confirm}"></div>
+	</div>
   </div>
 </div>
 

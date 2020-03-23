@@ -22,7 +22,7 @@
  
  
         <div class="row" >
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-5">
 		<div id="filter"  th:insert="/html/filter.html">
 		
 		</div>
@@ -38,7 +38,7 @@
 </thead >
 <tbody id="filter_table">
 <tr th:each="aircompany : ${aircompanies}">
-<td  ><input type="checkbox" th:id="ch+${aircompany.id}" th:value="${aircompany.id}" name="ch[]" th:form="form"></td>
+<td  ><input type="checkbox" th:id="ch+${aircompany.id}" th:value="${aircompany.id}" name="ch[]" th:form="form"/></td>
 <td><label th:for="ch+${aircompany.id}" th:text="${aircompany.nameLong}"> </label></td>
 <td><label th:for="ch+${aircompany.id}" th:text="${aircompany.nameShort}"> </label></td>
 <td><label th:for="ch+${aircompany.id}"> <img th:src="${aircompany.logo}"/> </label></td>
@@ -54,11 +54,7 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
 
 <script>
 /*
-$.ajaxSetup({
-        headers: {
-            'X-Csrf-Token':token
-        }
-    });
+//Мы моэжем создать форму сами на JS!
 $('.btn').click(function( event ){
 
     var file_data = $('#file').prop('files')[0];

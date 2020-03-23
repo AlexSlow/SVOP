@@ -1,0 +1,133 @@
+﻿<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta http-equiv="Content-type" Content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta th:name="_csrf" th:content="${_csrf.token}"/>
+<meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+<title th:text="#{nomer_reys.title}">
+Номера рейсов
+</title>
+	<link rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
+</head>
+<Body>
+
+
+<div id="header" th:insert="/html/nmenu.html"></div>
+
+
+ <div id="content" class="container-fluid">
+ 
+ 
+ 
+        <div class="row mb-5" >
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+		<div id="filter"  th:insert="/html/filter.html">
+		</div>
+
+		<form>
+		<div class="form-group">
+		 <label th:text="#{nomer_reys.select_aircompany}">Выберете Авиакомпнию</label>
+		 <select class="form-control" id="aircompany" name="aircompany_select" form="form">
+		 <option></option>
+		 <option th:each="aircompany : ${aircompanies}" th:value="${aircompany.id}" th:text="${aircompany.nameLong}"  th:selected="${aircompany.id==aircompanies_selected}">Название компании</option>
+		 </select>
+		 </div>
+		</form>
+<h2 class="text-center" th:text="#{nomer_reys.title_tab}">Таблица номеров рейсов</h2>	
+<div class="table-responsive">
+<table class="table table-striped table-bordered" id="content_table">
+<thead>
+<tr> <th name="id"></th><th th:text="#{nomer_reys.nomer}">Номер рейса</th><th th:text="#{nomer_reys.type}">Тип рейса</th></tr>
+</thead>
+<tbody id="filter_table">
+</tbody>
+<tfoot>
+<tr>
+<td colspan="3" style="text-align:left;" >  <input type='checkbox' 
+id="maincheck"/> <label for="maincheck" th:text="#{buttons.fire_all}"> Выделить все </label></td>
+</tr>
+</tfoot>
+</table>
+</div>
+</div>
+
+<form th:action="@{/svop/nomer_reys/delete}" method="POST" id="form" role="form" >
+<div class="btn-group fixed-bottom w-75 m-auto">
+ <input type="button" name="add" data-toggle="modal" data-target="#addModal" data-content="add" th:value="#{buttons.add_bt}" 
+ class="btn btn-primary"  />
+ <input type="button" name="redact" data-content="redact" th:value="#{buttons.red_bt}"  data-toggle="modal" data-target="#addModal" 
+ class="btn btn-warning"/>
+ <input type="submit" name="delete" th:value="#{buttons.del_bt}" 
+ class="btn btn-danger"/>
+ </div>
+</form>
+<form th:action="@{/svop/nomer_reys/}" method="POST" id="contentForm">
+<input type="text" class="d-none" id="input_select" name="aircompany_select"/>
+</form>
+
+</div>
+
+
+
+</div> 
+<script src="/js/jquery/jquery-3.3.1.min.js"></script>
+<script src="/bootstrap/js/popper_min.js" ></script>
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+<script src="/js/fire_check.js"></script>
+<script src="/js/filter.js"></script>
+<div th:insert="/html/modal/nomer_reys_modal.html" ></div>
+  <script th:inline="javascript">
+  //Заголовки для вывода интернационализованного текста
+  var head_add_title=[[#{modal.header_add}]];
+  var head_red_title=[[#{modal.header_red}]];
+  var error_aircompany_msg=[[#{nomer_reys.select_aircompany}]];
+  
+  //csrf токены
+var token = $("meta[name='_csrf']").attr("content"); 
+var header = $("meta[name='_csrf_header']").attr("content");
+var service_api_get="http://localhost:5000/svop/api/nomer_reys/get_from_aircompanies";
+var service_api_save="http://localhost:5000/svop/api/nomer_reys/save";
+var error=[[#{modal.error}]];
+  
+ </script>
+ <script src="/js/modal/nomer_reys_modal.js">
+ </script>
+ <script>
+ jQuery(document).ready(function($) {
+ select();
+});
+ $("#aircompany").change(function(){select();});
+	
+	function select(){
+ $("#content_table tbody").empty();
+ let aircompany=$("#aircompany").val();
+ if (aircompany!="")
+ {
+	 $.ajax({
+  type: "POST",
+  url: service_api_get,
+	data: JSON.stringify(aircompany),
+	contentType: 'application/json',
+	success: function(data) {
+   // console.log(data);
+	//location.reload();
+	$.each(data,function(index,value){
+	$("#content_table tbody").prepend("<tr><td><input type='checkbox' id='ch"+value.id+"'value='"+value.id+"' name='ch[]' form='form'/></td><td><label for='ch"+value.id+"'>"+value.nomer+"</label></td><td>"+value.type+"</td></tr>");
+	});
+	
+  }
+});	
+}		
+	};
+	
+ </script>
+
+</Body>
+</html>
+<script>
+</script>
+
+
+

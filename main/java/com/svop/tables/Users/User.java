@@ -3,6 +3,8 @@ package com.svop.tables.Users;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
@@ -12,7 +14,7 @@ public class User {
     @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name="users_id")
     private Long id;
-
+    //@NotNull
     @Column(name="username")
     private String username;
 
@@ -21,8 +23,6 @@ public class User {
 
     @Column(name="locale")
     private String locale;
-
-
 
     @Transient
     private String confirmPassword;

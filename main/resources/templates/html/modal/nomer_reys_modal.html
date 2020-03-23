@@ -1,0 +1,46 @@
+<div th:fragment="modal">
+
+<div id="addModal" class="modal fade" tabindex="-1">
+ <div class="modal-dialog modal-lg">
+ <div class="modal-content">
+ <div class="modal-header">
+ 
+ <h4 id="modal_title"></h4>
+ </div>
+ 
+	<div class="modal-body">
+	<div class="table-responsive">
+	<table class="table  mb-5" id="modal_table">
+	<thead><tr><th>Номер рейса</th><th>Тип</th></tr></thead>
+	<tbody></tbody>
+	</table>
+	</div>
+	</div>
+ 
+ <div class="modal-footer">
+ 
+ <div id="content" class="container-fluid">
+        <div class="row mb-3" id="add_buttons">
+<div class="col"></div>
+<div class="col">
+ <button id="add_str" class="btn-info" th:text="#{modal.add_str}">добавить строку</button>
+ <button id="remove_str" class="btn-warning" th:text="#{modal.remove_str}">убрать строку</button>
+</div>
+ </div>
+ <div class="row">
+ <div class="col"></div>
+<div class="col">
+ <div id="modal_error" style="color:red;font-size:14px;"></div>
+  <button id="save" class="btn-success" th:text="#{modal.save}">Применить</button>
+ <button class="btn-danger" data-dismiss="modal" th:text="#{modal.close}" >закрыть</button>
+ 
+ </div>
+ </div>
+
+ 
+ </div>
+ </div>
+ </div>
+</div>  
+ </div>
+ </div>

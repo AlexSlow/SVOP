@@ -7,9 +7,15 @@ import com.svop.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 
 @Controller
@@ -34,20 +40,30 @@ public class LoginController {
     }
 
     @RequestMapping(value="/svop/registration",method = RequestMethod.POST)
-  //  public String registration(@ModelAttribute("User") User userForm, BindingResult bindingResult,Model model) {
+    public String registration(@ModelAttribute("User") User user, BindingResult bindingResult, Model model) {
+        /*
+    }
     public String registration( @RequestParam(name = "username") String  username,
                                 @RequestParam(name = "password") String password,
                                 @RequestParam(name = "confirmPassword") String confirm_password,Model model) {
-
-        if (password.equals(confirm_password))
+*/
+        userValidator.validate(user,bindingResult);
+        if (bindingResult.hasErrors())
         {
-            User user=new User(username,password,null);
+            for (Object object : bindingResult.getAllErrors()) {
+                if(object instanceof FieldError) {
+                    FieldError fieldError = (FieldError) object;
+                    model.addAttribute(fieldError.getCode(),true);
+                }
+
+            }
+
+            return "/html/registration.html";
+        }else
+        {
             userService.save(user);
             securityService.autoLogin(user.getUsername(),user.getPassword());
             return "redirect:/svop/";
-        }else {
-            model.addAttribute("error","");
-            return "/html/registration.html";
         }
 
     }

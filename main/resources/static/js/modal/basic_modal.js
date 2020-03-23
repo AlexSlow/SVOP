@@ -31,14 +31,14 @@ $("#modal_table thead tr").append("<th>"+$(this).text()+"</th>");
   if (content=="add")
   {
   $("#modal_title").text(head_add_title);
- // $("#add_buttons").removeClass("d-none");
-  $("#modal_table tbody ").append("<tr></tr>");
+  $("#modal_table thead tr ").prepend("<th></th>");
+  $("#modal_table tbody ").append("<tr><td><input class='d-none' value='"+null+"' type='text'></td></tr>");
    //console.log(Headers);
 	for (let key of Headers.keys()) {
 	let val=Headers.get(key);
 	let name=Names.get(key);
 	let is_null=is_null_map.get(key);
-	$("#modal_table tbody tr:last-child").append("<td>"+"<input class='control-sm'  name='"+name+"' data-notnull='"+is_null+"' type='"+val+"'+  /></td>");
+	$("#modal_table tbody tr:last-child").append("<td><input class='control-sm form-control'   name='"+name+"' data-notnull='"+is_null+"' type='"+val+"'+  /></td>");
 }
   }
   
@@ -47,10 +47,10 @@ $("#modal_table thead tr").append("<th>"+$(this).text()+"</th>");
   
   else
   {
-  //Добавим колонку под id
-   $("#modal_table thead tr ").prepend("<th></th>");
-   $("#modal_title").text(head_red_title);
-   $("#add_buttons").addClass("d-none");
+  //Добавим колонку под id 
+  $("#modal_title").text(head_red_title);
+  $("#modal_table thead tr ").prepend("<th></th>");
+   //$("#add_buttons").addClass("d-none");
    
    //Выбор строк для редактирования
     $("#content_table tbody tr").each(function(){
@@ -76,7 +76,7 @@ $(this).children("label").each(function(){
 	let val=Headers.get(key);
 	let is_null=is_null_map.get(key);
 	let input_value=data[i];
-	$("#modal_table tbody tr:last-child").append("<td>"+"<input class='control-sm' name='"+name+"' data-notnull='"+is_null+"' value='"+input_value+"' type='"+val+"'/></td>");
+	$("#modal_table tbody tr:last-child").append("<td>"+"<input class='control-sm form-control' name='"+name+"' data-notnull='"+is_null+"' value='"+input_value+"' type='"+val+"'/></td>");
 	i++;
 	  }
  }
@@ -89,14 +89,14 @@ $(this).children("label").each(function(){
    $("#add_str").on('click', function(e) {
    
    $("#modal_table tbody ").append("<tr></tr>");
-   
+   $("#modal_table tbody tr:last-child").append("<td><input class='d-none' value='"+null+"' type='text'></td>");
    //Выставить все цвета нейтральным
    //console.log(Headers);
 	for (let key of Headers.keys()) {
 	let val=Headers.get(key);
 	let name=Names.get(key);
 	let is_null=is_null_map.get(key);
-	$("#modal_table tbody tr:last-child").append("<td>"+"<input class='control-sm' data-notnull='"+is_null+"' name='"+name+"'  type='"+val+"'/></td>");
+	$("#modal_table tbody tr:last-child").append("<td>"+"<input class='control-sm form-control' data-notnull='"+is_null+"' name='"+name+"'  type='"+val+"'/></td>");
 }
  }); 
     //Удалить строку

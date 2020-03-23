@@ -4,6 +4,7 @@ import com.svop.View.AircompanyView;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "aircompany")
@@ -18,6 +19,10 @@ public class Aircompany {
 
     @Column(name="aircompany_short_name")
     private String nameShort;
+
+    @OneToMany(mappedBy="aircompany")
+    private Set<NomerReys> nomers;
+
     @Column(name="aircompany_logo")
     private String logo;
     public Aircompany(){}
@@ -26,6 +31,14 @@ public class Aircompany {
         this.nameShort = nameShort;
         this.logo = logo;
     }
+
+    public Aircompany(String nameLong, String nameShort, Set<NomerReys> nomers, String logo) {
+        this.nameLong = nameLong;
+        this.nameShort = nameShort;
+        this.nomers = nomers;
+        this.logo = logo;
+    }
+
     public Aircompany(AircompanyView aircompanyView)
     {
         this.id=aircompanyView.getId();
@@ -64,5 +77,14 @@ public class Aircompany {
 
     public void setLogo(String logo) {
         this.logo = logo;
+    }
+
+
+    public Set<NomerReys> getNomers() {
+        return nomers;
+    }
+
+    public void setNomers(Set<NomerReys> nomers) {
+        this.nomers = nomers;
     }
 }

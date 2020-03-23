@@ -79,5 +79,9 @@ public class AircompaniesService {
     {
         aircompanyRepositpry.deleteByIdIn(idl);
     }
+    public Optional<Aircompany>  getByid(Integer id)
+    {
+        return aircompanyRepositpry.findById(id);
+    }
 
 }

@@ -42,7 +42,7 @@ max-width:50em;
 			<a class="dropdown-item" th:href="@{'/svop/routs?lang='+${current_language}}" th:text="#{menu.routs}"  >Маршруты</a>
 			<a class="dropdown-item" th:href="@{'/svop/airports?lang='+${current_language}}"  th:text="#{menu.airport}" >Аэрапорты</a>
 			<a class="dropdown-item" th:href="@{'/svop/aircompanies?lang='+${current_language}}"  	th:text="#{menu.aircompany}" >Авиакомпании</a>
-			<a class="dropdown-item" href="#" 	th:text="#{menu.nomer_reys}" >Номера рейсов</a>
+			<a class="dropdown-item" th:href="@{'/svop/nomer_reys?lang='+${current_language}}" 	th:text="#{menu.nomer_reys}" >Номера рейсов</a>
 		</div>
 	
 		<a class="dropdown-item submenu" href="#" th:text="#{menu.sezon_ras}" >Сезонное расписание</a>
