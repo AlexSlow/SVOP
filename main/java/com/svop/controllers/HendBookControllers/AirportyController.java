@@ -34,6 +34,7 @@ public class AirportyController {
 
     @RequestMapping(value="svop/airports/delete")
     public String delete(@RequestParam(name="ch[]",required = false) List<Integer> id_list, Model model) {
+        if (id_list!=null)
         AirportsRepositiry.deleteByIdIn(id_list);
         return "redirect:/svop/airports";
     }

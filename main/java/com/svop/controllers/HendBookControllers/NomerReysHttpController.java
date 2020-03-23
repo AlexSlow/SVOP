@@ -24,7 +24,7 @@ public class NomerReysHttpController {
     NomerReysService nomerReysService;
     //Тут передача выбранного селекта.Модель через ридерект не передается
     //Возможно его видят все пользователи
-    private Integer aircompany_selected;
+    //private Integer aircompany_selected;
     @RequestMapping(value="svop/nomer_reys")
     public String open(@RequestParam(name="aircompany_select",required = false) Integer aircompany,Model model) {
         Head_parser head_parser=new Head_parser();
@@ -40,9 +40,7 @@ public class NomerReysHttpController {
     public String delete(@RequestParam(name="aircompany_select",required = false) Integer aircompany,
                          @RequestParam(name="ch[]",required = false) List<Integer> id_list,
                          RedirectAttributes redirectAttributes) {
-      //  aircompany_selected=aircompany;
         redirectAttributes.addFlashAttribute("aircompanies_selected",aircompany);
-        //model.addAttribute("aircompanies_selected",aircompany);
         if (id_list!=null)
         nomerReysService.delete(id_list);
         return "redirect:/svop/nomer_reys";

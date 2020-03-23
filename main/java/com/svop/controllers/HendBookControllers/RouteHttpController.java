@@ -32,8 +32,7 @@ public class RouteHttpController {
 
     @RequestMapping(value="svop/routs/delete")
     public String delete(@RequestParam(name="ch[]",required = false) List<Integer> id_list, Model model) {
-
-
+        if (id_list!=null)
         routesService.delete(id_list);
         return "redirect:/svop/routs";
     }

@@ -35,6 +35,7 @@ public class AircompanyHttpController {
     }
     @RequestMapping(value="svop/aircompanies/delete")
     public String delete(@RequestParam(name="ch[]",required = false) List<Integer> id_list, Model model) {
+        if (id_list!=null)
             aircompaniesService.delete(id_list);
         return "redirect:/svop/aircompanies";
     }
