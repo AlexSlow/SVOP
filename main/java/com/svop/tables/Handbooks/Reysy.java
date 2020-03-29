@@ -6,6 +6,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalTime;
 
 
 @Entity
@@ -17,17 +18,17 @@ public class Reysy {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "reysy_nomer_prilet", nullable = true)
+    @JoinColumn(name = "reysy_nomer_prilet", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private NomerReys nomer_prilet;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "reysy_nomer_vilet", nullable = true)
+    @JoinColumn(name = "reysy_nomer_vilet", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private NomerReys nomer_vilet;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "reysy_rout", nullable = true)
+    @JoinColumn(name = "reysy_rout", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Routes rout;
 
@@ -41,20 +42,20 @@ public class Reysy {
     private String prilet_days;
 
     @Column(name="reysy_prilet_time_otpravl")
-    private Time prilet_time_otpravl;
+    private LocalTime prilet_time_otpravl;
 
     @Column(name="reysy_prilet_time_prib")
-    private Time prilet_time_prib;
+    private LocalTime prilet_time_prib;
 
 
     @Column(name="reysy_vilet_days")
     private String vilet_days;
 
     @Column(name="reysy_vilet_time_otpravl")
-    private Time vilet_time_otpravl;
+    private LocalTime vilet_time_otpravl;
 
     @Column(name="reysy_vilet_time_prib")
-    private Time vilet_time_prib;
+    private LocalTime vilet_time_prib;
 
     @Column(name="reysy_tip_vs")
     private String tip_vs;
@@ -74,7 +75,7 @@ public class Reysy {
     public Reysy() {
     }
 
-    public Reysy(NomerReys nomer_prilet, NomerReys nomer_vilet, Routes rout, Date period_start, Date period_end, String prilet_days, Time prilet_time_otpravl, Time prilet_time_prib, String vilet_days, Time vilet_time_otpravl, Time vilet_time_prib, String tip_vs, ReysyStatus izmen_otmen, String osnovanie_izmen_otmen, TypeReys type, Airline airline) {
+    public Reysy(NomerReys nomer_prilet, NomerReys nomer_vilet, Routes rout, Date period_start, Date period_end, String prilet_days, LocalTime prilet_time_otpravl, LocalTime prilet_time_prib, String vilet_days, LocalTime vilet_time_otpravl, LocalTime vilet_time_prib, String tip_vs, ReysyStatus izmen_otmen, String osnovanie_izmen_otmen, TypeReys type, Airline airline) {
         this.nomer_prilet = nomer_prilet;
         this.nomer_vilet = nomer_vilet;
         this.rout = rout;
@@ -149,19 +150,19 @@ public class Reysy {
         this.prilet_days = prilet_days;
     }
 
-    public Time getPrilet_time_otpravl() {
+    public LocalTime getPrilet_time_otpravl() {
         return prilet_time_otpravl;
     }
 
-    public void setPrilet_time_otpravl(Time prilet_time_otpravl) {
+    public void setPrilet_time_otpravl(LocalTime prilet_time_otpravl) {
         this.prilet_time_otpravl = prilet_time_otpravl;
     }
 
-    public Time getPrilet_time_prib() {
+    public LocalTime getPrilet_time_prib() {
         return prilet_time_prib;
     }
 
-    public void setPrilet_time_prib(Time prilet_time_prib) {
+    public void setPrilet_time_prib(LocalTime prilet_time_prib) {
         this.prilet_time_prib = prilet_time_prib;
     }
 
@@ -173,19 +174,19 @@ public class Reysy {
         this.vilet_days = vilet_days;
     }
 
-    public Time getVilet_time_otpravl() {
+    public LocalTime getVilet_time_otpravl() {
         return vilet_time_otpravl;
     }
 
-    public void setVilet_time_otpravl(Time vilet_time_otpravl) {
+    public void setVilet_time_otpravl(LocalTime vilet_time_otpravl) {
         this.vilet_time_otpravl = vilet_time_otpravl;
     }
 
-    public Time getVilet_time_prib() {
+    public LocalTime getVilet_time_prib() {
         return vilet_time_prib;
     }
 
-    public void setVilet_time_prib(Time vilet_time_prib) {
+    public void setVilet_time_prib(LocalTime vilet_time_prib) {
         this.vilet_time_prib = vilet_time_prib;
     }
 
@@ -227,5 +228,28 @@ public class Reysy {
 
     public void setAirline(Airline airline) {
         this.airline = airline;
+    }
+
+    @Override
+    public String toString() {
+        return "Reysy{" +
+                "id=" + id +
+                ", nomer_prilet=" + nomer_prilet +
+                ", nomer_vilet=" + nomer_vilet +
+                ", rout=" + rout +
+                ", period_start=" + period_start +
+                ", period_end=" + period_end +
+                ", prilet_days='" + prilet_days + '\'' +
+                ", prilet_time_otpravl=" + prilet_time_otpravl +
+                ", prilet_time_prib=" + prilet_time_prib +
+                ", vilet_days='" + vilet_days + '\'' +
+                ", vilet_time_otpravl=" + vilet_time_otpravl +
+                ", vilet_time_prib=" + vilet_time_prib +
+                ", tip_vs='" + tip_vs + '\'' +
+                ", izmen_otmen=" + izmen_otmen +
+                ", osnovanie_izmen_otmen='" + osnovanie_izmen_otmen + '\'' +
+                ", type=" + type +
+                ", airline=" + airline +
+                '}';
     }
 }

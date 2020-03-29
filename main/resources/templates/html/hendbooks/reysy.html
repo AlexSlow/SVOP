@@ -15,6 +15,9 @@
 	#content_table{
 	text-align:center;
 	vertical-align: top;
+	border-collapse: collapse;
+	white-space: nowrap;
+	
 	}
 	</style>
 </head>
@@ -46,14 +49,12 @@
 <thead >
 <tr> <th  rowspan="2" ></th>
 	<th  rowspan="2" th:text="#{reysy.rout}" >Маршрут</th>
-	<th rowspan="2" th:text="#{reysy.period_start}">Начало периода</th>
+	<th rowspan="2"  th:text="#{reysy.period_start}">Начало периода</th>
 	<th rowspan="2" th:text="#{reysy.period_end}">Конец периода</th> 
 	<th  colspan="4" th:text="#{reysy.prilet}">Прилет</th>
 	<th  colspan="4" th:text="#{reysy.vilet}">Вылет</th>
 	<th rowspan="2" th:text="#{reysy.tip_vs}">Тип ВС</th>
 	<th rowspan="2" th:text="#{reysy.izemenen_onmenen}">Изменен отменен</th>
-	<th rowspan="2" th:text="#{reysy.osnovanie}"> Основание отмены</th>
-	<th rowspan="2" th:text="#{reysy.type}" >Тип рейса</th>	
 	<th rowspan="2" th:text="#{reysy.airlines}" >Вид авиалинии</th>
   </tr>
   <tr>
@@ -76,24 +77,22 @@
 <tr th:each="reys : ${reysy}">
 
 <td  ><input type="checkbox" th:id="ch+${reys.id}" th:value="${reys.id}" name="ch[]" th:form="form"/></td>
-<td><label th:for="ch+${reys.id}" th:text="${reys.rout.name}"> </label></td>
+<td><label th:for="ch+${reys.id}" th:text="${reys.rout}"> </label></td>
 <td><label th:for="ch+${reys.id}" th:text="${reys.period_start}"> </label></td>
 <td><label th:for="ch+${reys.id}" th:text="${reys.period_end}"> </label></td>
 
-<td><label th:for="ch+${reys.id}" th:text="${reys.nomer_prilet.nomer}"> </label></td>
+<td><label th:for="ch+${reys.id}" th:text="${reys.nomer_prilet}"> </label></td>
 <td><label th:for="ch+${reys.id}" th:text="${reys.prilet_days}"> </label></td>
 <td><label th:for="ch+${reys.id}" th:text="${reys.prilet_time_otpravl}"> </label></td>
 <td><label th:for="ch+${reys.id}" th:text="${reys.prilet_time_prib}"> </label></td>
 
-<td><label th:for="ch+${reys.id}" th:text="${reys.nomer_vilet.nomer}"> </label></td>
+<td><label th:for="ch+${reys.id}" th:text="${reys.nomer_vilet}"> </label></td>
 <td><label th:for="ch+${reys.id}" th:text="${reys.vilet_days}"> </label></td>
 <td><label th:for="ch+${reys.id}" th:text="${reys.vilet_time_otpravl}"> </label></td>
 <td><label th:for="ch+${reys.id}" th:text="${reys.vilet_time_prib}"> </label></td>
 
 <td><label th:for="ch+${reys.id}" th:text="${reys.tip_vs}"> </label></td>
 <td><label th:for="ch+${reys.id}" th:text="${reys.izmen_otmen}"> </label></td>
-<td><label th:for="ch+${reys.id}" th:text="${reys.osnovanie_izmen_otmen}"> </label></td>
-<td><label th:for="ch+${reys.id}" th:text="${reys.type}"> </label></td>
 <td><label th:for="ch+${reys.id}" th:text="${reys.airline}"> </label></td>
 </tr>
 
@@ -110,16 +109,16 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
 </div>
 
 
-<form th:action="@{/svop/airports/reysy}" method="POST" id="form" role="form" >
+<form th:action="@{'/svop/reysy/edit'}" method="POST" id="form" role="form" >
 <div class="btn-group fixed-bottom w-75 m-auto">
-
-
  <input type="submit" name="add"  th:value="#{buttons.add_bt}"
  class="btn btn-primary">
+  <input type="submit" name="redact"  th:value="#{buttons.red_bt}"  class="btn btn-warning"/>
  <input type="submit" name="delete" th:value="#{buttons.del_bt}" 
  class="btn btn-danger">
  </div>
-</form>
+ <input type="text" class="d-none" name="type" th:value="${type}"/>
+ </form>
 </div>
  </div>
 
@@ -128,7 +127,17 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
 <script src="/bootstrap/js/popper_min.js" ></script>
 <script src="/bootstrap/js/bootstrap.min.js"></script>
 <script src="/js/fire_check.js"></script>
-<script src="/js/filter.js"></script>
+<script>
+
+var token = $("meta[name='_csrf']").attr("content"); 
+var header = $("meta[name='_csrf_header']").attr("content");
+$.ajaxSetup({
+        headers: {
+            'X-Csrf-Token':token
+        }
+    });
+</script>
+</body>
 </html>
 
 

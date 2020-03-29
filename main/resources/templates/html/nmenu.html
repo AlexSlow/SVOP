@@ -167,33 +167,13 @@ function(){
 	$(this).hide(100);
 	}
 });
-	
-	
-	
-	
 	//console.log("после вызова"); 
 	$(this).next(".dropdown-menu").show(100);
 
-}
-	
+}	
 ,
 function(){
-	//$(this).next(".dropdown-menu").css("display", "none");
 });
-
-/*
-$('.dropdown-menu').hover(   //Если мы покидаем меню
-function(){
-},
-function(){
-//alert(level);
-	$('.submenu').each(function(){
-$(this).next(".dropdown-menu").css("display", "none");
-});
-level=0;
-}
-);
-*/
 </script>
 
 
@@ -201,16 +181,6 @@ level=0;
 
 
 <script th:inline="javascript">
-var token = $("meta[name='_csrf']").attr("content"); 
-var header = $("meta[name='_csrf_header']").attr("content");
-$.ajaxSetup({
-        headers: {
-            'X-Csrf-Token':token
-        }
-    });
-
-
-
 //Работа с списком флагов 
 var ddData = [
     {
@@ -257,24 +227,15 @@ $('#flags').ddslick({
     selectText: "",
     imagePosition:"center",
     onSelected: function(selectedData){
-	
-	//alert(location.href);
-     // console.log(JSON.stringify(selectedData.selectedData.value));
-	 let lang=[[${current_language}]];
-	 //console.log(lang+" "+selectedData.selectedData.value);
-	 if (lang!=selectedData.selectedData.value)
-	 {
-	
-	 //alert("start");
+	let lang=[[${current_language}]];
+	//console.log(lang+" "+selectedData.selectedData.value);
+	if (lang!=selectedData.selectedData.value)
+	{
 	 var url = window.location.href.split('?')[0];
-	 // console.log(url);
 	 $.post("http://localhost:5000/svop/api/language/select",{locale:selectedData.selectedData.value},function( data ) {
 		window.location.replace(url+"?lang="+selectedData.selectedData.value);
 });
-	 
 	 }
-	 
-	
     }   
 });
 

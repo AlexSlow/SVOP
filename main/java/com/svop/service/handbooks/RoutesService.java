@@ -14,14 +14,15 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RoutesService {
     public static Logger logger= LoggerFactory.getLogger(RoutesService.class.getName());
     @Autowired
-    RoutesRepository routesRepository;
+   private RoutesRepository routesRepository;
     @Autowired
-    AirportyRepo airportyRepo;
+   private AirportyRepo airportyRepo;
 
     /**
      *
@@ -29,6 +30,7 @@ public class RoutesService {
      * @param id Отвечает за возможность сохраненеия
      * @return Возвращает В случае успеха строку о успехе
      */
+    //Сохранить последовательность
     public ResponseEntity<String> save(String airports_sequence, Integer id)
     {
         List<Airporty> airporty = airportyRepo.findByNameRu("Барнаул");
@@ -104,6 +106,17 @@ if (Integer.parseInt(item)==airport.getId()) {isBax=true;break;}
                 HttpStatus.OK);
 
     }
+    public Optional<Routes> getById(Integer id)
+    {
+        if (id==null)
+        {
+            logger.error("Ошибка. Передана пустой id  маршрута!");
+            return Optional.empty();
+        }
+        return routesRepository.findById(id);
+
+    }
+    ////------------------------------------------------
     public ResponseEntity<String> save(ArrayList<RoutesView> routesViewArrayList){
         if (routesViewArrayList==null) {
             logger.error("Ошибка. Передана пустаня ссылка маршрутов!");
@@ -123,7 +136,7 @@ if (Integer.parseInt(item)==airport.getId()) {isBax=true;break;}
     {
         routesRepository.deleteByIdIn(idl);
     }
-
+//Ответ для представления маршрутов
     public ArrayList<RoutesView> getRouts(){
         List<Routes> routs=routesRepository.findAll();
         ArrayList<RoutesView> output_routes=new ArrayList<>();
@@ -155,4 +168,18 @@ if (Integer.parseInt(item)==airport.getId()) {isBax=true;break;}
         logger.info("Формирование ответа для представления маршрутов");
         return  output_routes;
     }
+    //Вернуть маршрут из строки
+   public String getRouts(String route_string)
+   {
+       String[] airports_id=route_string.split("/");
+       String response="";
+       for (String id:airports_id)
+       {
+           Integer id_int=Integer.valueOf(id);
+           Airporty airporty=airportyRepo.findById(id_int);
+           if (response.length()!=0){response=response+"—"+airporty.getNameRu();}else response=airporty.getNameRu();
+
+       }
+       return response;
+   }
 }

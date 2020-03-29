@@ -20,8 +20,6 @@ public class StartController {
     @RequestMapping("/svop")
     public String index(Model model)
     {
-        //System.out.println(userService.getUserAccountsInfo());
-
         Head_parser head_parser=new Head_parser();
         head_parser.setModel(userService,model);
         model.addAttribute("usersAccounts",userService.getUserAccountsInfo());

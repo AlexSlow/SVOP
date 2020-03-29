@@ -41,18 +41,16 @@ public class LoginController {
 
     @RequestMapping(value="/svop/registration",method = RequestMethod.POST)
     public String registration(@ModelAttribute("User") User user, BindingResult bindingResult, Model model) {
-        /*
-    }
-    public String registration( @RequestParam(name = "username") String  username,
-                                @RequestParam(name = "password") String password,
-                                @RequestParam(name = "confirmPassword") String confirm_password,Model model) {
-*/
+
         userValidator.validate(user,bindingResult);
+        //Вывод ошибок
         if (bindingResult.hasErrors())
         {
+            //Получить все ошибки
             for (Object object : bindingResult.getAllErrors()) {
                 if(object instanceof FieldError) {
                     FieldError fieldError = (FieldError) object;
+                    //Мы передаем в форму коды ошибок, если а сами сообщениея храним в boundle (сообщениях)
                     model.addAttribute(fieldError.getCode(),true);
                 }
 

@@ -7,20 +7,13 @@
 <meta th:name="_csrf" th:content="${_csrf.token}"/>
 <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
 <title th:text="#{aircompanies.title}">
-Аэропорты
+Заголовок
 </title>
 	<link rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
 </head>
 <Body>
-
-
 <div id="header" th:insert="/html/nmenu.html"></div>
-
-
  <div id="content" class="container-fluid">
- 
- 
- 
         <div class="row" >
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-5">
 		<div id="filter"  th:insert="/html/filter.html">
@@ -83,14 +76,12 @@ $('.btn').click(function( event ){
 <form th:action="@{/svop/aircompanies/delete}" method="POST" id="form" role="form" >
 
 <div class="btn-group fixed-bottom w-75 m-auto mt-5">
-
-
  <input type="button" name="add" data-toggle="modal" data-target="#addModal" data-content="add" th:value="#{buttons.add_bt}" 
- class="btn btn-primary"  />
+ class="btn btn-success"  />
  <input type="button" name="redact" data-content="redact" th:value="#{buttons.red_bt}"  data-toggle="modal" data-target="#addModal" 
- class="btn btn-warning"/>
+ class="btn btn-primary"/>
  <input type="submit" name="delete" th:value="#{buttons.del_bt}" 
- class="btn btn-danger"/>
+ class="btn btn-warning"/>
  </div>
  
  
@@ -115,9 +106,7 @@ $('.btn').click(function( event ){
   
   //csrf токены
 var token = $("meta[name='_csrf']").attr("content"); 
-var header = $("meta[name='_csrf_header']").attr("content");
-var error=[[#{modal.error}]];
-  
+var header = $("meta[name='_csrf_header']").attr("content");  
  </script>
    <script src="/js/modal/aircompanies_modal.js">
    </script>

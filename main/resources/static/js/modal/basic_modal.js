@@ -6,27 +6,26 @@
     });
 
 var Headers = new Map(); // Заголовки главной таблицы
- var Names = new Map(); //Атрибуты name заголовков главной таблицы, они не зависят от языка
-  var is_null_map = new Map(); //валидация не пустых элементов
- var content;
- $('#addModal').on('show.bs.modal', function (event) {
-
- clean();
-  // получить кнопку, которая его открыло
-  var button = $(event.relatedTarget)
-  // извлечь информацию из атрибута data-content
-   content= button.data('content') 
-  // вывести колонки таблицы
-  $("#modal_table thead").append("<tr></tr>");
-  $("#content_table thead tr").children("th").each(function(){
-  if ($(this).text()!="")
-  {
-  Headers.set($(this).text(),$(this).attr('data-type'));
-  Names.set($(this).text(),$(this).attr('name'));
-  is_null_map.set($(this).text(),$(this).attr('data-notnull'));
+var Names = new Map(); //Атрибуты name заголовков главной таблицы, они не зависят от языка
+var is_null_map = new Map(); //валидация не пустых элементов
+var content;
+$('#addModal').on('show.bs.modal', function (event) {
+clean();
+// получить кнопку, которая его открыло
+var button = $(event.relatedTarget)
+// извлечь информацию из атрибута data-content
+content= button.data('content') 
+// вывести колонки таблицы
+$("#modal_table thead").append("<tr></tr>");
+$("#content_table thead tr").children("th").each(function(){
+if ($(this).text()!="")
+{
+Headers.set($(this).text(),$(this).attr('data-type'));
+Names.set($(this).text(),$(this).attr('name'));
+is_null_map.set($(this).text(),$(this).attr('data-notnull'));
 $("#modal_table thead tr").append("<th>"+$(this).text()+"</th>");
 }
-  });
+});
   
   if (content=="add")
   {

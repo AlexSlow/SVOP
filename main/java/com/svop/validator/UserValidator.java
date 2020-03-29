@@ -23,6 +23,7 @@ public class UserValidator  implements Validator {
     public void validate(Object o, Errors errors) {
 
         User user=(User)o;
+        //Утилита. Отменить
         ValidationUtils.rejectIfEmptyOrWhitespace(errors,"username","username_empty_error");
         if (user.getUsername().length()<8||user.getUsername().length()>32)
         {
@@ -36,7 +37,7 @@ public class UserValidator  implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors,"password","password_empty_error");
         if (user.getPassword().length()<8||user.getPassword().length()>32)
         {
-            errors.rejectValue("password","spassword_size_error");
+            errors.rejectValue("password","password_size_error");
         }
         if(!user.getConfirmPassword().equals(user.getPassword()))
         {

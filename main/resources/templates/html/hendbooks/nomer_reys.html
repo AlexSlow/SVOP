@@ -12,15 +12,8 @@
 	<link rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
 </head>
 <Body>
-
-
 <div id="header" th:insert="/html/nmenu.html"></div>
-
-
  <div id="content" class="container-fluid">
- 
- 
- 
         <div class="row mb-5" >
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
 		<div id="filter"  th:insert="/html/filter.html">
@@ -31,7 +24,8 @@
 		 <label th:text="#{nomer_reys.select_aircompany}">Выберете Авиакомпнию</label>
 		 <select class="form-control" id="aircompany" name="aircompany_select" form="form">
 		 <option></option>
-		 <option th:each="aircompany : ${aircompanies}" th:value="${aircompany.id}" th:text="${aircompany.nameLong}"  th:selected="${aircompany.id==aircompanies_selected}">Название компании</option>
+		 <option th:each="aircompany : ${aircompanies}" th:value="${aircompany.id}" th:text="${aircompany.nameLong}"
+		 th:selected="${aircompany.id==aircompanies_selected}">Название компании</option>
 		 </select>
 		 </div>
 		</form>
@@ -88,13 +82,12 @@ id="maincheck"/> <label for="maincheck" th:text="#{buttons.fire_all}"> Выде�
 var token = $("meta[name='_csrf']").attr("content"); 
 var header = $("meta[name='_csrf_header']").attr("content");
 var service_api_get="http://localhost:5000/svop/api/nomer_reys/get_from_aircompanies";
-var service_api_save="http://localhost:5000/svop/api/nomer_reys/save";
-var error=[[#{modal.error}]];
-  
+var service_api_save="http://localhost:5000/svop/api/nomer_reys/save";  
  </script>
  <script src="/js/modal/nomer_reys_modal.js">
  </script>
  <script>
+ //При загрузке страницы вызываем таблицу
  jQuery(document).ready(function($) {
  select();
 });
@@ -111,8 +104,6 @@ var error=[[#{modal.error}]];
 	data: JSON.stringify(aircompany),
 	contentType: 'application/json',
 	success: function(data) {
-   // console.log(data);
-	//location.reload();
 	$.each(data,function(index,value){
 	$("#content_table tbody").prepend("<tr><td><input type='checkbox' id='ch"+value.id+"'value='"+value.id+"' name='ch[]' form='form'/></td><td><label for='ch"+value.id+"'>"+value.nomer+"</label></td><td>"+value.type+"</td></tr>");
 	});

@@ -3,9 +3,10 @@
 <head>
     <meta http-equiv="Content-type" Content="text/html; charset=utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta th:name="_csrf" th:content="${_csrf.token}"/>
-	<meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
-    <link rel="/img/icons/shortcut icon" href="favicon.ico" type="image/x-icon">
+<meta th:name="_csrf" th:content="${_csrf.token}"/>
+<meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+ 
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
     <title th:text="#{sp.title}">
         стартовая страница
@@ -55,8 +56,19 @@
     </div>
 <script src="/js/jquery/jquery-3.3.1.min.js"></script>
 <script src="/bootstrap/js/bootstrap.js"></script>
-<script src="/bootstrap/js/bootstrap.min.js"></script>
 <script src="/bootstrap/js/popper_min.js"></script>
+<script src="/js/fire_check.js"></script>
+<script src="/js/filter.js"></script>
+
+  <script th:inline="javascript">
+  //csrf токены
+var token = $("meta[name='_csrf']").attr("content");   
+$.ajaxSetup({
+        headers: {
+            'X-Csrf-Token':token
+        }
+    });
+ </script>
 </body>
 </html>
 

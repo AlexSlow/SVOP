@@ -32,5 +32,4 @@ public class NomerReysRestController {
     public ResponseEntity<String> save(@RequestBody NomerReysViewRequest nomerReysView) {
         return nomerReysService.save(nomerReysView) ;
     }
-
 }

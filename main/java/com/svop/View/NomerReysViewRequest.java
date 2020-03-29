@@ -2,10 +2,12 @@ package com.svop.View;
 
 import java.util.ArrayList;
 
+/**
+ * Для сохранения за авиакомпанией номнеров рейсов
+ */
 public class NomerReysViewRequest {
     private ArrayList<NomerReysView> nomers;
     private Integer aicompany_id;
-
     public NomerReysViewRequest() {
     }
 

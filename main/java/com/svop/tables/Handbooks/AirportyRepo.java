@@ -22,7 +22,6 @@ public interface AirportyRepo extends CrudRepository<Airporty,Long> {
 
 
     List<Airporty> findByNameRu(String name);
-
     @Transactional
     @Modifying
     @Query("UPDATE Airporty e SET e.nameRu = :nameRu, e.nameEng = :nameEng,e.nameCh=:nameCh,e.gmt=:GMT,e.icao=:ICAO, e.iata=:IATA where e.id = :id")
