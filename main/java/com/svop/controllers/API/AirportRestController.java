@@ -13,10 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 
-
-//Нужно будет доделать!
 @RestController
-@RequestMapping(value="svop/api/airports",headers = {"Content-type=application/json"})
+@RequestMapping(value="/svop/api/airports",headers = {"Content-type=application/json"})
 public class AirportRestController {
     @Autowired
     private AirportsService airportsService;

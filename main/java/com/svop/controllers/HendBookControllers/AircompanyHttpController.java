@@ -24,7 +24,7 @@ public class AircompanyHttpController {
     UserService userService;
     @Autowired
     AircompaniesService aircompaniesService;
-    @RequestMapping(value="svop/aircompanies")
+    @RequestMapping(value="/svop/aircompanies")
     public String open(Model model)
     {
         Head_parser head_parser=new Head_parser();
@@ -33,13 +33,13 @@ public class AircompanyHttpController {
         model.addAttribute("aircompanies",aircompanies);
         return "/html/hendbooks/aircompanies.html";
     }
-    @RequestMapping(value="svop/aircompanies/delete")
+    @RequestMapping(value="/svop/aircompanies/delete")
     public String delete(@RequestParam(name="ch[]",required = false) List<Integer> id_list, Model model) {
         if (id_list!=null)
             aircompaniesService.delete(id_list);
         return "redirect:/svop/aircompanies";
     }
-@RequestMapping(value="svop/aircompanies/save")
+@RequestMapping(value="/svop/aircompanies/save")
 public String update(@ModelAttribute AircompanyView aircompanyView, Model model) throws IOException {
     aircompaniesService.save(aircompanyView);
     return "redirect:/svop/aircompanies";

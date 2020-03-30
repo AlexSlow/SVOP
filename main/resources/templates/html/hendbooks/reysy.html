@@ -28,14 +28,14 @@
 
 
  <div id="content" class="container-fluid">
- 
- 
- 
         <div class="row" >
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
 		<div class="form-group">
 		 <label th:text="#{reysy.period}">Отбор по периоду</label>
-		 <select class="form-control"><option>Лето 2020</option></select>
+		 <select id="sezon_select" form="form" name="sezon_selected" class="form-control">
+		 <option th:each="sezon : ${sezons}" th:value="${sezon.id}" th:text="${sezon.name}" 
+		 th:selected="${sezon.id == sezon_selected}">Отбор по сезону</option>
+		 </select>
 		 </div>
 		</div>
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-5">
@@ -136,7 +136,23 @@ $.ajaxSetup({
             'X-Csrf-Token':token
         }
     });
+	
+	jQuery(document).ready(function($) {
+ setSelect();
+});
+//при изменении авиакомпании
+ $("#sezon_select").change(function(){setSelect();});
+	
+	function setSelect(){
+		
+	};
+	
+	
 </script>
+
+
+
+
 </body>
 </html>
 

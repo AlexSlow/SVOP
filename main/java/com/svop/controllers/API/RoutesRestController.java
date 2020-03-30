@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping(value="svop/api/routes",headers = {"Content-type=application/json"})
+@RequestMapping(value="/svop/api/routes",headers = {"Content-type=application/json"})
 public class RoutesRestController {
     @Autowired
     RoutesService routesService;
@@ -24,13 +24,6 @@ public class RoutesRestController {
     public ResponseEntity<String> update(@RequestBody ArrayList<RoutesView> routes) {
         return routesService.save(routes);
     }
-    /*
-    @ResponseBody
-    @RequestMapping(value="/save")
-    public  String delete(@RequestBody List<RoutesView> routes) {
-        routesService.deleteRoutesList(routes);
-        return "Success";
-    }
-    */
+
 
 }

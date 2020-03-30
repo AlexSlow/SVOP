@@ -1,0 +1,102 @@
+﻿<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta http-equiv="Content-type" Content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta th:name="_csrf" th:content="${_csrf.token}"/>
+<meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+<title th:text="#{sezons.title}">
+
+</title>
+<link rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
+</head>
+<Body>
+
+
+<div id="header" th:insert="/html/nmenu.html"></div>
+ <div id="content" class="container-fluid">
+ 
+ 
+ 
+        <div class="row" >
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-5">
+		<div id="filter"  th:insert="/html/filter.html">
+		
+		</div>
+		<h2 class="text-center" th:text="#{sezons.title}">Таблица аэропортов</h2>
+		
+<div class="table-responsive">
+<table class="table table-striped table-bordered mb-8" id="content_table">
+<thead>
+<tr> <th name="id"></th>
+<th  name="name" data-notnull="1" data-type="text" th:text="#{sezons.name}">Название</th>
+  <th name="begin" data-notnull="1" data-type="date" th:text="#{sezons.begin}">Дата Начала</th> 
+  <th name="end" data-notnull="1" data-type="date" th:text="#{sezons.end}" >Дата окончания</th>
+</thead >
+<tbody id="filter_table">
+<tr th:each="sezon : ${sezons}">
+
+<td  ><input type="checkbox" th:id="ch+${sezon.id}" th:value="${sezon.id}" name="ch[]" th:form="form"/></td>
+<td><label th:for="ch+${sezon.id}" th:text="${sezon.name}"> </label></td>
+<td><label th:for="ch+${sezon.id}" th:text="${sezon.begin}"> </label></td>
+<td><label th:for="ch+${sezon.id}" th:text="${sezon.end}"> </label></td>
+</tr>
+<tr >
+<td colspan="7" style="text-align:left;">  <input type='checkbox' 
+id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выделить все </label></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<form th:action="@{/svop/sezons/delete}" method="POST" id="form" role="form" >
+
+<div class="btn-group fixed-bottom w-75 m-auto">
+
+
+ <input type="button" name="add" data-toggle="modal" data-target="#addModal" data-content="add" th:value="#{buttons.add_bt}" 
+ class="btn btn-primary"  />
+ <input type="button" name="redact" data-content="redact" th:value="#{buttons.red_bt}"  data-toggle="modal" data-target="#addModal" 
+ class="btn btn-warning"/>
+ <input type="submit" name="delete" th:value="#{buttons.del_bt}" 
+ class="btn btn-danger"/>
+ </div>
+ 
+ 
+</form>
+
+</div>
+ </div>
+<script src="/js/jquery/jquery-3.3.1.min.js"></script>
+<script src="/bootstrap/js/popper_min.js" ></script>
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+<script src="/js/fire_check.js"></script>
+<script src="/js/filter.js"></script>
+
+
+<div th:insert="/html/modal/base_modal.html" ></div>
+  <script th:inline="javascript">
+  //Заголовки для вывода интернационализованного текста
+  var head_add_title=[[#{modal.header_add}]];
+  var head_red_title=[[#{modal.header_red}]];
+  
+  //csrf токены
+var token = $("meta[name='_csrf']").attr("content"); 
+var header = $("meta[name='_csrf_header']").attr("content");
+var service_api_save="http://localhost:5000/svop/api/sezons/save";  
+ </script>
+   <script src="/js/modal/basic_modal.js">
+   </script>
+   
+   
+ 
+</Body>
+</html>
+<script>
+</script>
+
+
+

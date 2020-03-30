@@ -8,10 +8,8 @@ import com.svop.service.handbooks.NomerReysService;
 import com.svop.service.handbooks.ReysyService;
 import com.svop.service.handbooks.RoutesService;
 import com.svop.service.secutity.UserService;
-import com.svop.tables.Handbooks.NomerReys;
-import com.svop.tables.Handbooks.Reysy;
-import com.svop.tables.Handbooks.ReysyNomerType;
-import com.svop.tables.Handbooks.TypeReys;
+import com.svop.tables.Handbooks.*;
+import com.svop.validator.ReysViewElementValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,23 +39,32 @@ public class ReysyHttpController {
     @Autowired
     private RoutesService routesService;
     @Autowired private NomerReysService nomerReysService;
+    @Autowired private ReysViewElementValidator reysViewElementValidator;
+    @Autowired private SezonRepository sezonRepository;
 
-
-    @RequestMapping(value="svop/reysy")
+    private void fillSezons(Model modal)
+    {
+        modal.addAttribute("sezons",sezonRepository.findAll());
+        return;
+    }
+    @RequestMapping(value="/svop/reysy")
     public String open_reysy( Model model) {
+        Integer sezon_selected=(Integer) model.getAttribute("sezon_selected");
         Head_parser head_parser=new Head_parser();
         head_parser.setModel(userService,model);
         model.addAttribute("type",TypeReys.Regular);
         model.addAttribute("reysy",reysyService.getReysListByType(TypeReys.Regular));
+        fillSezons(model);
         return "/html/hendbooks/reysy.html";
     }
 
-    @RequestMapping(value="svop/chartery")
+    @RequestMapping(value="/svop/chartery")
     public String open_chartery( Model model) {
         Head_parser head_parser=new Head_parser();
         head_parser.setModel(userService,model);
         model.addAttribute("type",TypeReys.Charter);
         model.addAttribute("reysy",reysyService.getReysListByType(TypeReys.Charter));
+        fillSezons(model);
         return "/html/hendbooks/reysy.html";
     }
 
@@ -67,16 +74,18 @@ public class ReysyHttpController {
                        @RequestParam(name="add",required = false) String addBt,
                        @RequestParam(name="redact",required = false) String redBt,
                        @RequestParam(name="delete",required = false) String delete_bt,
+                       @RequestParam(name="sezon_selected",required = false) Integer sezon_selected,
                        @RequestParam(name="type") TypeReys type,
                        Model model) {
-
-        model.addAttribute("type",type);
+        model.addAttribute("sezon_selected",sezon_selected);
         model.addAttribute("routs",routesService.getRouts());
         model.addAttribute("aircompanies",aircompaniesService.getAircompanies());
 
         if (addBt!=null)
         {
-            model.addAttribute("reysy",new ReysViewElement());
+            ReysViewElement reysViewElement=new ReysViewElement();
+            reysViewElement.setType(type);
+            model.addAttribute("reysy",reysViewElement);
             model.addAttribute("type_operation","add");
         }
         //Если нужно показать элемент
@@ -85,7 +94,6 @@ public class ReysyHttpController {
             if (id_list!=null) {
                 //необходимо получить авиакомпанию
                 ReysViewElement reysy = reysyService.getReysById(id_list.get(0));
-
                 if (reysy==null)
                 {
                     logger.error("Не найден рейс для редактирования");
@@ -94,18 +102,16 @@ public class ReysyHttpController {
                     else  return "redirect:/svop/chartery";
                 }
 
-                return fillModelForRedact(reysy,type,model);
+                return fillModelForRedact(reysy,model);
             }else {
                 logger.error("Список id нулевой");
                 if (type==TypeReys.Regular)
                     return "redirect:/svop/reysy";
                 else  return "redirect:/svop/chartery";
             }
-
-
-
         }else if(delete_bt!=null)
         {
+            if (id_list!=null)
             reysyService.delete(id_list);
             if (type==TypeReys.Regular)
                 return "redirect:/svop/reysy";
@@ -120,42 +126,57 @@ public class ReysyHttpController {
 //Операции над отображением
 //При нажатии на кнопку. Отображение уже загрузилось шагом ранее. Теперь пойдет обратное преобразование в рейсы
 //Основные алгоритмы см в сервисе
-    @RequestMapping(value="svop/reysy/save")
-    public String save(@Valid @ModelAttribute ReysViewElement reysy, BindingResult bindingResult,
-                       @RequestParam(name="save",required = false) String saveBt,
-                       @RequestParam(name="exit",required = false) String exitBt, RedirectAttributes redirectAttributes) {
+    @RequestMapping(value="/svop/reysy/save")
+    public String save(
+            //@Valid
+            @ModelAttribute ReysViewElement reysy,
+           BindingResult bindingResult,
+            @RequestParam(name="save",required = false) String saveBt,
+            @RequestParam(name="exit",required = false) String exitBt,
+            @RequestParam(name="sezon_selected",required = false) Integer sezon_selected,
+            RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("sezon_selected",sezon_selected);
+        if (exitBt!=null)
+        {
 
+            if (reysy.getType()==TypeReys.Regular)
+                return "redirect:/svop/reysy";
+            else  return "redirect:/svop/chartery";
+        }
         //Валидация введенной формы
+        reysViewElementValidator.validate(reysy,bindingResult);
         if (bindingResult.hasErrors())
         {
+            redirectAttributes.addFlashAttribute("reysy",reysy);
             for (Object object : bindingResult.getAllErrors()) {
-                redirectAttributes.addFlashAttribute("reysy",reysy);
-                redirectAttributes.addFlashAttribute("errors",bindingResult.getFieldErrors());
-                redirectAttributes.addFlashAttribute("type",reysy.getType());
-                return "redirect:/svop/reysy/errors";
+                if(object instanceof FieldError) {
+                    FieldError fieldError = (FieldError) object;
+                    redirectAttributes.addFlashAttribute(fieldError.getCode(), true);
+                }
             }
+            return "redirect:/svop/reysy/errors";
         }
+
+
         if (saveBt!=null)
         {
            //System.out.println(reysy);
             reysyService.save(reysy);
         }
-        if (exitBt!=null)
-        {
-            return "redirect:/svop/reysy";
-        }
+
         if (reysy.getType()==TypeReys.Regular)
             return "redirect:/svop/reysy";
         else  return "redirect:/svop/chartery";
     }
 
     // Обработка ошибок
-    @RequestMapping(value="svop/reysy/errors")
-    public String error(Model model) {
+    @RequestMapping(value="/svop/reysy/errors")
+    public String error(Model model,RedirectAttributes redirectAttributes) {
         logger.error("Неверное заполнение формы рейсов!");
+        Integer sezon_selected=(Integer)model.getAttribute("sezon_selected");
+        redirectAttributes.addFlashAttribute("redirectAttributes",redirectAttributes);
         ReysViewElement reysy=(ReysViewElement) model.getAttribute("reysy");
-        System.out.println(reysy);
-        model.addAttribute("type",reysy.getType());
+        //Из списка представления к выводу на экран
         List<Integer> prilet_days= Arrays.asList(0,0,0,0,0,0,0);
         for(int i=0;i<reysy.getPrilet_days().size();i++)
         {
@@ -168,10 +189,11 @@ public class ReysyHttpController {
         }
         reysy.setPrilet_days(prilet_days);
         reysy.setVilet_days(vilet_days);
-        return fillModelForRedact(reysy,reysy.getType(),model);
+        return fillModelForRedact(reysy,model);
     }
     //_____------------------------------------------------------------------
-    public String fillModelForRedact(ReysViewElement reysy,TypeReys type, Model model)
+    //Заполнить страницу по имеющемуся reysView
+    public String fillModelForRedact(ReysViewElement reysy, Model model)
     {
         //Получим по одному из номеров рейсов авуакомпанию а затем, ролучим список номеров рейсов
         Integer nomer=null;
@@ -186,7 +208,7 @@ public class ReysyHttpController {
             if (nomerReys==null)
             {
                 logger.error("Не найден номер рейса для рейса");
-                if (type==TypeReys.Regular)
+                if (reysy.getType()==TypeReys.Regular)
                     return "redirect:/svop/reysy";
                 else  return "redirect:/svop/chartery";
             }
@@ -199,11 +221,11 @@ public class ReysyHttpController {
             if (nomerReysViews==null)
             {
                 logger.error("Список номеров рейсов отсутствует");
-                if (type==TypeReys.Regular)
+                if (reysy.getType()==TypeReys.Regular)
                     return "redirect:/svop/reysy";
                 else  return "redirect:/svop/chartery";
             }
-
+            //Распределить номера рейсов по коллекциям
             for (NomerReysView item : nomerReysViews) {
                 if (item.getType() == ReysyNomerType.Tranzit) {
                     nomerReysViewPrilet.add(item);
@@ -222,6 +244,8 @@ public class ReysyHttpController {
         model.addAttribute("aircompanies",aircompaniesService.getAircompanies());
         model.addAttribute("reysy",reysy);
         model.addAttribute("type_operation", "redact");
+
+
         return "/html/hendbooks/reysy_modal.html";
     }
 

@@ -14,34 +14,34 @@ import java.util.List;
 public class ReysViewElement {
 
     private Integer id;
-    @NotNull(message = "Не заполнен номер рейса на прилет или вылет!")
+   // @NotNull(message = "Не заполнен номер рейса на прилет или вылет!")
     private Integer nomer_prilet_id;
-    @NotNull(message = "Не заполнен номер рейса на прилет или вылет!")
+    //@NotNull(message = "Не заполнен номер рейса на прилет или вылет!")
     private Integer nomer_vilet_id;
-    @NotNull(message = "Не заполнен маршрут!")
+    //@NotNull(message = "Не заполнен маршрут!")
     private Integer rout;
-    @NotNull(message = "Не заполнен период!")
+    //@NotNull(message = "Не заполнен период!")
     private String period_start;
-    @NotNull(message = "Не заполнен период!")
+    //@NotNull(message = "Не заполнен период!")
     private String period_end;
-    @NotNull(message = "Не заполнены дни прилета!")
+    //@NotNull(message = "Не заполнены дни прилета!")
     private List<Integer> prilet_days;
-    @NotNull(message = "Не заполнено время отправления в Барнаул")
+    //@NotNull(message = "Не заполнено время отправления в Барнаул")
     private LocalTime prilet_time_otpravl;
-    @NotNull(message = "Не заполнено время прибытия в Барнаул")
+    //@NotNull(message = "Не заполнено время прибытия в Барнаул")
     private LocalTime prilet_time_prib;
-    @NotNull(message = "Не заполнены дни вылета из Барнаула!")
+    //@NotNull(message = "Не заполнены дни вылета из Барнаула!")
     private List<Integer> vilet_days;
-    @NotNull(message = "Не заполнено время отправления из Барнаула")
+    //@NotNull(message = "Не заполнено время отправления из Барнаула")
     private LocalTime vilet_time_otpravl;
-    @NotNull(message = "Не заполнено время прибытия из Барнаула!")
+    //@NotNull(message = "Не заполнено время прибытия из Барнаула!")
     private LocalTime vilet_time_prib;
     private String tip_vs;
     private String izmen_otmen;
     private String osnovanie_izmen_otmen;
-    @NotNull(message = "Не задан тип рейса")
+    //@NotNull(message = "Не задан тип рейса")
     private TypeReys type;
-    @NotNull(message = "Не задан тип авиалинии")
+    //@NotNull(message = "Не задан тип авиалинии")
     private Airline airline;
 
     public ReysViewElement() {

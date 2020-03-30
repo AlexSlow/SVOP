@@ -6,7 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value="svop/api/language")
+@RequestMapping(value="/svop/api/language")
 public class SelectLanguage {
     @Autowired
     private UserService userService;

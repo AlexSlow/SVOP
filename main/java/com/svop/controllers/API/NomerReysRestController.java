@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping(value="svop/api/nomer_reys",headers = {"Content-type=application/json"})
+@RequestMapping(value="/svop/api/nomer_reys",headers = {"Content-type=application/json"})
 public class NomerReysRestController {
     @Autowired
     NomerReysService nomerReysService;

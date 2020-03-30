@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" >
+<html xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
 <meta http-equiv="Content-type" Content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -26,9 +27,13 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
 		
 		<div  style="color:red; font-size:14px;" id="errors">
-		<p th:each="error : ${errors}" 
-		 th:text="${error.defaultMessage}"
-		>Номер рейса прилета</p>
+	<div th:if="${nomer_null}" th:text="#{reysy.error.nomer.null}"></div>
+	<div th:if="${rout_null != null}" th:text="#{reysy.error.rout.null}"></div>
+	<div th:if="${period_null}" th:text="#{reysy.error.period.null}"></div>
+	<div th:if="${prilet_time_otpravl_null}" th:text="#{reysy.error.prilet_time_otpravl.null}"></div>
+	<div th:if="${prilet_time_prib_null}" th:text="#{reysy.error.prilet_time_prib.null}"></div>
+	<div th:if="${vilet_time_otpravl_null}" th:text="#{reysy.error.vilet_time_otpravl.null}"></div>
+	<div th:if="${vilet_time_prib_null}" th:text="#{reysy.error.vilet_time_prib.null}"></div>
 		</div>
 		
 		 <div class="form-group">
@@ -174,8 +179,10 @@
 		</div>
 		<div class="col"></div>
 		</div>
+		
+<input type="text" class="d-none" name="sezon_selected" th:value="${sezon_selected}"/>
 <input type="text" class="d-none" name="id" th:value="${reysy.id}"/>
-<input type="text" class="d-none" name="type" th:value="${type}"/>
+<input type="text" class="d-none" name="type" th:value="${reysy.type}"/>
 </form>
 </form>
 </div>

@@ -20,7 +20,7 @@ public class RouteHttpController {
     private AirportyRepo airportyRepo;
     @Autowired
     UserService userService;
-    @RequestMapping(value="svop/routs")
+    @RequestMapping(value="/svop/routs")
     public String open( Model model) {
         Head_parser head_parser=new Head_parser();
         head_parser.setModel(userService,model);
@@ -30,7 +30,7 @@ public class RouteHttpController {
     }
 
 
-    @RequestMapping(value="svop/routs/delete")
+    @RequestMapping(value="/svop/routs/delete")
     public String delete(@RequestParam(name="ch[]",required = false) List<Integer> id_list, Model model) {
         if (id_list!=null)
         routesService.delete(id_list);
