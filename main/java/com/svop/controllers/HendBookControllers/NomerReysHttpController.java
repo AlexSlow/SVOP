@@ -40,6 +40,7 @@ public class NomerReysHttpController {
     public String delete(@RequestParam(name="aircompany_select",required = false) Integer aircompany,
                          @RequestParam(name="ch[]",required = false) List<Integer> id_list,
                          RedirectAttributes redirectAttributes) {
+        //Для передачи параметров между редиректами
         redirectAttributes.addFlashAttribute("aircompanies_selected",aircompany);
         if (id_list!=null)
         nomerReysService.delete(id_list);

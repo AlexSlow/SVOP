@@ -1,5 +1,6 @@
 package com.svop.tables.Handbooks;
 
+import com.svop.tables.temp.TempReysy;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -72,6 +73,7 @@ public class Reysy {
     @Column(name="reysy_airline")
     private Airline airline;
 
+
     public Reysy() {
     }
 
@@ -93,6 +95,7 @@ public class Reysy {
         this.type = type;
         this.airline = airline;
     }
+
 
     public Integer getId() {
         return id;

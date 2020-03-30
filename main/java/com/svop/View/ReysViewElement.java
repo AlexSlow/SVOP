@@ -5,6 +5,7 @@ import com.svop.tables.Handbooks.Reysy;
 import com.svop.tables.Handbooks.ReysyStatus;
 import com.svop.tables.Handbooks.TypeReys;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,21 +14,34 @@ import java.util.List;
 public class ReysViewElement {
 
     private Integer id;
+    @NotNull(message = "Не заполнен номер рейса на прилет или вылет!")
     private Integer nomer_prilet_id;
+    @NotNull(message = "Не заполнен номер рейса на прилет или вылет!")
     private Integer nomer_vilet_id;
+    @NotNull(message = "Не заполнен маршрут!")
     private Integer rout;
+    @NotNull(message = "Не заполнен период!")
     private String period_start;
+    @NotNull(message = "Не заполнен период!")
     private String period_end;
+    @NotNull(message = "Не заполнены дни прилета!")
     private List<Integer> prilet_days;
+    @NotNull(message = "Не заполнено время отправления в Барнаул")
     private LocalTime prilet_time_otpravl;
+    @NotNull(message = "Не заполнено время прибытия в Барнаул")
     private LocalTime prilet_time_prib;
+    @NotNull(message = "Не заполнены дни вылета из Барнаула!")
     private List<Integer> vilet_days;
+    @NotNull(message = "Не заполнено время отправления из Барнаула")
     private LocalTime vilet_time_otpravl;
+    @NotNull(message = "Не заполнено время прибытия из Барнаула!")
     private LocalTime vilet_time_prib;
     private String tip_vs;
     private String izmen_otmen;
     private String osnovanie_izmen_otmen;
+    @NotNull(message = "Не задан тип рейса")
     private TypeReys type;
+    @NotNull(message = "Не задан тип авиалинии")
     private Airline airline;
 
     public ReysViewElement() {
@@ -72,7 +86,7 @@ public class ReysViewElement {
         this.prilet_days=Arrays.asList(0,0,0,0,0,0,0);
         String [] prilet_days=reys.getPrilet_days().split("/");
         //Arrays.stream(deys).forEach(this.prilet_days.add(x->Integer.parseInt(x)));
-        for(int i=0;i<prilet_days.length;i++){this.prilet_days.set(Integer.parseInt(prilet_days[i]),1);}
+        for(int i=0;i<prilet_days.length;i++){this.prilet_days.set(Integer.parseInt(prilet_days[i])-1,1);}
 
         this.prilet_time_otpravl = reys.getPrilet_time_otpravl();
         this.prilet_time_prib = reys.getPrilet_time_prib();
@@ -80,7 +94,7 @@ public class ReysViewElement {
         //Преобразовать дни вылета
         this.vilet_days=Arrays.asList(0,0,0,0,0,0,0);
         String [] vilet_days=reys.getVilet_days().split("/");
-        for(int i=0;i<vilet_days.length;i++){this.vilet_days.set(Integer.parseInt(vilet_days[i]),1);}
+        for(int i=0;i<vilet_days.length;i++){this.vilet_days.set(Integer.parseInt(vilet_days[i])-1,1);}
 
         this.vilet_time_otpravl = reys.getVilet_time_otpravl();
         this.vilet_time_prib = reys.getVilet_time_prib();

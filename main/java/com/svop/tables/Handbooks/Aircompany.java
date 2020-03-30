@@ -20,6 +20,7 @@ public class Aircompany {
     @Column(name="aircompany_short_name")
     private String nameShort;
 
+    //Это таблица хозяин и у него нет внешнего ключа
     @OneToMany(mappedBy="aircompany")
     private Set<NomerReys> nomers;
 
