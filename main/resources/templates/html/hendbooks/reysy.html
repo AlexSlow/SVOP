@@ -33,6 +33,7 @@
 		<div class="form-group">
 		 <label th:text="#{reysy.period}">Отбор по периоду</label>
 		 <select id="sezon_select" form="form" name="sezon_selected" class="form-control">
+		 <option value=null></option>
 		 <option th:each="sezon : ${sezons}" th:value="${sezon.id}" th:text="${sezon.name}" 
 		 th:selected="${sezon.id == sezon_selected}">Отбор по сезону</option>
 		 </select>
@@ -78,8 +79,8 @@
 
 <td  ><input type="checkbox" th:id="ch+${reys.id}" th:value="${reys.id}" name="ch[]" th:form="form"/></td>
 <td><label th:for="ch+${reys.id}" th:text="${reys.rout}"> </label></td>
-<td><label th:for="ch+${reys.id}" th:text="${reys.period_start}"> </label></td>
-<td><label th:for="ch+${reys.id}" th:text="${reys.period_end}"> </label></td>
+<td id="date_start"><label th:for="ch+${reys.id}" th:text="${reys.period_start}"> </label></td>
+<td id="date_end"><label th:for="ch+${reys.id}" th:text="${reys.period_end}"> </label></td>
 
 <td><label th:for="ch+${reys.id}" th:text="${reys.nomer_prilet}"> </label></td>
 <td><label th:for="ch+${reys.id}" th:text="${reys.prilet_days}"> </label></td>
@@ -117,7 +118,7 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
  <input type="submit" name="delete" th:value="#{buttons.del_bt}" 
  class="btn btn-danger">
  </div>
- <input type="text" class="d-none" name="type" th:value="${type}"/>
+ <input type="text" id="type" class="d-none" name="type" th:value="${type}"/>
  </form>
 </div>
  </div>
@@ -136,14 +137,47 @@ $.ajaxSetup({
             'X-Csrf-Token':token
         }
     });
-	
-	jQuery(document).ready(function($) {
- setSelect();
-});
 //при изменении авиакомпании
  $("#sezon_select").change(function(){setSelect();});
 	
 	function setSelect(){
+		
+	let request={};
+request.type=$("#type").val();
+request.sezon_selected=$("#sezon_select").val();	
+		
+			 $.ajax({
+  type: "POST",
+  url: "http://localhost:5000/svop/api/reysy/get_reys_from_period",
+	data: JSON.stringify(request),
+	contentType: 'application/json',
+	success: function(data) {
+	console.log(data);
+	$("#filter_table").empty();
+	
+	data.forEach( function (reys)
+{
+$("#filter_table").append("<tr></tr>");
+$("#filter_table tr:last-child").append("<td>"+'<input type="checkbox" id='+reys.id+' value='+reys.id+' name="ch[]" form="form"/>'+"</td>");
+$("#filter_table tr:last-child").append("<td>"+'<label for="ch'+reys.id+'">'+reys.rout+' </label>'+"</td>");	
+$("#filter_table tr:last-child").append("<td>"+'<label for="ch'+reys.id+'"> '+reys.period_start+'</label>'+"</td>");
+$("#filter_table tr:last-child").append("<td>"+'<label for="ch'+reys.id+'"> '+reys.period_end+'</label>'+"</td>");
+$("#filter_table tr:last-child").append("<td>"+'<label th:for="ch'+reys.id+'" >'+reys.nomer_prilet+'</label>'+"</td>");
+$("#filter_table tr:last-child").append("<td>"+'<label th:for="ch'+reys.id+'">'+reys.prilet_days+'+</label>'+"</td>");
+$("#filter_table tr:last-child").append("<td>"+'<label th:for="ch'+reys.id+'">'+reys.prilet_time_otpravl+'</label>'+"</td>");
+$("#filter_table tr:last-child").append("<td>"+'<label th:for="ch'+reys.id+'">'+reys.prilet_time_prib+'</label>'+"</td>");
+$("#filter_table tr:last-child").append("<td>"+'<label th:for="ch'+reys.id+'">'+reys.nomer_vilet+'</label>'+"</td>");
+$("#filter_table tr:last-child").append("<td>"+'<label th:for="ch'+reys.id+'">'+reys.vilet_days+'</label>'+"</td>");
+$("#filter_table tr:last-child").append("<td>"+'<label th:for="ch'+reys.id+'">'+reys.vilet_time_otpravl+'</label>'+"</td>");
+$("#filter_table tr:last-child").append("<td>"+'<label th:for="ch'+reys.id+'">'+reys.vilet_time_prib+'</label>'+"</td>");
+$("#filter_table tr:last-child").append("<td>"+'<label th:for="ch'+reys.id+'">'+reys.tip_vs+'</label>'+"</td>");
+$("#filter_table tr:last-child").append("<td>"+'<label th:for="ch'+reys.id+'">'+reys.izmen_otmen+'</label>'+"</td>");
+$("#filter_table tr:last-child").append("<td>"+'<label th:for="ch'+reys.id+'">'+reys.airline+'</label>'+"</td>");    
+});
+	
+	
+  }
+});	
 		
 	};
 	

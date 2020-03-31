@@ -32,18 +32,37 @@ public class ReysyService {
     private NomerReysService nomerReysService;
     @Autowired
     private TempReysyRepository tempReysyRepository;
+    @Autowired private SezonRepository sezonRepository;
+
+    private List<ReysyListView> fillReysView(List<Reysy>reysyList)
+    {
+        List<ReysyListView> reysyListViewList = new ArrayList<>();
+        for (Reysy reys : reysyList) {
+            ReysyListView reysyListView = new ReysyListView(reys, userService.getLocale(SecurityContextHolder.getContext().getAuthentication().getName()));
+            reysyListView.setRout(routesService.getRouts(reys.getRout().getName()));
+            reysyListViewList.add(reysyListView);
+        }
+        return reysyListViewList;
+    }
     //Получить отображение для рейсов
-    public List<ReysyListView> getReysListByType(TypeReys typeReys){
+    public List<ReysyListView> getReysListByType(TypeReys typeReys,Integer sezon_selected){
        logger.info("Получение списка рейсов");
-       List<Reysy> reysyList= reysyRepository.findAllByType(typeReys);
-       List<ReysyListView> reysyListViewList=new ArrayList<>();
-       for (Reysy reys:reysyList)
+        List<Reysy> reysyList;
+       if (sezon_selected!=null)
        {
-           ReysyListView reysyListView=new ReysyListView(reys,userService.getLocale(SecurityContextHolder.getContext().getAuthentication().getName()));
-           reysyListView.setRout(routesService.getRouts(reys.getRout().getName()));
-           reysyListViewList.add(reysyListView);
+           Optional<Sezon> sezon=sezonRepository.findById(sezon_selected);
+           if (sezon.isPresent())
+           {
+               logger.info("Сезон найден");
+              // System.out.println(sezon.get().getBegin()+" "+sezon.get().getEnd());
+               reysyList=reysyRepository.findBetweenPeriodByType(typeReys,sezon.get().getBegin(),sezon.get().getEnd());
+               return fillReysView(reysyList);
+           }
+
        }
-    return reysyListViewList;
+           logger.info("Отбор пропущен");
+           reysyList = reysyRepository.findAllByType(typeReys);
+            return fillReysView(reysyList);
     }
     public ReysViewElement getReysById(Integer id){
 

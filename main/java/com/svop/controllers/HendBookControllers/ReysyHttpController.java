@@ -49,11 +49,14 @@ public class ReysyHttpController {
     }
     @RequestMapping(value="/svop/reysy")
     public String open_reysy( Model model) {
+        //id выбор сезона
         Integer sezon_selected=(Integer) model.getAttribute("sezon_selected");
         Head_parser head_parser=new Head_parser();
         head_parser.setModel(userService,model);
+        //Определить тип рейса
         model.addAttribute("type",TypeReys.Regular);
-        model.addAttribute("reysy",reysyService.getReysListByType(TypeReys.Regular));
+        //Если есть отбор по периоду
+        model.addAttribute("reysy",reysyService.getReysListByType(TypeReys.Regular,sezon_selected));
         fillSezons(model);
         return "/html/hendbooks/reysy.html";
     }
@@ -63,7 +66,8 @@ public class ReysyHttpController {
         Head_parser head_parser=new Head_parser();
         head_parser.setModel(userService,model);
         model.addAttribute("type",TypeReys.Charter);
-        model.addAttribute("reysy",reysyService.getReysListByType(TypeReys.Charter));
+        Integer sezon_selected=(Integer) model.getAttribute("sezon_selected");
+        model.addAttribute("reysy",reysyService.getReysListByType(TypeReys.Charter,sezon_selected));
         fillSezons(model);
         return "/html/hendbooks/reysy.html";
     }
@@ -76,8 +80,11 @@ public class ReysyHttpController {
                        @RequestParam(name="delete",required = false) String delete_bt,
                        @RequestParam(name="sezon_selected",required = false) Integer sezon_selected,
                        @RequestParam(name="type") TypeReys type,
-                       Model model) {
+                       Model model,RedirectAttributes redirectAttributes) {
+        //Это выборанный отбор на прд странице
+        //Нужно положить и в модель и в атрибуты, так как атрибуты редиректа поместятся в модель только при редиректе
         model.addAttribute("sezon_selected",sezon_selected);
+        redirectAttributes.addFlashAttribute("sezon_selected",sezon_selected);
         model.addAttribute("routs",routesService.getRouts());
         model.addAttribute("aircompanies",aircompaniesService.getAircompanies());
 
@@ -174,7 +181,7 @@ public class ReysyHttpController {
     public String error(Model model,RedirectAttributes redirectAttributes) {
         logger.error("Неверное заполнение формы рейсов!");
         Integer sezon_selected=(Integer)model.getAttribute("sezon_selected");
-        redirectAttributes.addFlashAttribute("redirectAttributes",redirectAttributes);
+        redirectAttributes.addFlashAttribute("sezon_selected",sezon_selected);
         ReysViewElement reysy=(ReysViewElement) model.getAttribute("reysy");
         //Из списка представления к выводу на экран
         List<Integer> prilet_days= Arrays.asList(0,0,0,0,0,0,0);

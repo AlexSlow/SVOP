@@ -1,6 +1,8 @@
 package com.svop.tables.Handbooks;
 
 import javax.persistence.*;
+import java.sql.Date;
+
 
 @Entity
 @Table(name = "sezon")
@@ -13,9 +15,9 @@ public class Sezon {
     @Column(name="sezon_name")
     private String name;
     @Column(name="sezon_begin")
-    private String begin;
+    private Date begin;
     @Column(name="sezon_end")
-    private String end;
+    private Date end;
 
     public Sezon() {
     }
@@ -36,19 +38,19 @@ public class Sezon {
         this.name = name;
     }
 
-    public String getBegin() {
+    public Date getBegin() {
         return begin;
     }
 
-    public void setBegin(String begin) {
+    public void setBegin(Date begin) {
         this.begin = begin;
     }
 
-    public String getEnd() {
+    public Date getEnd() {
         return end;
     }
 
-    public void setEnd(String end) {
+    public void setEnd(Date end) {
         this.end = end;
     }
 }
