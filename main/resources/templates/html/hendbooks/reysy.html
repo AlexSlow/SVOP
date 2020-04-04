@@ -14,7 +14,7 @@
 	<style>
 	#content_table{
 	text-align:center;
-	vertical-align: top;
+	vertical-align:middle;
 	border-collapse: collapse;
 	white-space: nowrap;
 	
@@ -33,7 +33,7 @@
 		<div class="form-group">
 		 <label th:text="#{reysy.period}">Отбор по периоду</label>
 		 <select id="sezon_select" form="form" name="sezon_selected" class="form-control">
-		 <option value=null></option>
+		 <option value=""></option>
 		 <option th:each="sezon : ${sezons}" th:value="${sezon.id}" th:text="${sezon.name}" 
 		 th:selected="${sezon.id == sezon_selected}">Отбор по сезону</option>
 		 </select>
@@ -41,8 +41,9 @@
 		</div>
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-5">
 		<div id="filter"  th:insert="/html/filter.html">
-		
 		</div>
+		<div class="pages" th:insert="/html/pages.html"></div>
+		
 		<h2 class="text-center" th:text="#{reysy.title_tab}">Таблица рейсов</h2>
 		
 <div class="table-responsive">
@@ -59,19 +60,16 @@
 	<th rowspan="2" th:text="#{reysy.airlines}" >Вид авиалинии</th>
   </tr>
   <tr>
-  
+
   <th th:text="#{reysy.nomer_reys}">Номер рейса</th>
   <th th:text="#{reysy.prilet_days}" >Дни прилета</th>
   <th th:text="#{reysy.time_otpravl}" >Время отправления</th>
   <th th:text="#{reysy.time_prib}">Время прибытия</th>
-  
-  
+ 
   <th th:text="#{reysy.nomer_reys}">Номер рейса</th>
   <th th:text="#{reysy.vilet_days}" >Дни вылета</th>
   <th th:text="#{reysy.time_otpravl}" >Время отправления</th>
   <th th:text="#{reysy.time_prib}">Время прибытия</th>
-  
-	
   </tr>
 </thead >
 <tbody id="filter_table">
@@ -105,13 +103,14 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
 </tr>
 </tfoot>
 </table>
+<div class="pages" th:insert="/html/pages.html"></div>
 </div>
 
 </div>
 
 
 <form th:action="@{'/svop/reysy/edit'}" method="POST" id="form" role="form" >
-<div class="btn-group fixed-bottom w-75 m-auto">
+<div class="btn-group fixed-bottom w-50 m-auto">
  <input type="submit" name="add"  th:value="#{buttons.add_bt}"
  class="btn btn-primary">
   <input type="submit" name="redact"  th:value="#{buttons.red_bt}"  class="btn btn-warning"/>
@@ -137,7 +136,7 @@ $.ajaxSetup({
             'X-Csrf-Token':token
         }
     });
-//при изменении авиакомпании
+//при изменении сезона
  $("#sezon_select").change(function(){setSelect();});
 	
 	function setSelect(){
@@ -157,13 +156,14 @@ request.sezon_selected=$("#sezon_select").val();
 	
 	data.forEach( function (reys)
 {
+//Переформируем таблицу
 $("#filter_table").append("<tr></tr>");
-$("#filter_table tr:last-child").append("<td>"+'<input type="checkbox" id='+reys.id+' value='+reys.id+' name="ch[]" form="form"/>'+"</td>");
+$("#filter_table tr:last-child").append("<td>"+'<input type="checkbox" id=ch'+reys.id+' value='+reys.id+' name="ch[]" form="form"/>'+"</td>");
 $("#filter_table tr:last-child").append("<td>"+'<label for="ch'+reys.id+'">'+reys.rout+' </label>'+"</td>");	
 $("#filter_table tr:last-child").append("<td>"+'<label for="ch'+reys.id+'"> '+reys.period_start+'</label>'+"</td>");
 $("#filter_table tr:last-child").append("<td>"+'<label for="ch'+reys.id+'"> '+reys.period_end+'</label>'+"</td>");
 $("#filter_table tr:last-child").append("<td>"+'<label th:for="ch'+reys.id+'" >'+reys.nomer_prilet+'</label>'+"</td>");
-$("#filter_table tr:last-child").append("<td>"+'<label th:for="ch'+reys.id+'">'+reys.prilet_days+'+</label>'+"</td>");
+$("#filter_table tr:last-child").append("<td>"+'<label th:for="ch'+reys.id+'">'+reys.prilet_days+'</label>'+"</td>");
 $("#filter_table tr:last-child").append("<td>"+'<label th:for="ch'+reys.id+'">'+reys.prilet_time_otpravl+'</label>'+"</td>");
 $("#filter_table tr:last-child").append("<td>"+'<label th:for="ch'+reys.id+'">'+reys.prilet_time_prib+'</label>'+"</td>");
 $("#filter_table tr:last-child").append("<td>"+'<label th:for="ch'+reys.id+'">'+reys.nomer_vilet+'</label>'+"</td>");

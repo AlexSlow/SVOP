@@ -7,11 +7,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -35,14 +39,18 @@ public class AircompaniesService {
     @Value("${upload.path}")
     private String uploadPath;
     @Value("${svop.size_logo_x}")
-    private String width_x;
+    private Integer width_x;
     @Value("${svop.size_logo_y}")
-    private String width_y;
+    private Integer width_y;
     @Autowired
     AircompanyRepositpry aircompanyRepositpry;
     public List<Aircompany> getAircompanies()
     {
         return aircompanyRepositpry.findAll();
+    }
+    public Page<Aircompany> getAircompanies(Pageable pageable)
+    {
+        return aircompanyRepositpry.findAll(pageable);
     }
     public void save(AircompanyView aircompanyView) throws IOException {
         logger.info("Сохранение авиакоммпании");
@@ -60,6 +68,7 @@ public class AircompaniesService {
             }
         }
         //Если файл  был отправлен
+        //Сохдадим директорию, если ее нет
         if (!aircompanyView.getFile().getOriginalFilename().isEmpty()){
         Path upload_dir= Paths.get(uploadPathServer);
         if (!Files.isDirectory(upload_dir,LinkOption.NOFOLLOW_LINKS)){
@@ -71,10 +80,21 @@ public class AircompaniesService {
         String fileName=uuidFile+"_"+aircompanyView.getFile().getOriginalFilename();
         Path filePathUpload=Paths.get(uploadPathServer,fileName);
         aircompanyView.getFile().transferTo(filePathUpload);
+        //Это путь для отбражение для Spring
         aircompany.setLogo(uploadPath+fileName);
+
+
+
+        //Поптыаемся маштабировать файл
+
+            BufferedImage image = ImageIO.read(filePathUpload.toFile());
+            BufferedImage resized = resize(image, width_y, width_x);
+            ImageIO.write(resized, "png", filePathUpload.toFile());
         }
         aircompanyRepositpry.save(aircompany);
     }
+
+
     public void delete(List<Integer>idl)
     {
         aircompanyRepositpry.deleteByIdIn(idl);
@@ -82,6 +102,16 @@ public class AircompaniesService {
     public Optional<Aircompany>  getByid(Integer id)
     {
         return aircompanyRepositpry.findById(id);
+    }
+
+    //Преобразование Буффера изображения
+    private static BufferedImage resize(BufferedImage img, int height, int width) {
+        Image tmp = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        BufferedImage resized = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = resized.createGraphics();
+        g2d.drawImage(tmp, 0, 0, null);
+        g2d.dispose();
+        return resized;
     }
 
 }

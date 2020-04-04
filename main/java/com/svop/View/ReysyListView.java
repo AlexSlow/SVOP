@@ -7,6 +7,7 @@ import java.sql.Time;
 import java.text.DateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 public class ReysyListView {
@@ -17,11 +18,11 @@ public class ReysyListView {
     private String period_start;
     private String period_end;
     private String prilet_days;
-    private LocalTime prilet_time_otpravl;
-    private LocalTime prilet_time_prib;
+    private String prilet_time_otpravl;
+    private String prilet_time_prib;
     private String vilet_days;
-    private LocalTime vilet_time_otpravl;
-    private LocalTime vilet_time_prib;
+    private String vilet_time_otpravl;
+    private String vilet_time_prib;
     private String tip_vs;
     private ReysyStatus izmen_otmen;
     //private TypeReys type;
@@ -56,11 +57,12 @@ public class ReysyListView {
         this.period_start = df.format(reys.getPeriod_start());
         this.period_end = df.format(reys.getPeriod_end());
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm", new Locale(locale));
         //System.out.println( df.format(reys.getPrilet_time_otpravl()));
-        this.prilet_time_otpravl=reys.getPrilet_time_otpravl();
-        this.prilet_time_prib=reys.getPrilet_time_prib();
-        this.vilet_time_otpravl=reys.getVilet_time_otpravl();
-        this.vilet_time_prib=reys.getVilet_time_prib();
+        this.prilet_time_otpravl=formatter.format(reys.getPrilet_time_otpravl());
+        this.prilet_time_prib=formatter.format(reys.getPrilet_time_prib());
+        this.vilet_time_otpravl=formatter.format(reys.getVilet_time_otpravl());
+        this.vilet_time_prib=formatter.format(reys.getVilet_time_prib());
 
     }
 
@@ -116,19 +118,19 @@ public class ReysyListView {
         this.prilet_days = prilet_days;
     }
 
-    public LocalTime getPrilet_time_otpravl() {
+    public String getPrilet_time_otpravl() {
         return prilet_time_otpravl;
     }
 
-    public void setPrilet_time_otpravl(LocalTime prilet_time_otpravl) {
+    public void setPrilet_time_otpravl(String prilet_time_otpravl) {
         this.prilet_time_otpravl = prilet_time_otpravl;
     }
 
-    public LocalTime getPrilet_time_prib() {
+    public String getPrilet_time_prib() {
         return prilet_time_prib;
     }
 
-    public void setPrilet_time_prib(LocalTime prilet_time_prib) {
+    public void setPrilet_time_prib(String prilet_time_prib) {
         this.prilet_time_prib = prilet_time_prib;
     }
 
@@ -140,19 +142,19 @@ public class ReysyListView {
         this.vilet_days = vilet_days;
     }
 
-    public LocalTime getVilet_time_otpravl() {
+    public String getVilet_time_otpravl() {
         return vilet_time_otpravl;
     }
 
-    public void setVilet_time_otpravl(LocalTime vilet_time_otpravl) {
+    public void setVilet_time_otpravl(String vilet_time_otpravl) {
         this.vilet_time_otpravl = vilet_time_otpravl;
     }
 
-    public LocalTime getVilet_time_prib() {
+    public String getVilet_time_prib() {
         return vilet_time_prib;
     }
 
-    public void setVilet_time_prib(LocalTime vilet_time_prib) {
+    public void setVilet_time_prib(String vilet_time_prib) {
         this.vilet_time_prib = vilet_time_prib;
     }
 

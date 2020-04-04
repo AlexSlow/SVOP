@@ -1,0 +1,17 @@
+body{
+	font-size:9pt;
+}
+input{
+	font-size:9pt;
+}
+#filter_table{
+	font-size:11pt;
+	white-space: nowrap;
+}
+th{
+	font-size:11pt;
+}
+ td,th{
+	 text-align: center;
+	vertical-align:middle;
+}

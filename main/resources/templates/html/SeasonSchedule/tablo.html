@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta http-equiv="Content-type" Content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta http-equiv="refresh" content="10;http://localhost:5000/svop/SeasonSchedule/tablo">
+
+<meta th:name="_csrf" th:content="${_csrf.token}"/>
+<meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+<title th:text="#{sezon.title}">
+Формирование сезонного расписания
+</title>
+<link rel="stylesheet" href="/bootstrap/css/bootstrap.css"/>
+	<style>
+	body{
+	background-color:#8F028B;
+	}
+	.TabloTable{
+	color:yellow;
+	border:solid 1pt yellow;
+	text-align: center;
+	vertical-align:middle;
+	border-collapse: collapse;
+	white-space: nowrap;
+	}
+	</style>
+</head>
+<Body>
+<script src="/js/jquery/jquery-3.3.1.min.js"></script>
+<script src="/bootstrap/js/popper_min.js" ></script>
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+<script>
+</script>
+
+
+
+ <div id="content" class="container-fluid">
+        <div class="row" >
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+
+<table class="table TabloTable" id="content_table" >
+<thead>
+<tr>
+	<th rowspan="2"  th:text="#{aircompanies.title}">Авиакомпания</th>
+	<th rowspan="2"  th:text="#{reysy.period_start}">Начало периода</th>
+	<th rowspan="2" th:text="#{reysy.period_end}">Конец периода</th> 
+	<th  rowspan="2" th:text="#{routs.name_ru}" >Маршрут</th>	
+	<th  colspan="4" th:text="#{reysy.prilet}">Прилет</th>
+	<th  colspan="4" th:text="#{reysy.vilet}">Вылет</th>
+	<th rowspan="2" th:text="#{reysy.tip_vs}">Тип ВС</th>
+	<th rowspan="2" th:text="#{reysy.airlines}" >Вид авиалинии</th>
+		<th rowspan="2" th:text="#{aircompanies.logo}" >Логотип</th>
+  </tr>
+  <tr>
+  <th th:text="#{reysy.nomer_reys}">Номер рейса</th>
+  <th th:text="#{reysy.prilet_days}" >Дни прилета</th>
+  <th th:text="#{reysy.time_otpravl}" >Время отправления</th>
+  <th th:text="#{reysy.time_prib}">Время прибытия</th>
+  
+  <th th:text="#{reysy.nomer_reys}">Номер рейса</th>
+  <th th:text="#{reysy.vilet_days}" >Дни вылета</th>
+  <th th:text="#{reysy.time_otpravl}" >Время отправления</th>
+  <th th:text="#{reysy.time_prib}">Время прибытия</th>
+  </tr>
+</thead >
+<tbody id="filter_table">
+<tr th:each="sezonSchedule : ${sezonSchedules}">
+<td id="date_start"><span  th:text="${sezonSchedule.aircompany}"> </span></td>
+<td id="date_start"><span  th:text="${sezonSchedule.periodStart}"> </span></td>
+<td id="date_end"><span    th:text="${sezonSchedule.periodEnd}"> </span></td>
+<td><span th:text="${sezonSchedule.routRu}"> </span></td>
+<td><span  th:text="${sezonSchedule.nomerPrilet}"> </span></td>
+<td><span  th:text="${sezonSchedule.priletDays}"> </span></td>
+<td><span  th:text="${sezonSchedule.prilet_time_otpravl}"> </span></td>
+<td><span  th:text="${sezonSchedule.prilet_time_prib}"> </span></td>
+
+<td><span  th:text="${sezonSchedule.nomerVilet}"> </span></td>
+<td><span  th:text="${sezonSchedule.viletDays}"> </span></td>
+<td><span  th:text="${sezonSchedule.vilet_time_otpravl}"> </span></td>
+<td><span  th:text="${sezonSchedule.vilet_time_prib}"> </span></td>
+
+<td><span  th:text="${sezonSchedule.tip_vs}"> </span></td>
+<td><span  th:text="${sezonSchedule.airline}"> </span></td>
+<td><img  th:src="${sezonSchedule.img}"/> </td>
+</tr>
+
+</tbody>
+</table>
+        </div>
+
+
+
+ </div>
+
+</body>
+</html>

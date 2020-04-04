@@ -1,0 +1,12 @@
+<div th:fragment="pages">
+  <ul class="pagination">
+    <li  th:class="${is_previous}">
+      <a class="page-link" th:href="@{?(page=${previous})}" th:text="#{page.previous}" th:tabindex="${previous}">Previous</a>
+    </li>
+	<li th:each="page, iState : ${pages}" class="page-item" >
+	<a class="page-link" th:text="${iState.index}" th:href="@{?(page=${iState.index})}">1</a>	</li>
+	 <li th:class="${is_next}">
+      <a class="page-link"  th:text="#{page.next}" th:tabindex="${next}" th:href="@{?(page=${next})}">Next</a>
+    </li>
+  </ul>
+</div>	

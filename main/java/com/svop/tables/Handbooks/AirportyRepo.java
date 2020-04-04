@@ -1,6 +1,8 @@
 package com.svop.tables.Handbooks;
 
 import com.svop.tables.Handbooks.Airporty;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -12,11 +14,10 @@ import java.util.List;
 
 @Repository
 public interface AirportyRepo extends CrudRepository<Airporty,Long> {
-    //List<Airporty> findByGMT(String IATA);
-    Airporty findById(Integer integer);
-   // List<Airporty> findAllById(Iterable<Integer> iterable);
-    //boolean deleteById(Integer integer);
 
+    Page<Airporty> findAll(Pageable page);
+
+    Airporty findById(Integer integer);
     @Transactional
    void deleteByIdIn(List<Integer> ids);
 

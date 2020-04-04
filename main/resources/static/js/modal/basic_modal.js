@@ -37,7 +37,7 @@ $("#modal_table thead tr").append("<th>"+$(this).text()+"</th>");
 	let val=Headers.get(key);
 	let name=Names.get(key);
 	let is_null=is_null_map.get(key);
-	$("#modal_table tbody tr:last-child").append("<td><input class='control-sm form-control'   name='"+name+"' data-notnull='"+is_null+"' type='"+val+"'+  /></td>");
+	$("#modal_table tbody tr:last-child").append("<td><input class='form-control'   name='"+name+"' data-notnull='"+is_null+"' type='"+val+"'+  /></td>");
 }
   }
   
@@ -68,14 +68,14 @@ $(this).children("label").each(function(){
 	});
 	//Вставим строку
 	 $("#modal_table tbody ").append("<tr></tr>");
-	 $("#modal_table tbody tr:last-child ").append("<td>"+"<input class='control-sm d-none' value='"+id+"' type='text'/></td>");
+	 $("#modal_table tbody tr:last-child ").append("<td>"+"<input class='d-none' value='"+id+"' type='text'/></td>");
 	 let i=0;
 	for (let key of Headers.keys()) {
 	let name=Names.get(key);
 	let val=Headers.get(key);
 	let is_null=is_null_map.get(key);
 	let input_value=data[i];
-	$("#modal_table tbody tr:last-child").append("<td>"+"<input class='control-sm form-control' name='"+name+"' data-notnull='"+is_null+"' value='"+input_value+"' type='"+val+"'/></td>");
+	$("#modal_table tbody tr:last-child").append("<td>"+"<input class=' form-control' name='"+name+"' data-notnull='"+is_null+"' value='"+input_value+"' type='"+val+"'/></td>");
 	i++;
 	  }
  }
@@ -95,7 +95,7 @@ $(this).children("label").each(function(){
 	let val=Headers.get(key);
 	let name=Names.get(key);
 	let is_null=is_null_map.get(key);
-	$("#modal_table tbody tr:last-child").append("<td>"+"<input class='control-sm form-control' data-notnull='"+is_null+"' name='"+name+"'  type='"+val+"'/></td>");
+	$("#modal_table tbody tr:last-child").append("<td>"+"<input class=' form-control' data-notnull='"+is_null+"' name='"+name+"'  type='"+val+"'/></td>");
 }
  }); 
     //Удалить строку

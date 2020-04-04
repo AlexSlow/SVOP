@@ -2,6 +2,7 @@ package com.svop.service.handbooks;
 
 import com.svop.View.ReysViewElement;
 import com.svop.View.ReysyListView;
+import com.svop.other.HeadProcessing.PageFormatter;
 import com.svop.service.secutity.UserService;
 import com.svop.tables.Handbooks.*;
 import com.svop.tables.temp.TempReysy;
@@ -9,6 +10,8 @@ import com.svop.tables.temp.TempReysyRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +37,12 @@ public class ReysyService {
     private TempReysyRepository tempReysyRepository;
     @Autowired private SezonRepository sezonRepository;
 
-    private List<ReysyListView> fillReysView(List<Reysy>reysyList)
+    /**
+     * Для получения всех.Преобразование
+     * @param reysyList
+     * @return
+     */
+    private List<ReysyListView> fillReysView(Iterable<Reysy>reysyList)
     {
         List<ReysyListView> reysyListViewList = new ArrayList<>();
         for (Reysy reys : reysyList) {
@@ -44,7 +52,13 @@ public class ReysyService {
         }
         return reysyListViewList;
     }
-    //Получить отображение для рейсов
+
+    /**Получить отображение для рейсов
+     *
+     * @param typeReys
+     * @param sezon_selected
+     * @return
+     */
     public List<ReysyListView> getReysListByType(TypeReys typeReys,Integer sezon_selected){
        logger.info("Получение списка рейсов");
         List<Reysy> reysyList;
@@ -64,6 +78,44 @@ public class ReysyService {
            reysyList = reysyRepository.findAllByType(typeReys);
             return fillReysView(reysyList);
     }
+
+    /**
+     * ПОлучить По странице рейсов
+     * @param typeReys
+     * @param sezon_selected
+     * @return
+     */
+    public List<ReysyListView> getReysPageByType(TypeReys typeReys, Integer sezon_selected, Pageable pageable, PageFormatter pageFormatter){
+        logger.info("Получение страницы списка рейсов");
+        Page<Reysy> reysyList;
+        if (sezon_selected!=null)
+        {
+            Optional<Sezon> sezon=sezonRepository.findById(sezon_selected);
+            if (sezon.isPresent())
+            {
+                logger.info("Сезон найден");
+                // System.out.println(sezon.get().getBegin()+" "+sezon.get().getEnd());
+                reysyList=reysyRepository.findBetweenPeriodByType(typeReys,sezon.get().getBegin(),sezon.get().getEnd(),pageable);
+                pageFormatter.setSize(reysyList.getTotalPages());
+                return fillReysView(reysyList);
+            }
+
+        }
+        logger.info("Отбор пропущен");
+        reysyList = reysyRepository.findAllByType(typeReys,pageable);
+        pageFormatter.setSize(reysyList.getTotalPages());
+        return fillReysView(reysyList);
+    }
+
+    /**Получить список рейсов за период
+     *
+     */
+    public List<Reysy> getActualReysListByType(TypeReys type,Date date)
+    {
+        return reysyRepository.findActualReysByDate(type,date);
+    }
+
+
     public ReysViewElement getReysById(Integer id){
 
         Optional<Reysy> reys=reysyRepository.findById(id);
@@ -121,7 +173,7 @@ public class ReysyService {
         try {
             java.util.Date date=sdf.parse(reysViewElement.getPeriod_start());
             reysy.setPeriod_start(new Date(sdf.parse(reysViewElement.getPeriod_start()).getTime()));
-            reysy.setPeriod_end(new Date(sdf.parse(reysViewElement.getPeriod_start()).getTime()));
+            reysy.setPeriod_end(new Date(sdf.parse(reysViewElement.getPeriod_end()).getTime()));
         } catch (ParseException e) {
             logger.error("Ошибка.Неверные форматы периодов!");
             e.printStackTrace();
@@ -160,6 +212,7 @@ public class ReysyService {
         //Остальные параметры
         reysy.setTip_vs(reysViewElement.getTip_vs());
         ReysyStatus reysyStatus=ReysyStatus.NOTChange;;
+        //Если чекбокс не нажат, то рейс считается изменненным ??? А если по факту ничего не поменяется?
         if (reysViewElement.getIzmen_otmen()==null)
         {
             if (reysViewElement.getId()!=null) reysyStatus=ReysyStatus.Modified;
@@ -189,6 +242,12 @@ public class ReysyService {
     //----------------------------------------------------------------------------------------
     /**
      * Метод для работы с временной таблицей
+     */
+    /**
+     *
+     * @param id_reys id обрабатываемого рейса
+     * @param prilet_days Дни прилета, которые были выбраны сейчас
+     * @param vilet_days Дни вылета, которые были выбраны сейчас
      */
     private void refreshRemoveDays(Integer id_reys,List<Integer> prilet_days,List<Integer> vilet_days)
     {
@@ -329,6 +388,7 @@ public class ReysyService {
     }
     /**
      * Форматттер для перевода из коллекции дней в строку
+     * @param days Список дней. По списку будет составлена строка,для сохранения в Базу Данных
      */
     private String listToStringDays(List<Integer> days)
     {
@@ -342,7 +402,6 @@ public class ReysyService {
             }else{
                 result=result+days.get(i)+"/";
             }
-
         }
         return result;
     }

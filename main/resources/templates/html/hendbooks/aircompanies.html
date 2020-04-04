@@ -9,7 +9,7 @@
 <title th:text="#{aircompanies.title}">
 Заголовок
 </title>
-	<link rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
+<link rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
 </head>
 <Body>
 <div id="header" th:insert="/html/nmenu.html"></div>
@@ -17,8 +17,8 @@
         <div class="row" >
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-5">
 		<div id="filter"  th:insert="/html/filter.html">
-		
 		</div>
+		<div class="pages" th:insert="/html/pages.html"></div>
 		<h2 class="text-center" th:text="#{aircompanies.title_tab}">Таблица Авиакомпаний</h2>
 		
 <div class="table-responsive">
@@ -42,6 +42,7 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
 </tr>
 </tbody>
 </table>
+<div class="pages" th:insert="/html/pages.html"></div>
 </div>
 
 
@@ -75,7 +76,7 @@ $('.btn').click(function( event ){
 
 <form th:action="@{/svop/aircompanies/delete}" method="POST" id="form" role="form" >
 
-<div class="btn-group fixed-bottom w-75 m-auto mt-5">
+<div class="btn-group fixed-bottom w-50 m-auto mt-5">
  <input type="button" name="add" data-toggle="modal" data-target="#addModal" data-content="add" th:value="#{buttons.add_bt}" 
  class="btn btn-success"  />
  <input type="button" name="redact" data-content="redact" th:value="#{buttons.red_bt}"  data-toggle="modal" data-target="#addModal" 

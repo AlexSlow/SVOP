@@ -3,6 +3,7 @@ package com.svop.controllers.HendBookControllers;
 import com.svop.View.NomerReysView;
 import com.svop.View.ReysViewElement;
 import com.svop.other.HeadProcessing.Head_parser;
+import com.svop.other.HeadProcessing.PageFormatter;
 import com.svop.service.handbooks.AircompaniesService;
 import com.svop.service.handbooks.NomerReysService;
 import com.svop.service.handbooks.ReysyService;
@@ -13,6 +14,9 @@ import com.svop.validator.ReysViewElementValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -48,7 +52,7 @@ public class ReysyHttpController {
         return;
     }
     @RequestMapping(value="/svop/reysy")
-    public String open_reysy( Model model) {
+    public String open_reysy( Model model,@PageableDefault(sort = {"id"},direction = Sort.Direction.DESC) Pageable page) {
         //id выбор сезона
         Integer sezon_selected=(Integer) model.getAttribute("sezon_selected");
         Head_parser head_parser=new Head_parser();
@@ -56,7 +60,9 @@ public class ReysyHttpController {
         //Определить тип рейса
         model.addAttribute("type",TypeReys.Regular);
         //Если есть отбор по периоду
-        model.addAttribute("reysy",reysyService.getReysListByType(TypeReys.Regular,sezon_selected));
+        PageFormatter pageFormatter=new PageFormatter();
+        model.addAttribute("reysy",reysyService.getReysPageByType(TypeReys.Regular,sezon_selected,page,pageFormatter));
+        pageFormatter.fillModel(model,page.getPageNumber());
         fillSezons(model);
         return "/html/hendbooks/reysy.html";
     }
@@ -73,6 +79,19 @@ public class ReysyHttpController {
     }
 
     //Отображение элемента рейса и его редактирование
+
+    /**
+     *
+     * @param id_list Списко с id
+     * @param addBt Кнопка добавить
+     * @param redBt Кнопка редактировать
+     * @param delete_bt Кнопка удалить
+     * @param sezon_selected Сезон для сохранения
+     * @param type Тип рейса
+     * @param model
+     * @param redirectAttributes
+     * @return
+     */
     @RequestMapping(value="svop/reysy/edit")
     public String edit(@RequestParam(name="ch[]",required = false) List<Integer> id_list,
                        @RequestParam(name="add",required = false) String addBt,
@@ -133,6 +152,17 @@ public class ReysyHttpController {
 //Операции над отображением
 //При нажатии на кнопку. Отображение уже загрузилось шагом ранее. Теперь пойдет обратное преобразование в рейсы
 //Основные алгоритмы см в сервисе
+
+    /**
+     *
+     * @param reysy Представление элемента-Данные формы
+     * @param bindingResult Для валидации
+     * @param saveBt Сохранить?
+     * @param exitBt Выйти?
+     * @param sezon_selected Сохраненное значение выбранного периода
+     * @param redirectAttributes Атрибуты редиректа
+     * @return
+     */
     @RequestMapping(value="/svop/reysy/save")
     public String save(
             //@Valid
@@ -251,8 +281,6 @@ public class ReysyHttpController {
         model.addAttribute("aircompanies",aircompaniesService.getAircompanies());
         model.addAttribute("reysy",reysy);
         model.addAttribute("type_operation", "redact");
-
-
         return "/html/hendbooks/reysy_modal.html";
     }
 

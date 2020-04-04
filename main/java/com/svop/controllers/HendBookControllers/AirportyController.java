@@ -1,11 +1,17 @@
 package com.svop.controllers.HendBookControllers;
 
 import com.svop.other.HeadProcessing.Head_parser;
+import com.svop.other.HeadProcessing.PageFormatter;
 import com.svop.service.secutity.UserService;
 import com.svop.tables.Handbooks.Airporty;
 import com.svop.tables.Handbooks.AirportyRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.querydsl.QSort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,10 +29,13 @@ public class AirportyController {
     @Autowired
     UserService userService;
     @RequestMapping(value="/svop/airports")
-    public String open( Model model) {
+    public String open(Model model,@PageableDefault(sort = {"id"},direction = Sort.Direction.DESC) Pageable page) {
         Head_parser head_parser=new Head_parser();
         head_parser.setModel(userService,model);
-        Iterable<Airporty> Airports=AirportsRepositiry.findAll();
+        Page<Airporty> Airports=AirportsRepositiry.findAll(page);
+        PageFormatter pageFormatter=new PageFormatter();
+        pageFormatter.setSize(Airports.getTotalPages());
+        pageFormatter.fillModel(model,page.getPageNumber());
         model.addAttribute("airports",Airports);
         return "/html/hendbooks/airports.html";
     }

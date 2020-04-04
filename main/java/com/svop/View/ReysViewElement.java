@@ -73,6 +73,10 @@ public class ReysViewElement {
         this.airline = airline;
     }
 
+    /**
+     * Это важный метод преобразователь. Рейсы будет представлены в данные формы
+     * @param reys
+     */
     public ReysViewElement(Reysy reys)
     {
         this.id = reys.getId();
