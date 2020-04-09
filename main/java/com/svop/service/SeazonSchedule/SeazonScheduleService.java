@@ -1,5 +1,6 @@
 package com.svop.service.SeazonSchedule;
 
+import com.svop.View.SeazonScheduleViews.SeazonScheduleLanguageView;
 import com.svop.View.SeazonScheduleViews.SeazonScheduleView;
 import com.svop.other.HeadProcessing.PageFormatter;
 import com.svop.service.handbooks.ReysyService;
@@ -22,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-
+@Transactional
 @Service
 public class SeazonScheduleService {
     private static  final Logger logger= LoggerFactory.getLogger(SeazonSchedule.class);
@@ -31,7 +32,10 @@ public class SeazonScheduleService {
     @Autowired private RoutesService routesService;
     @Autowired private SeazonScheduleRepository sezonScheduleRepository;
     @Autowired private UserService userService;
-    @Transactional
+
+    /**
+     * ПРоцедура формирования сезонного расписания
+     */
     public void forming()
     {
         logger.info("Начало формирования сезонного расписания");
@@ -74,6 +78,11 @@ public class SeazonScheduleService {
         }
     }
 
+    /**
+     * Получить весь список представлений сезонного расписания
+     * @return Списко представлений сезонного расписания
+     */
+
     public List<SeazonScheduleView> getSeazonScheduleViews()
     {
         List<SeazonSchedule> seazonSchedules=sezonScheduleRepository.findAll();
@@ -86,6 +95,12 @@ public class SeazonScheduleService {
         return seazonScheduleViews;
     }
 
+    /**
+     * Получить Страницу списка сезонного расписания
+     * @param pageFormatter КЛАС ДЛЯ отображения страниц на html
+     * @param pageable Интерейс для работы со страницами
+     * @return
+     */
     public List<SeazonScheduleView> getSeazonScheduleViews(PageFormatter pageFormatter, Pageable pageable)
     {
         Page<SeazonSchedule> seazonSchedules=sezonScheduleRepository.findAll(pageable);
@@ -98,4 +113,36 @@ public class SeazonScheduleService {
         }
         return seazonScheduleViews;
     }
+
+    /**
+     * Получить Страницу списка сезонного расписания с учетом языка
+     @param country_nomer номер языка. 1 руский 2- англ 3- китайский
+     * @param pageable Интерейс для работы со страницами
+     * @return
+     */
+    public List<SeazonScheduleLanguageView> getSeazonScheduleLanguageViews(Pageable pageable,Integer country_nomer)
+    {
+        Page<SeazonSchedule> seazonSchedules=sezonScheduleRepository.findAll(pageable);
+        List<SeazonScheduleLanguageView> seazonScheduleLanguageViews=new ArrayList<>(seazonSchedules.getTotalPages());
+       // System.out.println(SecurityContextHolder.getContext());
+        for(SeazonSchedule item:seazonSchedules)
+        {
+            seazonScheduleLanguageViews.add(new SeazonScheduleLanguageView(item,country_nomer));
+        }
+        return seazonScheduleLanguageViews;
+    }
+    /**
+     * ПОлучить число страниц
+
+     * @param pageable Интерейс для работы со страницами
+     * @return
+     */
+    public Integer getPageAmount(Pageable pageable)
+    {
+        Page<SeazonSchedule> seazonSchedules=sezonScheduleRepository.findAll(pageable);
+
+        return seazonSchedules.getTotalPages();
+    }
+
+
 }

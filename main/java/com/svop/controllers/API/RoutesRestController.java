@@ -1,9 +1,11 @@
 package com.svop.controllers.API;
 
 import com.svop.View.RoutesView;
+import com.svop.exeptions.SvopDataBaseExeption;
 import com.svop.service.handbooks.RoutesService;
 import com.svop.tables.Handbooks.Airporty;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +24,14 @@ public class RoutesRestController {
     @ResponseBody
     @RequestMapping(value="/save")
     public ResponseEntity<String> update(@RequestBody ArrayList<RoutesView> routes) {
-        return routesService.save(routes);
+        try {
+            return routesService.save(routes);
+        }
+        catch (DataIntegrityViolationException ex)
+        {
+            throw new SvopDataBaseExeption(ex.getLocalizedMessage());
+        }
+
     }
 
 

@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface RoutesRepository extends JpaRepository<Routes,Integer> {
-    @Transactional
     void deleteByIdIn(List<Integer> ids);
     Page<Routes> findAll(Pageable page);
 }

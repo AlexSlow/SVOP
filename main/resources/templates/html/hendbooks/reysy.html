@@ -106,6 +106,10 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
 <div class="pages" th:insert="/html/pages.html"></div>
 </div>
 
+<div id="errors" style="color:red;font-size:18px;">
+<span th:text="${error}"></span>
+</div> 
+
 </div>
 
 

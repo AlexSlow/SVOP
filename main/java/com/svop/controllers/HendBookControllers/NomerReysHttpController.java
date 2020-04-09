@@ -1,10 +1,12 @@
 package com.svop.controllers.HendBookControllers;
 
+import com.svop.exeptions.httpResponse.DeleteFromDBExeption;
 import com.svop.other.HeadProcessing.Head_parser;
 import com.svop.service.handbooks.AircompaniesService;
 import com.svop.service.handbooks.NomerReysService;
 import com.svop.service.secutity.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -43,7 +45,13 @@ public class NomerReysHttpController {
         //Для передачи параметров между редиректами
         redirectAttributes.addFlashAttribute("aircompanies_selected",aircompany);
         if (id_list!=null)
-        nomerReysService.delete(id_list);
+            try {
+                nomerReysService.delete(id_list);
+            }
+        catch (DataIntegrityViolationException ex)
+        {
+            new DeleteFromDBExeption(redirectAttributes,ex.getLocalizedMessage());
+        }
         return "redirect:/svop/nomer_reys";
     }
 }

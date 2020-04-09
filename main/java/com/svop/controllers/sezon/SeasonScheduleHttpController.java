@@ -4,9 +4,11 @@ import com.itextpdf.text.DocumentException;
 import com.svop.other.HeadProcessing.Head_parser;
 import com.svop.other.HeadProcessing.PageFormatter;
 import com.svop.service.SeazonSchedule.SeazonScheduleService;
+import com.svop.service.control.SeazonTabloControl;
 import com.svop.service.documentOutputPdf.SeazonOutputPdfService;
 import com.svop.service.secutity.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -28,7 +30,9 @@ public class SeasonScheduleHttpController {
     private UserService userService;
     @Autowired private SeazonScheduleService seazonScheduleService;
     @Autowired private SeazonOutputPdfService seazonOutputPdfService;
+    @Autowired private SeazonTabloControl seazonTabloControl;
     @RequestMapping(value="/svop/SeasonSchedule")
+
 
     public String open( Model model,@PageableDefault(sort = {"id"},direction = Sort.Direction.DESC) Pageable page) {
         Head_parser head_parser=new Head_parser();
@@ -39,6 +43,14 @@ public class SeasonScheduleHttpController {
         pageFormatter.fillModel(model,page.getPageNumber());
         return "/html/SeasonSchedule/SeasonScheduleFormation.html";
     }
+
+    /**
+     * Прием запроса на формирование сезонного расписания
+     * @param forming_bt
+     * @param pdf_bt
+     * @param model
+     * @return
+     */
     @RequestMapping(value="/svop/SeasonSchedule/forming")
     public String forming( @RequestParam (name="formation",required = false) String forming_bt,
                            @RequestParam (name="pdf",required = false) String pdf_bt,
@@ -55,8 +67,15 @@ public class SeasonScheduleHttpController {
         }
         return "redirect:/svop/SeasonSchedule";
     }
-@RequestMapping(value = "/svop/SeasonSchedule/pdf")
-public ResponseEntity<InputStreamResource> get() throws IOException, DocumentException {
+
+    /**
+     *
+     * @return Прлучить pdf документ
+     * @throws IOException
+     * @throws DocumentException
+     */
+    @RequestMapping(value = "/svop/SeasonSchedule/pdf")
+public ResponseEntity<InputStreamResource> getPdf() throws IOException, DocumentException {
 
     ByteArrayInputStream bis = seazonOutputPdfService.generate(seazonScheduleService.getSeazonScheduleViews());
 
@@ -68,12 +87,32 @@ public ResponseEntity<InputStreamResource> get() throws IOException, DocumentExc
             .contentType(MediaType.APPLICATION_PDF)
             .body(new InputStreamResource(bis));
 }
+
+    /**
+     * Страница табло
+     * @param model
+     * @param page
+     * @return
+     */
     @RequestMapping(value="/svop/SeasonSchedule/tablo")
     public String tablo( Model model,@PageableDefault(sort = {"id"},direction = Sort.Direction.DESC) Pageable page) {
 
+        System.out.println(seazonTabloControl);
         PageFormatter pageFormatter=new PageFormatter();
         model.addAttribute("sezonSchedules",seazonScheduleService.getSeazonScheduleViews(pageFormatter,page));
         return "/html/SeasonSchedule/tablo.html";
+    }
+
+    /**
+     * Страница управления таблом
+     * @param model
+     * @return
+     */
+    @RequestMapping(value="/svop/SeasonSchedule/control")
+    public String getControlWindow( Model model) {
+        Head_parser head_parser=new Head_parser();
+        head_parser.setModel(userService,model);
+        return "/html/control/seasonal_schedule_management.html";
     }
 
 }

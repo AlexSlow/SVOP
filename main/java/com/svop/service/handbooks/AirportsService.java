@@ -1,57 +1,48 @@
 package com.svop.service.handbooks;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.svop.exeptions.SvopDataBaseExeption;
 import com.svop.tables.Handbooks.Airporty;
 import com.svop.tables.Handbooks.AirportyRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-
+@Transactional(rollbackFor = SvopDataBaseExeption.class)
 @Service
 public class AirportsService  {
     @Autowired
     AirportyRepo airportyRepo;
 
-    public ResponseEntity<String> save(Object note) {
-        Airporty aiporty=(Airporty)note;
-      if(airportyRepo.save(aiporty)==null){
-          return new ResponseEntity<String>("Сохранение завершено", HttpStatus.OK);
-      }else
-          return new ResponseEntity<String>("Сохраненить не удалось", HttpStatus.BAD_REQUEST);
+    public void save(Airporty aiporty)   {
+        try
+        {
+            airportyRepo.save(aiporty);
+        }catch (RuntimeException ex)
+        {
+            ex.getLocalizedMessage();
+            System.out.println(ex.getLocalizedMessage());
+        }
 
     }
 
-    public ResponseEntity<String> save(List<?> notes) {
-        ResponseEntity<String> response= new ResponseEntity<>("Сохранение произошло успешно",HttpStatus.OK);
+    public void save(List<?> notes) {
             for (Object note : notes) {
                 Airporty aiporty = (Airporty) note;
-
-                if (airportyRepo.save(aiporty) == null) {
-                    response=new ResponseEntity<>("Сохранение произошло с ошибкой", HttpStatus.BAD_REQUEST);
-                }
+                save(aiporty);
             }
-        return response;
     }
 
-    public ResponseEntity<String> delete(List<?> notes) {
-        ResponseEntity<String> response= new ResponseEntity<>("Сохранение произошло успешно",HttpStatus.OK);
-        for (Object note : notes) {
-            Airporty aiporty = (Airporty) note;
-            airportyRepo.delete(aiporty);
-        }
-        return response;
+    public void deleteById(List<Integer> id_list) {
+        if (id_list!=null)
+                airportyRepo.deleteByIdIn(id_list);
     }
-
-    public ResponseEntity<String> delete(Object note) {
-        ResponseEntity<String> response= new ResponseEntity<>("Сохранение произошло успешно",HttpStatus.OK);
-        Airporty aiporty=(Airporty)note;
-        airportyRepo.delete(aiporty);
-        return response;
+    public Page<Airporty> getPage(Pageable pageable) {
+        return airportyRepo.findAll(pageable);
     }
 }

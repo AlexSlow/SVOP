@@ -89,7 +89,12 @@ wrap_object["nomers"]=ajax_array;
    // alert(data);
    $("#input_select").val(aircompany);
 	//location.reload();
+$("#modal_error").text(data.message);
+ if (data.kod==0)
+   {
 	$('#contentForm').submit();
+  }
+	
   }
 });
 }else{

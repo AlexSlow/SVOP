@@ -1,5 +1,7 @@
 package com.svop.controllers.API;
 
+import com.svop.exeptions.response.SvopMessage;
+import com.svop.message.Success;
 import com.svop.tables.Handbooks.Sezon;
 import com.svop.tables.Handbooks.SezonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +19,10 @@ public class SezonRestController {
     private SezonRepository sezonRepository;
     @ResponseBody
     @RequestMapping(value="/save")
-    public ResponseEntity<String> update(@RequestBody ArrayList<Sezon> sezons) {
+    public ResponseEntity<SvopMessage> update(@RequestBody ArrayList<Sezon> sezons) {
 
         List<Sezon> sezons_saved=sezonRepository.saveAll(sezons);
-        System.out.println(sezons_saved);
-        return new ResponseEntity<>("Success", HttpStatus.OK);
+        //System.out.println(sezons_saved);
+        return new ResponseEntity<>(new Success("Success"), HttpStatus.OK);
     }
 }

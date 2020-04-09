@@ -28,9 +28,9 @@
 <h2 class="text-center" th:text="#{airports.title_tab}">Таблица аэропортов</h2>
 <div class="table-responsive">
 <table class="table table-striped table-bordered mb-8" id="content_table">
-<thead>
+<thead data-minwidth="1000px">
 <tr> <th name="id"></th>
-<th  name="nameRu" data-notnull="1" data-type="text" th:text="#{airports.name_ru}">Название(RU)</th>
+<th  name="nameRu" data-notnull="1" data-size="1" data-type="text" th:text="#{airports.name_ru}">Название(RU)</th>
   <th name="nameEng" data-notnull="1" data-type="text" th:text="#{airports.name_eng}">Название(EN)</th> 
   <th name="nameCh" data-notnull="1" data-type="text" th:text="#{airports.name_ch}" >Название(CH)</th>
   <th name="gmt" data-notnull="0" data-type="text" th:text="#{airports.gmt_time}" >Отклонение метного времени по Гринвичу</th>
@@ -56,6 +56,11 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
 </table>
 <div class="pages" th:insert="/html/pages.html"></div>
 </div>
+
+<div id="errors" style="color:red;font-size:18px;">
+<span th:text="${error}"></span>
+</div> 
+
 </div>
 
 
@@ -100,7 +105,7 @@ var error=[[#{modal.error}]];
    <script src="/js/modal/basic_modal.js">
    </script>
    
-   
+
  
 </Body>
 </html>

@@ -3,8 +3,6 @@
 <head>
 <meta http-equiv="Content-type" Content="text/html; charset=utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<meta http-equiv="refresh" content="10;http://localhost:5000/svop/SeasonSchedule/tablo">
-
 <meta th:name="_csrf" th:content="${_csrf.token}"/>
 <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
 
@@ -12,9 +10,12 @@
 Формирование сезонного расписания
 </title>
 <link rel="stylesheet" href="/bootstrap/css/bootstrap.css"/>
-	<style>
-	body{
-	background-color:#8F028B;
+<style>
+body{
+background-color:#800080;
+}
+#tablo{
+	background-color:#800080;
 	}
 	.TabloTable{
 	color:yellow;
@@ -24,12 +25,15 @@
 	border-collapse: collapse;
 	white-space: nowrap;
 	}
-	</style>
+</style>
 </head>
 <Body>
 <script src="/js/jquery/jquery-3.3.1.min.js"></script>
 <script src="/bootstrap/js/popper_min.js" ></script>
 <script src="/bootstrap/js/bootstrap.min.js"></script>
+<script src="/js/jquery/sockjs.min.js"></script>
+    <script src="/js/jquery/stomp.min.js"></script>
+
 <script>
 </script>
 
@@ -38,6 +42,7 @@
  <div id="content" class="container-fluid">
         <div class="row" >
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+<div id="tablo">
 
 <table class="table TabloTable" id="content_table" >
 <thead>
@@ -87,11 +92,109 @@
 
 </tbody>
 </table>
+</div>
         </div>
 
-
+</div>
 
  </div>
 
+ 
+ 
+ 
+ 
+ <div id="main-content" class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="connect">WebSocket connection:</label>
+                    <button id="connect" class="btn btn-default" type="submit">Connect</button>
+                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="name">What is your name?</label>
+                    <input type="text" id="name" class="form-control" placeholder="Your name here...">
+                </div>
+                <button id="send" class="btn btn-default" type="submit">Send</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table id="conversation" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Greetings</th>
+                </tr>
+                </thead>
+                <tbody id="greetings">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+ 
+ 
 </body>
+<script>
+//Настройка клиента
+
+var stompClient = null;
+
+function setConnected(connected) {
+    $("#connect").prop("disabled", connected);
+    $("#disconnect").prop("disabled", !connected);
+    if (connected) {
+        $("#conversation").show();
+    }
+    else {
+        $("#conversation").hide();
+    }
+    $("#greetings").html("");
+}
+
+function connect() {
+    var socket = new SockJS('/gs-guide-websocket');
+    stompClient = Stomp.over(socket);
+    stompClient.connect({}, function (frame) {
+        setConnected(true);
+        console.log('Connected: ' + frame);
+        stompClient.subscribe('/topic/greetings', function (greeting) {
+		console.log(greeting.body);
+            showGreeting(JSON.parse(greeting.body).content);
+        });
+    });
+}
+
+function disconnect() {
+    if (stompClient !== null) {
+        stompClient.disconnect();
+    }
+    setConnected(false);
+    console.log("Disconnected");
+}
+
+function sendName() {
+    stompClient.send("/app/hello", {}, JSON.stringify({'name': $("#name").val()}));
+}
+
+function showGreeting(message) {
+    $("#greetings").append("<tr><td>" + message + "</td></tr>");
+}
+
+$(function () {
+    $("form").on('submit', function (e) {
+        e.preventDefault();
+    });
+    $( "#connect" ).click(function() { connect(); });
+    $( "#disconnect" ).click(function() { disconnect(); });
+    $( "#send" ).click(function() { sendName(); });
+});
+</script>
 </html>

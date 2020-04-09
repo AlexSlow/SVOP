@@ -12,7 +12,6 @@ import java.util.Calendar;
 import java.util.List;
 
 public interface ReysyRepository extends JpaRepository<Reysy,Integer> {
-    @Transactional
     void deleteByIdIn(List<Integer> list);
     List<Reysy> findAllByType(TypeReys type);
     Page<Reysy> findAllByType(TypeReys type,Pageable pageable);

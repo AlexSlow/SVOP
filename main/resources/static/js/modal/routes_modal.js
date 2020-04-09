@@ -126,16 +126,19 @@
 	});
    function send_request(ajax_array,adress)
   { 
-  //console.log(ajax_array);
-   //console.log(adress);
+
   $.ajax({
   type: "POST",
   url: adress,
 	data: JSON.stringify(ajax_array),
 	contentType: 'application/json',
 	success: function(data) {
-   // alert(data);
+  $("#modal_error").text(data.message);
+   if (data.kod==0)
+   {
 	location.reload();
+  }
+
   }
 });
   }

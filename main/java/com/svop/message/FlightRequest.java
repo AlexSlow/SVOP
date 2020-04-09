@@ -1,7 +1,10 @@
-package com.svop.View.message;
+package com.svop.message;
 
 import com.svop.tables.Handbooks.TypeReys;
 
+/** Используется в сезонах
+ *
+ */
 public class FlightRequest {
     private TypeReys type;
     private Integer sezon_selected;

@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 public interface AircompanyRepositpry extends JpaRepository<Aircompany,Long> {
-    @Transactional
     void deleteByIdIn(Iterable<Integer> ids);
     Page<Aircompany> findAll(Pageable pageable);
     Optional<Aircompany> findById(Integer aLong);

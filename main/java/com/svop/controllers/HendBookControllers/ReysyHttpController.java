@@ -2,6 +2,8 @@ package com.svop.controllers.HendBookControllers;
 
 import com.svop.View.NomerReysView;
 import com.svop.View.ReysViewElement;
+import com.svop.exeptions.SvopDataBaseExeption;
+import com.svop.exeptions.httpResponse.DeleteFromDBExeption;
 import com.svop.other.HeadProcessing.Head_parser;
 import com.svop.other.HeadProcessing.PageFormatter;
 import com.svop.service.handbooks.AircompaniesService;
@@ -14,8 +16,10 @@ import com.svop.validator.ReysViewElementValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.reactive.RxJava2CrudRepository;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -118,17 +122,20 @@ public class ReysyHttpController {
         else if(redBt!=null)
         {
             if (id_list!=null) {
-                //необходимо получить авиакомпанию
-                ReysViewElement reysy = reysyService.getReysById(id_list.get(0));
-                if (reysy==null)
+                //необходимо получить рейс
+                ReysViewElement reysy;
+                try {
+                    reysy = reysyService.getReysById(id_list.get(0));
+                }catch (Exception ex)
                 {
+                    new DeleteFromDBExeption(redirectAttributes,ex.getLocalizedMessage());
+                    ex.printStackTrace();
                     logger.error("Не найден рейс для редактирования");
                     if (type==TypeReys.Regular)
-                    return "redirect:/svop/reysy";
+                        return "redirect:/svop/reysy";
                     else  return "redirect:/svop/chartery";
                 }
-
-                return fillModelForRedact(reysy,model);
+                return fillModelForRedact(reysy,model,redirectAttributes);
             }else {
                 logger.error("Список id нулевой");
                 if (type==TypeReys.Regular)
@@ -138,7 +145,14 @@ public class ReysyHttpController {
         }else if(delete_bt!=null)
         {
             if (id_list!=null)
-            reysyService.delete(id_list);
+                try {
+                    reysyService.delete(id_list);
+                }catch (Exception ex)
+                {
+                    new DeleteFromDBExeption(redirectAttributes,ex.getLocalizedMessage());
+                    ex.printStackTrace();
+                }
+
             if (type==TypeReys.Regular)
                 return "redirect:/svop/reysy";
             else  return "redirect:/svop/chartery";
@@ -198,7 +212,15 @@ public class ReysyHttpController {
         if (saveBt!=null)
         {
            //System.out.println(reysy);
-            reysyService.save(reysy);
+            try {
+                reysyService.save(reysy);
+            }
+            catch (DataIntegrityViolationException ex)
+            {
+                ex.printStackTrace();
+                new DeleteFromDBExeption(redirectAttributes,ex.getLocalizedMessage());
+            }
+
         }
 
         if (reysy.getType()==TypeReys.Regular)
@@ -226,11 +248,11 @@ public class ReysyHttpController {
         }
         reysy.setPrilet_days(prilet_days);
         reysy.setVilet_days(vilet_days);
-        return fillModelForRedact(reysy,model);
+        return fillModelForRedact(reysy,model,redirectAttributes);
     }
     //_____------------------------------------------------------------------
     //Заполнить страницу по имеющемуся reysView
-    public String fillModelForRedact(ReysViewElement reysy, Model model)
+    public String fillModelForRedact(ReysViewElement reysy, Model model,RedirectAttributes redirectAttributes)
     {
         //Получим по одному из номеров рейсов авуакомпанию а затем, ролучим список номеров рейсов
         Integer nomer=null;
@@ -240,7 +262,16 @@ public class ReysyHttpController {
             nomer=reysy.getNomer_vilet_id();
         }
         if (nomer!=null) {
-            NomerReys nomerReys = nomerReysService.getByid(nomer).get();
+            NomerReys nomerReys=null;
+            try {
+                nomerReys = nomerReysService.getByid(nomer).get();
+            }catch (Exception ex)
+            {
+                new DeleteFromDBExeption(redirectAttributes,ex.getLocalizedMessage());
+                ex.printStackTrace();
+                logger.error("Не могу получить Номер рейса");
+            }
+
 
             if (nomerReys==null)
             {
@@ -253,15 +284,21 @@ public class ReysyHttpController {
             //Получим номера рейсов на прилет и вылет
             List<NomerReysView> nomerReysViewPrilet = new ArrayList<>();
             List<NomerReysView> nomerReysViewVilet = new ArrayList<>();
-            List<NomerReysView> nomerReysViews =
-                    nomerReysService.getNomerReysFromAircompany(nomerReys.getAircompany().getId());
-            if (nomerReysViews==null)
+            List<NomerReysView> nomerReysViews;
+            try
             {
+                 nomerReysViews =
+                        nomerReysService.getNomerReysFromAircompany(nomerReys.getAircompany().getId());
+            }catch (Exception ex)
+            {
+                new DeleteFromDBExeption(redirectAttributes,ex.getLocalizedMessage());
+                ex.printStackTrace();
                 logger.error("Список номеров рейсов отсутствует");
                 if (reysy.getType()==TypeReys.Regular)
                     return "redirect:/svop/reysy";
                 else  return "redirect:/svop/chartery";
             }
+
             //Распределить номера рейсов по коллекциям
             for (NomerReysView item : nomerReysViews) {
                 if (item.getType() == ReysyNomerType.Tranzit) {
@@ -277,8 +314,24 @@ public class ReysyHttpController {
             model.addAttribute("nomerReysPrilet",nomerReysViewPrilet);
             model.addAttribute("nomerReysVilet",nomerReysViewVilet);
         }
-        model.addAttribute("routs",routesService.getRouts());
-        model.addAttribute("aircompanies",aircompaniesService.getAircompanies());
+        try {
+            model.addAttribute("routs",routesService.getRouts());
+        }catch (Exception ex)
+        {
+            new DeleteFromDBExeption(redirectAttributes,ex.getLocalizedMessage());
+            ex.printStackTrace();
+            logger.error("Маршурты не получены");
+        }
+        try {
+
+            model.addAttribute("aircompanies",aircompaniesService.getAircompanies());
+        }catch (Exception ex)
+        {
+            new DeleteFromDBExeption(redirectAttributes,ex.getLocalizedMessage());
+            ex.printStackTrace();
+            logger.error("Авиакомпании  не получены");
+        }
+
         model.addAttribute("reysy",reysy);
         model.addAttribute("type_operation", "redact");
         return "/html/hendbooks/reysy_modal.html";

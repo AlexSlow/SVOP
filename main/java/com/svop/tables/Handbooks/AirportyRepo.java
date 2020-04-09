@@ -16,20 +16,16 @@ import java.util.List;
 public interface AirportyRepo extends CrudRepository<Airporty,Long> {
 
     Page<Airporty> findAll(Pageable page);
-
     Airporty findById(Integer integer);
-    @Transactional
    void deleteByIdIn(List<Integer> ids);
-
-
     List<Airporty> findByNameRu(String name);
-    @Transactional
+    /*
     @Modifying
     @Query("UPDATE Airporty e SET e.nameRu = :nameRu, e.nameEng = :nameEng,e.nameCh=:nameCh,e.gmt=:GMT,e.icao=:ICAO, e.iata=:IATA where e.id = :id")
     int updateAirport(@Param("id") Integer id, @Param("nameRu") String nameRu,
                        @Param("nameEng") String nameEng,@Param("nameCh")  String nameCh,
                        @Param("GMT") String GMT, @Param("ICAO") String ICAO,@Param("IATA") String IATA );
-
+*/
 
 
 

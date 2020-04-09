@@ -1,0 +1,98 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta http-equiv="Content-type" Content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<meta th:name="_csrf" th:content="${_csrf.token}"/>
+<meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+<title th:text="#{sezon_control.title}">
+Управление таблом сезонного расписания
+</title>
+<link rel="stylesheet" href="/bootstrap/css/bootstrap.css"/>
+<style>
+	#load_window{
+	max-width:1500px;
+	}
+	#tablo{
+	background-color:#800080;
+	overflow:auto;
+	}
+	.TabloTable{
+	color:yellow;
+	border:solid 1pt yellow;
+	text-align: center;
+	vertical-align:middle;
+	border-collapse: collapse;
+	white-space: nowrap;
+	}
+</style>
+</head>
+<body>
+<div id="header" th:insert="/html/nmenu.html"></div>
+
+
+ <div id="content" class="container-fluid">
+        <div class="row" >
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+		
+<form method="POST" id="form" role="form" >
+<div class="btn-group  m-auto">
+ <input type="button" id="bt_on"  th:value="#{buttons.on}"
+ class="btn btn-primary">
+  <input type="button" id="bt_off"  th:value="#{buttons.off}"  class="btn btn-success"/>
+ </div>
+ </form>
+ </div>
+ <div id="load_window">
+ </div>
+<script src="/js/jquery/jquery-3.3.1.min.js"></script>
+<script src="/bootstrap/js/popper_min.js" ></script>
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+</body>
+<script>
+$('#bt_on').on('click', function() {
+let json={};
+ json["active"]=true;
+ send(json);
+});
+$('#bt_off').on('click', function() {
+let json={};
+ json["active"]=false;
+ send(json);
+});
+function send(json)
+{
+console.log(json);
+var token = $("meta[name='_csrf']").attr("content"); 
+var header = $("meta[name='_csrf_header']").attr("content");
+$.ajaxSetup({
+        headers: {
+            'X-Csrf-Token':token
+        }
+    });
+			 $.ajax({
+  type: "POST",
+  url: "http://localhost:5000/svop/api/tablo/control",
+	data: JSON.stringify(json),
+	contentType: 'application/json',
+	success: function(data) {
+	console.log(data);
+}
+});	
+}
+
+//ПОдгружать в цикле окно из табло
+/*
+$("load_window").everyTime(30000,function(i){
+$("load_window").load("http://localhost:5000/svop/SeasonSchedule/tablo");
+})
+*/
+
+ function refresh() {$("#load_window").load("http://localhost:5000/svop/SeasonSchedule/tablo #tablo")};
+ refresh();
+ setInterval(refresh, 30000);
+ 
+</script>
+</html>

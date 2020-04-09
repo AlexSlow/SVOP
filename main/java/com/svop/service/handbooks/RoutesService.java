@@ -14,11 +14,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
+@Transactional
 @Service
 public class RoutesService {
     public static Logger logger= LoggerFactory.getLogger(RoutesService.class.getName());
@@ -281,5 +282,26 @@ if (Integer.parseInt(item)==airport.getId()) {isBax=true;break;}
 
         }
         return response;
+    }
+    /**
+     * На вход подается число -номер страны и строка с маршрутами , на выход маршрут на на нужном языке языке
+     * @param route_string
+     * @return
+     */
+    public String getRoutsByNomer(Integer nomer_country,String route_string)
+    {
+        switch (nomer_country) {
+            case 0:
+                return getRouts(route_string);
+
+            case 1:
+                return getRoutsEn(route_string);
+
+            case 2:
+                return getRoutsCh(route_string);
+            default:
+                return getRouts(route_string);
+        }
+
     }
 }

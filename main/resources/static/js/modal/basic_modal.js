@@ -11,6 +11,12 @@ var is_null_map = new Map(); //валидация не пустых элемен
 var content;
 $('#addModal').on('show.bs.modal', function (event) {
 clean();
+//Получим ширину таблици из анотации
+let minwidth=$("#content_table thead").attr('data-minwidth');
+if (minwidth!=null)
+{
+	$("#modal_table").css("min-width",minwidth);
+}
 // получить кнопку, которая его открыло
 var button = $(event.relatedTarget)
 // извлечь информацию из атрибута data-content
@@ -19,7 +25,7 @@ content= button.data('content')
 $("#modal_table thead").append("<tr></tr>");
 $("#content_table thead tr").children("th").each(function(){
 if ($(this).text()!="")
-{
+{ 8
 Headers.set($(this).text(),$(this).attr('data-type'));
 Names.set($(this).text(),$(this).attr('name'));
 is_null_map.set($(this).text(),$(this).attr('data-notnull'));
@@ -192,8 +198,13 @@ $(this).children("label").each(function(){
 	contentType: 'application/json',
 	success: function(data) {
    // alert(data);
+   //console.log(data);
+   $("#modal_error").text(data.message);
+   if (data.kod==0)
+   {
 	location.reload();
   }
+	}
 });
 
    }

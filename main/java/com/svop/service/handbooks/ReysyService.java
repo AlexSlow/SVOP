@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.Null;
 import java.sql.Date;
@@ -21,7 +22,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
+@Transactional
 @Service
 public class ReysyService {
     private static final Logger logger= LoggerFactory.getLogger(ReysyService.class.getName());

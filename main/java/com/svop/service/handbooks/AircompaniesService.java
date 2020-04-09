@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -28,7 +29,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Pattern;
-
+@Transactional
 @Service
 public class AircompaniesService {
     private static Logger logger= LoggerFactory.getLogger(AircompaniesService.class.getName());
