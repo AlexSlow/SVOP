@@ -45,6 +45,4 @@ public class TabloSeazonRestController {
         logger.info("Табло перешло в состояние "+message);
        return seazonTabloControl.getSeazonScheduleLanguageViews();
     }
-
-
 }

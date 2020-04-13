@@ -7,21 +7,18 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.PeriodicTrigger;
 import org.springframework.stereotype.Service;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Класс сервис управления содержимым табло
+ */
 
 @Service
 public class SeazonTabloControl implements TabloControl {
@@ -54,8 +51,6 @@ public class SeazonTabloControl implements TabloControl {
 
             seazonScheduleLanguageViews=Collections.synchronizedList(seazonScheduleService.getSeazonScheduleLanguageViews(PageRequest.of(page,page_size),countries));
             //Тут мы делаем выборку
-            //System.out.println("Номер страны  "+countries+" Страница  "+page);
-            //System.out.println(seazonScheduleLanguageViews);
             //Если мы не прошли страны то
             if (countries<countries_amount-1)
             {

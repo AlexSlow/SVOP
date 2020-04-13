@@ -1,21 +1,33 @@
 package com.svop.service.admin;
 
 import com.smattme.MysqlExportService;
+import lombok.AllArgsConstructor;
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Properties;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.nio.file.Files.isRegularFile;
+import static java.nio.file.Files.newDirectoryStream;
 
 @Service
 public class Recovery {
@@ -35,7 +47,15 @@ public class Recovery {
 
     @Value("${svop.exportdb}")
     private String expotrDbDir;
-    public  void export() throws SQLException, IOException, ClassNotFoundException {
+    @Value("${svop.backup_file_amout}")
+    private Integer file_amout;
+    @Value("${svop.eneble_backup}")
+    private Integer enebleBackup;
+
+
+    private @Autowired
+    SpringBeanJobFactory jobFactory;
+    public  boolean export() throws SQLException, IOException, ClassNotFoundException {
         /*
         //Установим параметры
         Properties properties=new Properties();
@@ -50,8 +70,11 @@ public class Recovery {
 
     }
     */
+        /**
+         * Если директория не создана, то создадим ее
+         */
         createRecoveryDir();
-        backupDataWithDatabase(mysqldump,
+       return backupDataWithDatabase(mysqldump,
                 Host,
                 MySqlPort,
                 Userneme,
@@ -70,11 +93,71 @@ public class Recovery {
             Files.createDirectory(export);
         }
     }
+public List<String> getDumps() throws IOException {
+    List<String> dumps=new ArrayList<>();
+    //  Получить все папки в каталоге
+    try (DirectoryStream<Path> directoryStream = newDirectoryStream(Paths.get(expotrDbDir))) {
+        for (Path path : directoryStream) {
+            if (isRegularFile(path)) {
+                dumps.add(path.getFileName().toString());
+            }
+        }
+    }
+    return dumps;
+}
 
-    public boolean backupDataWithDatabase(String dumpExePath, String host, String port,
-                                          String user, String password, String database, String backupPath) {
+    /**
+     * Если количество файлов в дампе Бд больше n,тогда удалить последний
+     */
+    private void dumpsAmoutControl() throws IOException {
+
+    if (new File(expotrDbDir).list().length>file_amout)
+    {
+        logger.info("Превышено число сохранений БД.");
+        List<Path> oldestFiles = findOldestFiles(expotrDbDir, 1);
+        for (Path path:oldestFiles){Files.deleteIfExists(path);}
+    }
+}
+
+    /**
+     *
+     * @param parentFolder Каталог для удаления
+     * @param numberOfOldestFilesToFind Число, которое определяет сколько всего файлов искать
+     * @return
+     * @throws IOException
+     */
+    private static List<Path> findOldestFiles(String parentFolder, int numberOfOldestFilesToFind) throws IOException {
+        Comparator<? super Path> lastModifiedComparator =
+                (p1, p2) -> Long.compare(p1.toFile().lastModified(),
+                        p2.toFile().lastModified());
+
+        List<Path> oldestFiles = Collections.emptyList();
+
+        try (Stream<Path> paths = Files.walk(Paths.get(parentFolder))) {
+            oldestFiles = paths.filter(Files::isRegularFile)
+                    .sorted(lastModifiedComparator)
+                    .limit(numberOfOldestFilesToFind)
+                    .collect(Collectors.toList());
+        }
+
+        return oldestFiles;
+    }
+
+    /**
+     * Сделать дамп Базы данных
+     * @param dumpExePath
+     * @param host
+     * @param port
+     * @param user
+     * @param password
+     * @param database
+     * @param backupPath
+     * @return
+     */
+    private boolean backupDataWithDatabase(String dumpExePath, String host, String port,
+                                          String user, String password, String database, String backupPath) throws IOException {
+        dumpsAmoutControl();
         boolean status = false;
-        System.out.println(backupPath);
         try {
             Process p = null;
 
@@ -111,4 +194,21 @@ public class Recovery {
         }
         return status;
     }
+/*
+    @Scheduled(cron = "0 15 10 15 * ?")
+    public void scheduleTaskUsingCronExpression() {
+        if (enebleBackup == 1) {
+            try {
+                export();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    */
+
 }
