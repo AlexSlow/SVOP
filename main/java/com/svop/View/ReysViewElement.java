@@ -37,7 +37,7 @@ public class ReysViewElement {
     //@NotNull(message = "Не заполнено время прибытия из Барнаула!")
     private LocalTime vilet_time_prib;
     private String tip_vs;
-    private String izmen_otmen;
+    private Boolean izmen_otmen;
     private String osnovanie_izmen_otmen;
     //@NotNull(message = "Не задан тип рейса")
     private TypeReys type;
@@ -48,7 +48,7 @@ public class ReysViewElement {
         this.prilet_days = Arrays.asList(0,0,0,0,0,0,0);
         this.vilet_days = Arrays.asList(0,0,0,0,0,0,0);
     }
-
+/*
     public ReysViewElement(Integer id, Integer nomer_prilet_id, Integer nomer_vilet_id, Integer rout, String period_start,
                            String period_end, List<Integer> prilet_days, LocalTime prilet_time_otpravl,
                            LocalTime prilet_time_prib, List<Integer> vilet_days, LocalTime vilet_time_otpravl,
@@ -67,12 +67,13 @@ public class ReysViewElement {
         this.vilet_time_otpravl = vilet_time_otpravl;
         this.vilet_time_prib = vilet_time_prib;
         this.tip_vs = tip_vs;
-        this.izmen_otmen = izmen_otmen;
+
+       // this.izmen_otmen = izmen_otmen;
         this.osnovanie_izmen_otmen = osnovanie_izmen_otmen;
         this.type = type;
         this.airline = airline;
     }
-
+*/
     /**
      * Это важный метод преобразователь. Рейсы будет представлены в данные формы
      * @param reys
@@ -104,7 +105,7 @@ public class ReysViewElement {
         this.vilet_time_prib = reys.getVilet_time_prib();
         this.tip_vs = reys.getTip_vs();
         //Reysy статус
-        if (reys.getIzmen_otmen()==ReysyStatus.Canceled){ this.izmen_otmen ="on";}else{this.izmen_otmen ="";}
+        if (reys.getIzmen_otmen()==ReysyStatus.Canceled){ this.izmen_otmen =true;}else{this.izmen_otmen =false;}
 
         this.osnovanie_izmen_otmen = reys.getOsnovanie_izmen_otmen();
         this.type = reys.getType();
@@ -202,11 +203,11 @@ public class ReysViewElement {
         this.tip_vs = tip_vs;
     }
 
-    public String getIzmen_otmen() {
+    public Boolean getIzmen_otmen() {
         return izmen_otmen;
     }
 
-    public void setIzmen_otmen(String izmen_otmen) {
+    public void setIzmen_otmen(Boolean izmen_otmen) {
         this.izmen_otmen = izmen_otmen;
     }
 

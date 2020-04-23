@@ -1,0 +1,275 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta http-equiv="Content-type" Content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<meta th:name="_csrf" th:content="${_csrf.token}"/>
+<meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+<title th:text="#{flightSchedule.title}">
+Формирование рафиков полета расписания
+</title>
+<link rel="stylesheet" href="/bootstrap/css/bootstrap.css"/>
+	<style>
+	#content_table{
+	text-align:center;
+	vertical-align: top;
+	border-collapse: collapse;
+	white-space: nowrap;
+	
+	}
+	</style>
+</head>
+<Body>
+<script>
+</script>
+<div id="header" th:insert="/html/nmenu.html"></div>
+
+<div class="form-group">
+<input  name="shift" id="shift"  th:value="#{flightShedule.currentShift}" type="button" class="btn btn-primary"/>
+<input  name="closeShift" id="closeShift"  th:value="#{flightShedule.closeShift}" type="button" class="btn btn-warning"/>
+</div>
+		<div class="form-group">
+		<label th:text="#{daily.day}"  class = "col-sm-2 control-label"> >Дата</label>
+		<input  id="day" name="start" form="form" type="Date" class="form-control"/>
+		</div>
+		<div class="form-group">
+		<button th:text="#{buttons.select}" id="select"  class="btn btn-primary">Выбрать</button>
+		</div>
+
+ <div id="content" class="container-fluid">
+        <div class="row" >
+		<div class="col-12">
+<div class="pages" th:insert="/html/pages.html"></div>
+		<div class="table-responsive">
+<table class="table table-striped table-bordered mb-5" id="content_table" >
+<thead >
+<tr>
+	<th></th>
+	<th   th:text="#{daily.day}">День</th>
+	<th   th:text="#{reysy.rout}" >Маршрут</th>
+	<th   th:text="#{nomer_reys.nomer}">Номер</th>
+	<th th:text="#{reysy.time_otpravl}" >Время отправления</th>
+	<th th:text="#{reysy.time_prib}">Время прибытия</th>
+	<th th:text="#{daily.direction}">Прилет/Вылет</th>	
+	<th th:text="#{flightSchedule.type}">Статус</th>
+	<th   th:text="#{flightShedule.comment}">комментарий</th>
+	<th th:text="#{reysy.type}">Тип рейса</th>
+	<th  th:text="#{reysy.tip_vs}">Тип ВС</th>
+  </tr>
+ 
+</thead >
+<tbody id="filter_table">
+<tr th:each="flightSchedule : ${flightSchedules}">
+<td><input type="checkbox" th:id="ch+${flightSchedule.id}" th:value="${flightSchedule.id}" name="ch[]" th:form="form"/></td>
+<td><label th:for="ch+${flightSchedule.id}" th:text="${flightSchedule.day}"> </label></td>
+<td><label th:for="ch+${flightSchedule.id}" th:text="${flightSchedule.rout}"> </label></td>
+<td><label th:for="ch+${flightSchedule.id}" th:text="${flightSchedule.nomer}"> </label></td>
+<td><label th:for="ch+${flightSchedule.id}" th:text="${flightSchedule.timeDeporture}"> </label></td>
+<td><label th:for="ch+${flightSchedule.id}" th:text="${flightSchedule.timePrilet}"> </label></td>
+<td><label th:for="ch+${flightSchedule.id}" th:text="${flightSchedule.direction}"> </label></td>
+<td><label th:for="ch+${flightSchedule.id}" th:text="${flightSchedule.status}"> </label></td>
+<td><label th:for="ch+${flightSchedule.id}" th:text="${flightSchedule.comment}"> </label></td>
+<td><label th:for="ch+${flightSchedule.id}" th:text="${flightSchedule.type}"> </label></td>
+<td><label th:for="ch+${flightSchedule.id}" th:text="${flightSchedule.tipVs}"> </label></td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td colspan="17" style="text-align:left;">  <input type='checkbox' 
+id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выделить все </label></td>
+</tr>
+</tfoot>
+</table>
+
+<div class="pages" th:insert="/html/pages.html"></div>
+		</div>
+<form th:action="@{'/svop/DailySchedule/forming'}" method="POST" id="form" role="form" >
+<div class="btn-group fixed-bottom w-50 m-auto">
+<input   name="build" id="build" th:value="#{flightShedule.build}"  type="button" class="btn btn-primary"/>
+<input type="button" id="uncancel"  name="uncancel" th:value="#{buttons.undelete}" class="btn btn-primary"/>
+<input type="button" id="cancel"  name="cancel" th:value="#{buttons.cancel}" class="btn btn-primary"/>
+<input type="button" name="redact"  th:value="#{buttons.red_bt}"  class="btn btn-primary" data-toggle="modal" data-target="#addModal" />
+ </div>
+ </form>
+ </div>
+ </div>
+ </div>
+ <div th:insert="/html/modal/flightShedule_modal.html" ></div>
+<script src="/js/jquery/jquery-3.3.1.min.js"></script>
+<script src="/bootstrap/js/popper_min.js" ></script>
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+<script src="/js/fire_check.js"></script>
+  <script src="/js/modal/flightShedule_modal.js">
+ </script>
+</body>
+<script>
+unCurrentShift();
+//Скрыть кнопки редактирования
+function unCurrentShift()
+  {
+  //$("#delete").css("display","none");
+  $("#build").css("display","none");
+  }
+  //Показать кнопки редактирования
+  function currentShift()
+  {
+ 
+ // $("#delete").css("display","");
+  $("#build").css("display","");
+  }
+   var token = $("meta[name='_csrf']").attr("content");  
+ $.ajaxSetup({
+        headers: {
+            'X-Csrf-Token':token
+        }
+    });
+//Обработчик кнопки выбрать
+ $('#select').on('click', function() {
+let day=$("#day").val(); 
+if (day!="")
+{
+requestFlightShedule(day);
+if (compareDay()){currentShift();}else{unCurrentShift();}
+}
+});
+//Выбрать тек смену
+ $('#shift').on('click', function() {
+requestFlightShedule(new Date());
+currentShift();
+});
+
+//построить ГП
+ $('#build').on('click', function() {
+requestBuild();
+});
+//Закрыть смену
+ $('#closeShift').on('click', function() {
+requestCloseShift();
+});
+function getFire()
+{
+let array=[];
+$('input:checkbox:checked').each(function(){
+    //добавляем значение каждого флажка в этот массив
+    array.push(this.value);
+  });
+  return array;
+}
+ $('#cancel').on('click', function() {
+requestCancel(getFire());
+});
+
+
+$('#uncancel').on('click', function() {
+requestUncancel(getFire());
+});
+//Запросы 
+
+//Запрос на получение рейсов по дню из основной таблицы
+function requestFlightShedule(day)
+{
+ 	 $.ajax({
+  type: "POST",
+  url: "http://localhost:5000/svop/api/flightShedule/getByDay",
+	data: JSON.stringify(Date.parse(day)),
+	contentType: 'application/json',
+	success: function(data) {
+	showReys(data);
+	
+  }
+});
+}
+
+//Запрос на построение рейсов из ежедневных
+function requestBuild()
+{
+ 	 $.ajax({
+  type: "POST",
+  url: "http://localhost:5000/svop/api/flightShedule/build",
+	contentType: 'application/json',
+	success: function(data) {
+	console.log(data);
+	showReys(data);
+  }
+});
+}
+
+//Запрос на построение рейсов из ежедневных
+function requestCloseShift()
+{
+ 	 $.ajax({
+  type: "POST",
+  url: "http://localhost:5000/svop/api/flightShedule/closeShift",
+	contentType: 'application/json',
+	success: function(data) {
+	console.log(data);
+  }
+});
+}
+
+function requestCancel(idl)
+{
+ 	 $.ajax({
+  type: "POST",
+  url: "http://localhost:5000/svop/api/flightShedule/cancel",
+	contentType: 'application/json',
+	data: JSON.stringify(idl),
+	success: function(data) {
+	console.log(data);
+  }
+});
+}
+
+function requestUncancel(idl)
+{
+ 	 $.ajax({
+  type: "POST",
+  url: "http://localhost:5000/svop/api/flightShedule/uncancel",
+	contentType: 'application/json',
+	data: JSON.stringify(idl),
+	success: function(data) {
+	console.log(data);
+  }
+});
+}
+
+
+
+
+
+//ПРоверить, текущая ли смена  без БД
+function compareDay()
+{
+
+let now=new Date();
+let day = new Date($("#day").val());
+
+if ((now.getFullYear()==day.getFullYear())&&(now.getMonth()==day.getMonth())&&(now.getDate()==day.getDate()))
+{
+return true;
+}else{return false;}
+
+}
+function showReys(reys) {
+$("#content_table tbody").empty();
+    reys.forEach( function (flightSchedule)
+{
+//Переформируем таблицу
+$("#filter_table").append("<tr></tr>");	
+$("#filter_table tr:last-child").append("<td>"+"<input type='checkbox' id='ch"+flightSchedule.id+"' value='"+flightSchedule.id+"' name='ch[]'/>"+"</td>");	
+$("#filter_table tr:last-child").append("<td><label for='ch"+flightSchedule.id+"'>"+flightSchedule.day+"</label></td>");	
+$("#filter_table tr:last-child").append("<td><label for='ch"+flightSchedule.id+"'>"+flightSchedule.rout+"</label></td>");	
+$("#filter_table tr:last-child").append("<td><label for='ch"+flightSchedule.id+"'>"+flightSchedule.nomer+"</label></td>");	
+$("#filter_table tr:last-child").append("<td><label for='ch"+flightSchedule.id+"'>"+flightSchedule.timeDeporture+"</label></td>");	
+$("#filter_table tr:last-child").append("<td><label for='ch"+flightSchedule.id+"'>"+flightSchedule.timePrilet+"</label></td>");
+$("#filter_table tr:last-child").append("<td><label for='ch"+flightSchedule.id+"'>"+flightSchedule.direction+"</label></td>");		
+$("#filter_table tr:last-child").append("<td><label for='ch"+flightSchedule.id+"'>"+flightSchedule.status+"</label></td>");
+$("#filter_table tr:last-child").append("<td><label for='ch"+flightSchedule.id+"'>"+flightSchedule.comment+"</label></td>");
+$("#filter_table tr:last-child").append("<td><label for='ch"+flightSchedule.id+"'>"+flightSchedule.type+"</label></td>");
+$("#filter_table tr:last-child").append("<td><label for='ch"+flightSchedule.id+"'>"+flightSchedule.tipVs+"</label></td>");	  		
+});
+}
+  </script>
+</html>

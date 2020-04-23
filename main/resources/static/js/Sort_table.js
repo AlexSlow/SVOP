@@ -1,5 +1,5 @@
 
-var grid = document.getElementById('grid');
+var grid = document.getElementById('content_table');
 var Save_Vector=[0,0];
 var Counter=[-1,0];
 grid.onclick = function(e) {

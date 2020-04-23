@@ -59,9 +59,4 @@ public class AirportyController {
         return "redirect:/svop/airports";
     }
 
-
-
-
-
-
 }

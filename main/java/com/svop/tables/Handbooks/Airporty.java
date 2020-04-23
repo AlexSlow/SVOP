@@ -2,6 +2,7 @@ package com.svop.tables.Handbooks;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "airporty")
@@ -100,5 +101,23 @@ public class Airporty implements Serializable {
                 ", icao='" + icao + '\'' +
                 ", iata='" + iata + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Airporty)) return false;
+        Airporty airporty = (Airporty) o;
+        return Objects.equals(getNameRu(), airporty.getNameRu()) &&
+                Objects.equals(getNameEng(), airporty.getNameEng()) &&
+                Objects.equals(getNameCh(), airporty.getNameCh()) &&
+                Objects.equals(getGmt(), airporty.getGmt()) &&
+                Objects.equals(getIcao(), airporty.getIcao()) &&
+                Objects.equals(getIata(), airporty.getIata());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getNameRu(), getNameEng(), getNameCh(), getGmt(), getIcao(), getIata());
     }
 }

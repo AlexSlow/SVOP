@@ -20,6 +20,7 @@ import java.util.Properties;
 @Slf4j
 @Configuration
 public class QuartzConfig {
+
     private ApplicationContext applicationContext;
     private DataSource dataSource;
     public QuartzConfig(ApplicationContext applicationContext, DataSource dataSource) {

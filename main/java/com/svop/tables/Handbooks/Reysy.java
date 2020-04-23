@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalTime;
+import java.util.Objects;
 
 
 @Entity
@@ -254,5 +255,33 @@ public class Reysy {
                 ", type=" + type +
                 ", airline=" + airline +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Reysy)) return false;
+        Reysy reysy = (Reysy) o;
+        return Objects.equals(getNomer_prilet(), reysy.getNomer_prilet()) &&
+                Objects.equals(getNomer_vilet(), reysy.getNomer_vilet()) &&
+                Objects.equals(getRout(), reysy.getRout()) &&
+                Objects.equals(getPeriod_start(), reysy.getPeriod_start()) &&
+                Objects.equals(getPeriod_end(), reysy.getPeriod_end()) &&
+                Objects.equals(getPrilet_days(), reysy.getPrilet_days()) &&
+                Objects.equals(getPrilet_time_otpravl(), reysy.getPrilet_time_otpravl()) &&
+                Objects.equals(getPrilet_time_prib(), reysy.getPrilet_time_prib()) &&
+                Objects.equals(getVilet_days(), reysy.getVilet_days()) &&
+                Objects.equals(getVilet_time_otpravl(), reysy.getVilet_time_otpravl()) &&
+                Objects.equals(getVilet_time_prib(), reysy.getVilet_time_prib()) &&
+                Objects.equals(getTip_vs(), reysy.getTip_vs()) &&
+                getIzmen_otmen() == reysy.getIzmen_otmen() &&
+                Objects.equals(getOsnovanie_izmen_otmen(), reysy.getOsnovanie_izmen_otmen()) &&
+                getType() == reysy.getType() &&
+                getAirline() == reysy.getAirline();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getNomer_prilet(), getNomer_vilet(), getRout(), getPeriod_start(), getPeriod_end(), getPrilet_days(), getPrilet_time_otpravl(), getPrilet_time_prib(), getVilet_days(), getVilet_time_otpravl(), getVilet_time_prib(), getTip_vs(), getIzmen_otmen(), getOsnovanie_izmen_otmen(), getType(), getAirline());
     }
 }

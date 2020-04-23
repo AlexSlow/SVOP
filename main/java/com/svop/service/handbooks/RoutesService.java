@@ -242,6 +242,7 @@ if (Integer.parseInt(item)==airport.getId()) {isBax=true;break;}
            if (response.length()!=0){response=response+"—"+airporty.getNameRu();}else response=airporty.getNameRu();
 
        }
+       logger.info("Получение маршрута "+response);
        return response;
    }
 

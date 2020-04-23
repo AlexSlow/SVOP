@@ -1,6 +1,7 @@
 package com.svop.controllers.sezon;
 
 import com.itextpdf.text.DocumentException;
+import com.svop.Application;
 import com.svop.other.HeadProcessing.Head_parser;
 import com.svop.other.HeadProcessing.PageFormatter;
 import com.svop.service.SeazonSchedule.SeazonScheduleService;
@@ -8,7 +9,9 @@ import com.svop.service.control.SeazonTabloControl;
 import com.svop.service.documentOutputPdf.SeazonOutputPdfService;
 import com.svop.service.secutity.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -23,6 +26,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 @Controller
 public class SeasonScheduleHttpController {
@@ -31,9 +38,8 @@ public class SeasonScheduleHttpController {
     @Autowired private SeazonScheduleService seazonScheduleService;
     @Autowired private SeazonOutputPdfService seazonOutputPdfService;
     @Autowired private SeazonTabloControl seazonTabloControl;
+    @Autowired private MessageSource messageSource;
     @RequestMapping(value="/svop/SeasonSchedule")
-
-
     public String open( Model model,@PageableDefault(sort = {"id"},direction = Sort.Direction.DESC) Pageable page) {
         Head_parser head_parser=new Head_parser();
 
@@ -80,7 +86,7 @@ public ResponseEntity<InputStreamResource> getPdf() throws IOException, Document
     ByteArrayInputStream bis = seazonOutputPdfService.generate(seazonScheduleService.getSeazonScheduleViews());
 
     HttpHeaders headers = new HttpHeaders();
-    headers.add("Content-Disposition", "inline; filename=customers.pdf");
+    headers.add("Content-Disposition", "inline; filename=Seazon.pdf");
     return ResponseEntity
             .ok()
             .headers(headers)
@@ -96,11 +102,8 @@ public ResponseEntity<InputStreamResource> getPdf() throws IOException, Document
      */
     @RequestMapping(value="/svop/SeasonSchedule/tablo")
     public String tablo( Model model,@PageableDefault(sort = {"id"},direction = Sort.Direction.DESC) Pageable page) {
-
-        System.out.println(seazonTabloControl);
-        PageFormatter pageFormatter=new PageFormatter();
-        model.addAttribute("sezonSchedules",seazonScheduleService.getSeazonScheduleViews(pageFormatter,page));
-        return "/html/SeasonSchedule/tablo.html";
+            PageFormatter pageFormatter = new PageFormatter();
+            return "/html/SeasonSchedule/tablo.html";
     }
 
     /**

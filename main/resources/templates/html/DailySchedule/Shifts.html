@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta http-equiv="Content-type" Content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<meta th:name="_csrf" th:content="${_csrf.token}"/>
+<meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+<title th:text="#{shift.title}">
+Формирование рафиков полета расписания
+</title>
+<link rel="stylesheet" href="/bootstrap/css/bootstrap.css"/>
+	<style>
+	#content_table{
+	text-align:center;
+	vertical-align: top;
+	border-collapse: collapse;
+	white-space: nowrap;
+	}
+	</style>
+</head>
+<Body>
+<script src="/js/jquery/jquery-3.3.1.min.js"></script>
+<script src="/bootstrap/js/popper_min.js" ></script>
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+<script>
+</script>
+<div id="header" th:insert="/html/nmenu.html"></div>
+
+<div class="form-group">
+<input  name="shift" id="shift"  th:value="#{flightShedule.currentShift}" type="button" class="btn btn-primary"/>
+<input  name="closeShift" id="closeShift"  th:value="#{flightShedule.closeShift}" type="button" class="btn btn-warning"/>
+</div>
+		<div class="form-group">
+		<label th:text="#{daily.day}"  class = "col-sm-2 control-label"> >Дата</label>
+		<input  id="day" name="start" form="form" type="Date" class="form-control"/>
+		</div>
+		<div class="form-group">
+		<button th:text="#{buttons.select}" id="select"  class="btn btn-primary">Выбрать</button>
+		</div>
+
+ <div id="content" class="container-fluid">
+        <div class="row" >
+		<div class="col-12">
+<div class="pages" th:insert="/html/pages.html"></div>
+		<div class="table-responsive">
+<table class="table table-striped table-bordered mb-5" id="content_table" >
+<thead >
+<tr>
+	<th  th:text="#{daily.day}">День</th>
+	<th  th:text="#{login.username}" >Пользователь</th>
+	<th  th:text="#{shift.status}" >Статус</th>
+	<th  th:text="#{shift.timeOpened}" >Время Открытия</th>
+	<th  th:text="#{shift.timeClosed}" >Время Закрытия</th>
+  </tr>
+ 
+</thead >
+<tbody id="filter_table">
+<tr th:each="shift : ${shifts}">
+<td><label th:for="ch+${shift.id}" th:text="${shift.day}"> </label></td>
+<td><label th:for="ch+${shift.id}" th:text="${shift.username}"> </label></td>
+<td><label th:for="ch+${shift.id}" th:text="${shift.status}"> </label></td>
+<td><label th:for="ch+${shift.id}" th:text="${shift.timeOpened}"> </label></td>
+<td><label th:for="ch+${shift.id}" th:text="${shift.timeClosed}"> </label></td>
+</tr>
+</tbody>
+</table>
+
+<div class="pages" th:insert="/html/pages.html"></div>
+		</div>
+ </div>
+ </div>
+ </div>
+</body>
+</html>

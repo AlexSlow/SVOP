@@ -115,6 +115,10 @@ public class ReysyService {
     {
         return reysyRepository.findActualReysByDate(type,date);
     }
+    public List<Reysy> getAllActualReys(Date date){
+
+        return reysyRepository.findAllActualReys(date);
+    }
 
 
     public ReysViewElement getReysById(Integer id){
@@ -122,6 +126,10 @@ public class ReysyService {
         Optional<Reysy> reys=reysyRepository.findById(id);
         if(reys.isPresent()){return new ReysViewElement(reys.get());}else{return new ReysViewElement();}
 
+    }
+    public Reysy findReysById(Integer id){
+        Optional<Reysy> reys=reysyRepository.findById(id);
+        return reys.get();
     }
     //____________________________________________________________
     /**
@@ -152,7 +160,6 @@ public class ReysyService {
         if (nomer_prilet.isPresent())
         {
             reysy.setNomer_vilet(nomer_vilet.get());
-
         }else
         {
             logger.error("Ошибка.Отсутствует номер рейса на вылет");
@@ -180,7 +187,6 @@ public class ReysyService {
             e.printStackTrace();
             return;
         }
-
         //получим дни прилета и вылета
         List<Integer> prilet_days=reysViewElement.getPrilet_days();
         List<Integer> vilet_days=reysViewElement.getVilet_days();
@@ -191,17 +197,12 @@ public class ReysyService {
         }
         //Тут пройдет проверка на удаленные дни
         refreshRemoveDays(reysy.getId(),prilet_days,vilet_days);
-
         //На прилет
-
         logger.info("Сформированы дни на прилет "+prilet_days);
         reysy.setPrilet_days(listToStringDays(prilet_days));//метод конвентирует списк в строку
-
         //На вылет
-
         logger.info("Сформированы дни на вылет "+vilet_days);
         reysy.setVilet_days(listToStringDays(vilet_days));//метод конвентирует списк в строку
-
         logger.info("Сформировано время отправления в Барнаул  "+reysViewElement.getPrilet_time_otpravl());
         //Время отправления и прибытия для прилета и вылета
         reysy.setPrilet_time_otpravl(reysViewElement.getPrilet_time_otpravl());
@@ -212,28 +213,24 @@ public class ReysyService {
 
         //Остальные параметры
         reysy.setTip_vs(reysViewElement.getTip_vs());
-        ReysyStatus reysyStatus=ReysyStatus.NOTChange;;
+        ReysyStatus reysyStatus=ReysyStatus.Unchanged;;
         //Если чекбокс не нажат, то рейс считается изменненным ??? А если по факту ничего не поменяется?
         if (reysViewElement.getIzmen_otmen()==null)
         {
-            if (reysViewElement.getId()!=null) reysyStatus=ReysyStatus.Modified;
+            if (reysViewElement.getId()!=null)
+            {
+                reysyStatus=ReysyStatus.Modified;
+            }
         }
-        else if (reysViewElement.getIzmen_otmen().equals("on"))
+        else if (reysViewElement.getIzmen_otmen()==true)
         {reysyStatus=ReysyStatus.Canceled;}
-
         reysy.setIzmen_otmen(reysyStatus);
         reysy.setOsnovanie_izmen_otmen(reysViewElement.getOsnovanie_izmen_otmen());
         reysy.setType(reysViewElement.getType());
         reysy.setAirline(reysViewElement.getAirline());
-
-        //System.out.println(reysy);
         reysyRepository.save(reysy);
-
-
-        logger.info("Озавершение сохранения рейса");
+        logger.info("Завершение сохранения рейса");
         return;
-
-
     }
     public void delete(List<Integer> id_list){
         logger.info("Удаление списка рейсов");
@@ -243,9 +240,6 @@ public class ReysyService {
     //----------------------------------------------------------------------------------------
     /**
      * Метод для работы с временной таблицей
-     */
-    /**
-     *
      * @param id_reys id обрабатываемого рейса
      * @param prilet_days Дни прилета, которые были выбраны сейчас
      * @param vilet_days Дни вылета, которые были выбраны сейчас
@@ -256,6 +250,7 @@ public class ReysyService {
         if (id_reys==null) return;
         //Так как рейс существует, то найдем дни, что были удалены
         Optional<Reysy> reysy=reysyRepository.findById(id_reys);
+
         if (!reysy.isPresent()) return; //Если рейса нет, то это новый рейс или где то ошибка!
 
         String[] prilet_days_in_past_array=reysy.get().getPrilet_days().split("/");
@@ -272,8 +267,8 @@ public class ReysyService {
             if (!item.equals(""))
             vilet_days_in_past.add(Integer.parseInt(item));}
 
-        logger.info("В таблице содержатся такие значения на прилет "+prilet_days_in_past);
-        logger.info("В таблице содержатся такие значения на вылет "+vilet_days_in_past);
+        logger.info("В  основной таблице содержатся такие значения на прилет "+prilet_days_in_past);
+        logger.info("В  основной таблице содержатся такие значения на вылет "+vilet_days_in_past);
         //Найдем, какие дни были Удалены между текущим сеансом
         List<Integer> prilet_days_has_daleted=new ArrayList<>(7);
         List<Integer> vilet_days_has_dalated=new ArrayList<>(7);
@@ -377,14 +372,20 @@ public class ReysyService {
 
         }else
         {
-            logger.info("Запись в временной таблице отсутствует. Добавим просто отсутствующие дни ");
-            //Создадним запись
-            TempReysy tempReysyNew=new TempReysy();
-            tempReysyNew.setReysyId(id_reys);
-            tempReysyNew.setTempPriletDays(listToStringDays(prilet_days_has_daleted));
-            tempReysyNew.setTempViletDays(listToStringDays(vilet_days_has_dalated));
-            tempReysyRepository.save(tempReysyNew);
+            if ((prilet_days_has_daleted.size()==0)&&(vilet_days_has_dalated.size()==0))
+            {
+                logger.info("Запись в временной таблице отсутствует, как и отмененные дни.Новую запись создавать не нужно");
+            }else {
+                logger.info("Запись в временной таблице отсутствует. Добавим просто отсутствующие дни ");
+                //Создадним запись
+                TempReysy tempReysyNew = new TempReysy();
+                tempReysyNew.setReysyId(id_reys);
+                tempReysyNew.setTempPriletDays(listToStringDays(prilet_days_has_daleted));
+                tempReysyNew.setTempViletDays(listToStringDays(vilet_days_has_dalated));
+                tempReysyRepository.save(tempReysyNew);
+            }
         }
+        logger.info("Конец обновления новых рейсов ");
 
     }
     /**

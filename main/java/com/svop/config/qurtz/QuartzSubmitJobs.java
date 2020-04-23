@@ -21,8 +21,9 @@ public class QuartzSubmitJobs {
      */
     @Value("${svop.backup_period}")
     private Integer period;
+
     //Активировать при выпуске
-    /*
+/*
     @Bean("recoveryJobDetail")
     public JobDetailFactoryBean recoveryJobDetail() {
         return QuartzConfig.createJobDetail(RecoveryJob.class, "Recovery Job");
@@ -30,6 +31,7 @@ public class QuartzSubmitJobs {
 
     @Bean("RecoveryTrigger")
     public SimpleTriggerFactoryBean triggerRecoveryJob(@Qualifier("recoveryJobDetail") JobDetail jobDetail) {
+       period = period==0? period=1:period;
         return QuartzConfig.createTrigger(jobDetail, period*1000*60*60*24, "Recovery Trigger");
     }
 */

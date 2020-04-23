@@ -4,6 +4,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "reysy_nomer")
@@ -69,5 +70,20 @@ public class NomerReys {
                 ", type=" + type +
                 ", aircompany=" + aircompany +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof NomerReys)) return false;
+        NomerReys nomerReys = (NomerReys) o;
+        return Objects.equals(getNomer(), nomerReys.getNomer()) &&
+                getType() == nomerReys.getType() &&
+                Objects.equals(getAircompany(), nomerReys.getAircompany());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getNomer(), getType(), getAircompany());
     }
 }

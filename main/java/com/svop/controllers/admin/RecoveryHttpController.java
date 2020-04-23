@@ -1,5 +1,6 @@
 package com.svop.controllers.admin;
 
+import com.svop.job.recovery.RecoveryJob;
 import com.svop.other.HeadProcessing.Head_parser;
 import com.svop.service.admin.Recovery;
 import com.svop.service.secutity.UserService;
@@ -30,6 +31,8 @@ public class RecoveryHttpController {
     private UserService userService;
     @Autowired
     private Recovery recovery;
+    @Autowired
+    private RecoveryJob recoveryJob;
     @RequestMapping(value="/svop/admin/recovery")
     public String open(Model model) {
         Head_parser head_parser=new Head_parser();
@@ -66,7 +69,14 @@ public class RecoveryHttpController {
         properties.setProperty("svop.backup_period",period.toString());
         properties.store();
         */
-
+        if (period==0)
+        {
+            recoveryJob.setStopFlag(false);
+        }
+        else
+        {
+            recoveryJob.setStopFlag(true);
+        }
         }
         return "redirect:/svop/admin/recovery";
     }

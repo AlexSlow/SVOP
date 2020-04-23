@@ -19,6 +19,10 @@
 	white-space: nowrap;
 	
 	}
+	td,th{
+	 text-align: center;
+	vertical-align:middle;
+}
 	</style>
 </head>
 <Body>
@@ -49,15 +53,15 @@
 <div class="table-responsive">
 <table class="table table-striped table-bordered mb-5" id="content_table" >
 <thead >
-<tr> <th  rowspan="2" ></th>
-	<th  rowspan="2" th:text="#{reysy.rout}" >Маршрут</th>
-	<th rowspan="2"  th:text="#{reysy.period_start}">Начало периода</th>
-	<th rowspan="2" th:text="#{reysy.period_end}">Конец периода</th> 
+<tr> <th rowspan="2" ></th>
+	<th  rowspan="2"  style="vertical-align:middle;" th:text="#{reysy.rout}" >Маршрут</th>
+	<th rowspan="2" style="vertical-align:middle;" th:text="#{reysy.period_start}">Начало периода</th>
+	<th rowspan="2" style="vertical-align:middle;" th:text="#{reysy.period_end}">Конец периода</th> 
 	<th  colspan="4" th:text="#{reysy.prilet}">Прилет</th>
 	<th  colspan="4" th:text="#{reysy.vilet}">Вылет</th>
-	<th rowspan="2" th:text="#{reysy.tip_vs}">Тип ВС</th>
-	<th rowspan="2" th:text="#{reysy.izemenen_onmenen}">Изменен отменен</th>
-	<th rowspan="2" th:text="#{reysy.airlines}" >Вид авиалинии</th>
+	<th rowspan="2" style="vertical-align:middle;" th:text="#{reysy.tip_vs}">Тип ВС</th>
+	<th rowspan="2" style="vertical-align:middle;" th:text="#{reysy.izemenen_onmenen}">Изменен отменен</th>
+	<th rowspan="2" style="vertical-align:middle;" th:text="#{reysy.airlines}" >Вид авиалинии</th>
   </tr>
   <tr>
 

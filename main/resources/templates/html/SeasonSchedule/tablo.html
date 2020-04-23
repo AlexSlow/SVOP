@@ -6,32 +6,26 @@
 <meta th:name="_csrf" th:content="${_csrf.token}"/>
 <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
 
-<title th:text="#{sezon.title}">
+<title th:text="#{sezon.tablo}">
 Формирование сезонного расписания
 </title>
 <link rel="stylesheet" href="/bootstrap/css/bootstrap.css"/>
+</head>
 <style>
 body{
-background-color:#800080;
+background-color:black;
 }
 #tablo{
-	background-color:#800080;
-	}
-	.TabloTable{
-	color:yellow;
-	border:solid 1pt yellow;
-	text-align: center;
-	vertical-align:middle;
-	border-collapse: collapse;
-	white-space: nowrap;
-	}
+width:100%
+height:100%;
+}
 </style>
-</head>
-<Body>
+
+<body>
 <script src="/js/jquery/jquery-3.3.1.min.js"></script>
 <script src="/bootstrap/js/popper_min.js" ></script>
 <script src="/bootstrap/js/bootstrap.min.js"></script>
-<script src="/js/jquery/sockjs.min.js"></script>
+<script src="/js/jquery/sockjs-min.js"></script>
     <script src="/js/jquery/stomp.min.js"></script>
 
 <script>
@@ -41,57 +35,65 @@ background-color:#800080;
 
  <div id="content" class="container-fluid">
         <div class="row" >
-		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-<div id="tablo">
+		<div class="col-12">
+		<script>var tablo=true;</script>
+<div id="tablo" class="tabloWidth tabloBlack">
 
-<table class="table TabloTable" id="content_table" >
+<style>
+
+.tabloWidth{
+width: 100vw; 
+height: 100vh;
+}
+.tabloBlack{
+	background-color:black;
+	}
+	.TabloActive{
+	background-color: #800080;
+	}
+	.tableTablo{
+	color:yellow;
+	border:solid 1pt yellow;
+	text-align: center;
+	vertical-align:middle;
+	border-collapse: collapse;
+	white-space: nowrap;
+	}
+</style>
+<div id="headTitle" style="text-align:center;color:yellow;font-size:34px; display:none;">
+<p id="head">
+
+</p>
+</div>
+<table class="table tableTablo TabloActive tabloWidth grid" id="content_table" style="width 100%;height:100%;display:none" >
 <thead>
 <tr>
-	<th rowspan="2"  th:text="#{aircompanies.title}">Авиакомпания</th>
-	<th rowspan="2"  th:text="#{reysy.period_start}">Начало периода</th>
-	<th rowspan="2" th:text="#{reysy.period_end}">Конец периода</th> 
-	<th  rowspan="2" th:text="#{routs.name_ru}" >Маршрут</th>	
-	<th  colspan="4" th:text="#{reysy.prilet}">Прилет</th>
-	<th  colspan="4" th:text="#{reysy.vilet}">Вылет</th>
-	<th rowspan="2" th:text="#{reysy.tip_vs}">Тип ВС</th>
-	<th rowspan="2" th:text="#{reysy.airlines}" >Вид авиалинии</th>
-		<th rowspan="2" th:text="#{aircompanies.logo}" >Логотип</th>
+	<th rowspan="2"  id="aircompanies">Авиакомпания</th>
+	<th rowspan="2"  id="period_start">Начало периода</th>
+	<th rowspan="2" id="period_end">Конец периода</th> 
+	<th  rowspan="2" id="rout" >Маршрут</th>	
+	<th  colspan="4" id="prilet">Прилет</th>
+	<th  colspan="4" id="vilet">Вылет</th>
+	<th rowspan="2" id="Logo" ></th>
   </tr>
   <tr>
-  <th th:text="#{reysy.nomer_reys}">Номер рейса</th>
-  <th th:text="#{reysy.prilet_days}" >Дни прилета</th>
-  <th th:text="#{reysy.time_otpravl}" >Время отправления</th>
-  <th th:text="#{reysy.time_prib}">Время прибытия</th>
+  <th id="nomer_reys_p">Номер рейса</th>
+  <th id="prilet_days" >Дни прилета</th>
+  <th id="time_otpravl_p" >Время отправления</th>
+  <th id="time_prib_p">Время прибытия</th>
   
-  <th th:text="#{reysy.nomer_reys}">Номер рейса</th>
-  <th th:text="#{reysy.vilet_days}" >Дни вылета</th>
-  <th th:text="#{reysy.time_otpravl}" >Время отправления</th>
-  <th th:text="#{reysy.time_prib}">Время прибытия</th>
+  <th id="nomer_reys_v">Номер рейса</th>
+  <th id="vilet_days" >Дни вылета</th>
+  <th id="time_otpravl_v" >Время отправления</th>
+  <th id="time_prib_v">Время прибытия</th>
   </tr>
 </thead >
 <tbody id="filter_table">
-<tr th:each="sezonSchedule : ${sezonSchedules}">
-<td id="date_start"><span  th:text="${sezonSchedule.aircompany}"> </span></td>
-<td id="date_start"><span  th:text="${sezonSchedule.periodStart}"> </span></td>
-<td id="date_end"><span    th:text="${sezonSchedule.periodEnd}"> </span></td>
-<td><span th:text="${sezonSchedule.routRu}"> </span></td>
-<td><span  th:text="${sezonSchedule.nomerPrilet}"> </span></td>
-<td><span  th:text="${sezonSchedule.priletDays}"> </span></td>
-<td><span  th:text="${sezonSchedule.prilet_time_otpravl}"> </span></td>
-<td><span  th:text="${sezonSchedule.prilet_time_prib}"> </span></td>
-
-<td><span  th:text="${sezonSchedule.nomerVilet}"> </span></td>
-<td><span  th:text="${sezonSchedule.viletDays}"> </span></td>
-<td><span  th:text="${sezonSchedule.vilet_time_otpravl}"> </span></td>
-<td><span  th:text="${sezonSchedule.vilet_time_prib}"> </span></td>
-
-<td><span  th:text="${sezonSchedule.tip_vs}"> </span></td>
-<td><span  th:text="${sezonSchedule.airline}"> </span></td>
-<td><img  th:src="${sezonSchedule.img}"/> </td>
-</tr>
-
 </tbody>
 </table>
+<script src="/js/tablo.js">
+//Настройка клиента
+</script>
 </div>
         </div>
 
@@ -103,98 +105,9 @@ background-color:#800080;
  
  
  
- <div id="main-content" class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="connect">WebSocket connection:</label>
-                    <button id="connect" class="btn btn-default" type="submit">Connect</button>
-                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
-                    </button>
-                </div>
-            </form>
-        </div>
-        <div class="col-md-6">
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="name">What is your name?</label>
-                    <input type="text" id="name" class="form-control" placeholder="Your name here...">
-                </div>
-                <button id="send" class="btn btn-default" type="submit">Send</button>
-            </form>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <table id="conversation" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Greetings</th>
-                </tr>
-                </thead>
-                <tbody id="greetings">
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
+ 
  
  
 </body>
-<script>
-//Настройка клиента
 
-var stompClient = null;
-
-function setConnected(connected) {
-    $("#connect").prop("disabled", connected);
-    $("#disconnect").prop("disabled", !connected);
-    if (connected) {
-        $("#conversation").show();
-    }
-    else {
-        $("#conversation").hide();
-    }
-    $("#greetings").html("");
-}
-
-function connect() {
-    var socket = new SockJS('/gs-guide-websocket');
-    stompClient = Stomp.over(socket);
-    stompClient.connect({}, function (frame) {
-        setConnected(true);
-        console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/greetings', function (greeting) {
-		console.log(greeting.body);
-            showGreeting(JSON.parse(greeting.body).content);
-        });
-    });
-}
-
-function disconnect() {
-    if (stompClient !== null) {
-        stompClient.disconnect();
-    }
-    setConnected(false);
-    console.log("Disconnected");
-}
-
-function sendName() {
-    stompClient.send("/app/hello", {}, JSON.stringify({'name': $("#name").val()}));
-}
-
-function showGreeting(message) {
-    $("#greetings").append("<tr><td>" + message + "</td></tr>");
-}
-
-$(function () {
-    $("form").on('submit', function (e) {
-        e.preventDefault();
-    });
-    $( "#connect" ).click(function() { connect(); });
-    $( "#disconnect" ).click(function() { disconnect(); });
-    $( "#send" ).click(function() { sendName(); });
-});
-</script>
 </html>

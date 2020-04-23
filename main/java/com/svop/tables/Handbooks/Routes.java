@@ -4,6 +4,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "routs")
@@ -87,5 +88,29 @@ public class Routes {
 
     public void setVilet(String vilet) {
         this.vilet = vilet;
+    }
+
+    @Override
+    public String toString() {
+        return "Routes{" +
+                "name='" + name + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Routes)) return false;
+        Routes routes = (Routes) o;
+        return Objects.equals(getName(), routes.getName()) &&
+                Objects.equals(getPrilet(), routes.getPrilet()) &&
+                Objects.equals(getVilet(), routes.getVilet()) &&
+                Objects.equals(getArrival(), routes.getArrival()) &&
+                Objects.equals(getDeporture(), routes.getDeporture());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName(), getPrilet(), getVilet(), getArrival(), getDeporture());
     }
 }

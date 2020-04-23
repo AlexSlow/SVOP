@@ -4,6 +4,7 @@ import com.svop.View.AircompanyView;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -87,5 +88,18 @@ public class Aircompany {
 
     public void setNomers(Set<NomerReys> nomers) {
         this.nomers = nomers;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Aircompany)) return false;
+        Aircompany that = (Aircompany) o;
+        return Objects.equals(getId(), that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }

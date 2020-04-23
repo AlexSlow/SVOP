@@ -1,9 +1,7 @@
 package com.svop.job.recovery;
 
 import com.svop.service.admin.Recovery;
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
+import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,11 +9,21 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 @Component
-public class RecoveryJob implements Job {
+public class RecoveryJob implements InterruptableJob {
     @Autowired
     Recovery recovery;
+    private Boolean stopFlag;
+
+    public Boolean getStopFlag() {
+        return stopFlag;
+    }
+
+    public void setStopFlag(Boolean stopFlag) {
+        this.stopFlag = stopFlag;
+    }
 
     public void execute(JobExecutionContext context) throws JobExecutionException {
+        if (stopFlag) return;
         try {
             recovery.export();
         } catch (SQLException e) {
@@ -25,5 +33,10 @@ public class RecoveryJob implements Job {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void interrupt() throws UnableToInterruptJobException {
+       stopFlag=!stopFlag;
     }
 }

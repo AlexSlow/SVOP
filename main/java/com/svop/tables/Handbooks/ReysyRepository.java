@@ -39,4 +39,8 @@ Page<Reysy> findBetweenPeriodByType(
             @Param("typeReys") TypeReys typeReys,
             @Param("date") Date date);
 
+    @Query("select reys from Reysy reys where  reys.period_end > :date")
+    List<Reysy> findAllActualReys(
+            @Param("date") Date date);
+
 }
