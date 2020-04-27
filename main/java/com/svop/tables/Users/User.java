@@ -1,10 +1,8 @@
 package com.svop.tables.Users;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
+
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
@@ -27,11 +25,8 @@ public class User {
     @Transient
     private String confirmPassword;
 
-
-    //mappedBy-имя владеющей стороны
-    //JoinTable -name -имя общей таблицы
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name="usr_roles",joinColumns = @JoinColumn(name="user_id"),
+    @JoinTable(name="user_role",joinColumns = @JoinColumn(name="user_id"),
             inverseJoinColumns = @JoinColumn(name="role_id"))
     private Set<Role> roles;
 
@@ -45,17 +40,16 @@ public class User {
 
 
     public User(){}
-    public User(String username, String password, Set<Role> roles) {
+    public User(String username, String password, Set<Permissions> permissions) {
         this.username = username;
         this.password = password;
-        this.roles = roles;
+
     }
 
-    public User(String username, String password, String locale, Set<Role> roles) {
+    public User(String username, String password, String locale, Set<Permissions> permissions) {
         this.username = username;
         this.password = password;
         this.locale = locale;
-        this.roles = roles;
     }
 
     public Long getId() {
@@ -67,6 +61,13 @@ public class User {
     }
 
 
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 
     public String getPassword() {
         return password;
@@ -76,14 +77,6 @@ public class User {
         this.password = password;
     }
 
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
 
     public String getConfirmPassword() {
         return confirmPassword;
@@ -110,7 +103,6 @@ public class User {
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", confirmPassword='" + confirmPassword + '\'' +
-                ", roles=" + roles +
                 '}';
     }
 }

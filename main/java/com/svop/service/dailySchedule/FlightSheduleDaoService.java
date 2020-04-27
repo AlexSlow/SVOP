@@ -76,6 +76,13 @@ public class FlightSheduleDaoService {
         flightScheduleView.setStatus(flightSchedule.getStatus().name());
         flightScheduleView.setDirection(flightSchedule.getDaily().getDirection().name());
 
+        if(flightSchedule.getFlightScheduleNext()!=null)
+        {
+            flightScheduleView.setTimeDeportureNext(flightSchedule.getFlightScheduleNext().getTimeDeporture().format(dateTimeFormatter));
+            flightScheduleView.setTimePriletNext(flightSchedule.getFlightScheduleNext().getTimePrilet().format(dateTimeFormatter));
+            flightScheduleView.setDayNext(df.format(flightSchedule.getFlightScheduleNext().getDay()));
+        }
+
         return flightScheduleView;
     }
 

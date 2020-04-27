@@ -43,9 +43,14 @@ public class FlightSchedule {
 
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Flight_Schedule_Previous", nullable = false)
+    @JoinColumn(name = "Flight_Schedule_Previous", nullable = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private FlightSchedule flightSchedule;
+    private FlightSchedule flightSchedulePrevious;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Flight_Schedule_next", nullable = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private FlightSchedule flightScheduleNext;
 
 
     public FlightSchedule() {
@@ -107,12 +112,20 @@ public class FlightSchedule {
         this.status = status;
     }
 
-    public FlightSchedule getFlightSchedule() {
-        return flightSchedule;
+    public FlightSchedule getFlightSchedulePrevious() {
+        return flightSchedulePrevious;
     }
 
-    public void setFlightSchedule(FlightSchedule flightSchedule) {
-        this.flightSchedule = flightSchedule;
+    public void setFlightSchedulePrevious(FlightSchedule flightSchedulePrevious) {
+        this.flightSchedulePrevious = flightSchedulePrevious;
+    }
+
+    public FlightSchedule getFlightScheduleNext() {
+        return flightScheduleNext;
+    }
+
+    public void setFlightScheduleNext(FlightSchedule flightScheduleNext) {
+        this.flightScheduleNext = flightScheduleNext;
     }
 
     @Override

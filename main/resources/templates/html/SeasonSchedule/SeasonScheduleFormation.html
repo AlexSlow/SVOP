@@ -99,7 +99,7 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
 		</table>
 <div class="pages" th:insert="/html/pages.html"></div>
 		</div>
-<form th:action="@{'/svop/SeasonSchedule/forming'}" method="POST" id="form" role="form" >
+<form th:action="@{'/svop/SeasonSchedule/forming'}" method="POST" id="form" permissions="form" >
 <div class="btn-group fixed-bottom w-50 m-auto">
  <input type="submit" name="formation"  th:value="#{buttons.formation}"
  class="btn btn-primary">

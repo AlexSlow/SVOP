@@ -1,8 +1,6 @@
 package com.svop.service.secutity;
 
-import com.svop.tables.Users.Role;
-import com.svop.tables.Users.User;
-import com.svop.tables.Users.UserRepository;
+import com.svop.tables.Users.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -29,11 +27,23 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
       User user= userRepository.findByUsername(username);
-        Set<GrantedAuthority> grantedAuthorities=new HashSet<>();//Оффициальные роли пользвателя. Теперь нам нужно подгрузить из БД обычные роль
-        for(Role role:user.getRoles())
+        Set<GrantedAuthority> grantedAuthorities=new HashSet<>();//Официальные роли пользвателя. Теперь нам нужно подгрузить из БД обычные роль
+        Set<Role>  roles=user.getRoles();
+        grantedAuthorities.add(new SimpleGrantedAuthority("Гость"));
+        //Перебор ролей и
+        if (roles!=null)
         {
-            grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
+
+            for(Role role:roles) {
+                grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()) );
+                //Загрузить разрешения роли
+                for (RolePermissions permissions : role.getPermissions()) {
+                    grantedAuthorities.add(new SimpleGrantedAuthority(permissions.getPermission().getName()));
+                }
+            }
         }
+
+
         return  new org.springframework.security.core.userdetails.User(user.getUsername(),user.getPassword(),grantedAuthorities);
     }
 }

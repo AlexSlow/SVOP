@@ -58,7 +58,7 @@
 </tbody>
 </table>
 </div>
-<form th:action="@{'/svop/DailySchedule/pdf'}" method="POST" id="form" role="form" th:object="${Period}" >
+<form th:action="@{'/svop/DailySchedule/pdf'}" method="POST" id="form" permissions="form" th:object="${Period}" >
 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 <div class="btn-group fixed-bottom w-50 m-auto">
  <input type="submit" name="pdf" id="pdf"  th:value="#{buttons.pdf}"

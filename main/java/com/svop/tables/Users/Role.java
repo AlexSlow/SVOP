@@ -1,26 +1,44 @@
 package com.svop.tables.Users;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.security.Permission;
 import java.util.Set;
 
 @Entity
-@Table(name="rls")
-public class Role {
+@Table(name="role")
+public class Role implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    @Column(name="roles_id")
-    private Long id;
+    @Column(name="role_id")
+    private Integer id;
 
-    @Column(name="rls_name")
+    @Column(name="role_name")
     private String name;
 
-    //mappedBy- используется  для главной таблицы, указвается ИМЯ переменной? у владельца
-    @ManyToMany(fetch=FetchType.EAGER, mappedBy = "roles")
-    Set<User> users;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "permission")
+    Set<RolePermissions> permissions;
 
-    public Role(){}
+    @ManyToMany(fetch = FetchType.LAZY,mappedBy="roles")
+    private Set<User> users;
+
+    public Role(Integer id,String name) {
+        this.id=id;
+        this.name = name;
+    }
     public Role(String name) {
         this.name = name;
+    }
+
+    public Role() {
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -31,6 +49,14 @@ public class Role {
         this.name = name;
     }
 
+    public Set<RolePermissions> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(Set<RolePermissions> permissions) {
+        this.permissions = permissions;
+    }
+
     public Set<User> getUsers() {
         return users;
     }
@@ -39,5 +65,13 @@ public class Role {
         this.users = users;
     }
 
-
+    @Override
+    public String toString() {
+        return "Role{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", permissions=" + permissions +
+                ", users=" + users +
+                '}';
+    }
 }

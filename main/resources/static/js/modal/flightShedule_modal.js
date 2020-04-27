@@ -60,18 +60,31 @@ $("#modal_table tbody").empty();
 	success: function(data) {
 	//console.log(data);
 	data.forEach(function(item, i, arr) {
- let id=item.id;
+	let id=item.id;
 	let day=item.day;
 	let nomer=item.nomer;
 	let type=item.status;
 	let timeDep=item.timeDeporture;
 	let timePril=item.timePrilet;
 	
+	let timeDeportureNext=item.timeDeportureNext;
+	let timePriletNext=item.timePriletNext;
+	let dayNext=item.dayNext;
+	let comment=item.comment;
+	
 	//Сформируем запрос на сервер и получим информацию о нужных рейсах
 	if (type!="Moved")
+	{
 $("#modal_table tbody ").append("<tr><td class='d-none'>"+id+"</td><td>"+day+"</td><td>"+nomer+"</td>"+
 "<td>"+timeDep+"</td><td>"+timePril+"</td><td><input type='date'/></td><td><input type='time'/></td><td><input type='time'/></td>"+
-"<td><input type='text'/></td><td class='d-none'>"+type+"</td></tr>");  
+"<td><input type='text'/></td><td class='d-none'>"+type+"</td></tr>"); 
+	} 
+else
+{
+	$("#modal_table tbody ").append("<tr><td class='d-none'>"+id+"</td><td>"+day+"</td><td>"+nomer+"</td>"+
+"<td>"+timeDep+"</td><td>"+timePril+"</td><td>"+dayNext+"</td><td>"+timeDeportureNext+"</td><td>"+timePriletNext+"</td><td>"+comment+"</td>"+
+"<td class='d-none'>"+type+"</td></tr>"); 
+}
 });
 	
   }

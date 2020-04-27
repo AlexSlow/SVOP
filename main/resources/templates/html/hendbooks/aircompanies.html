@@ -79,7 +79,7 @@ $('.btn').click(function( event ){
 </div>
 
 
-<form th:action="@{/svop/aircompanies/delete}" method="POST" id="form" role="form" >
+<form th:action="@{/svop/aircompanies/delete}" method="POST" id="form" permissions="form" >
 
 <div class="btn-group fixed-bottom w-50 m-auto mt-5">
  <input type="button" name="add" data-toggle="modal" data-target="#addModal" data-content="add" th:value="#{buttons.add_bt}" 

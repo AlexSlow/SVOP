@@ -14,8 +14,38 @@ public class FlightScheduleView {
     private String status;
     private String direction;
 
+    private String timeDeportureNext;
+    private String timePriletNext;
+    private String dayNext;
+
     public FlightScheduleView() {
         comment=new String();
+        timeDeportureNext=new String();
+        timePriletNext=new String();
+    }
+
+    public String getDayNext() {
+        return dayNext;
+    }
+
+    public void setDayNext(String dayNext) {
+        this.dayNext = dayNext;
+    }
+
+    public String getTimeDeportureNext() {
+        return timeDeportureNext;
+    }
+
+    public void setTimeDeportureNext(String timeDeportureNext) {
+        this.timeDeportureNext = timeDeportureNext;
+    }
+
+    public String getTimePriletNext() {
+        return timePriletNext;
+    }
+
+    public void setTimePriletNext(String timePriletNext) {
+        this.timePriletNext = timePriletNext;
     }
 
     public String getDirection() {

@@ -26,6 +26,7 @@ public class FlightSheduleService {
     public List<FlightScheduleView> build()
     {
         logger.info("Начало  построения графиков полета");
+        //Проверка открыта ли смена
         if (shiftService.checkShift()) {
             //Выберем из ежедневных расписаний за следующие сутки
             Calendar calendar = Calendar.getInstance();
@@ -49,34 +50,39 @@ public class FlightSheduleService {
     }
     public void move(List<FlightScheduleMove> flightScheduleMoves) throws SvopExeption
     {
-        logger.info("Начало  перемещения графика полета ");
-        ArrayList<FlightSchedule> flightSchedules=new ArrayList<>(flightScheduleMoves.size()*2);
-        for (FlightScheduleMove flightScheduleMove:flightScheduleMoves) {
-            Optional<FlightSchedule> flightSchedule = flightSheduleDaoService.getFlightSheduleById(flightScheduleMove.getId());
-            if (!flightSchedule.isPresent()) throw new SvopExeption("svop.error.fs.notfound");
-            if ((flightScheduleMove.getDay() == null) || (flightScheduleMove.getDeporture() == null) || (flightScheduleMove.getPrilet() == null))
-                throw new SvopExeption("svop.error.incorrect");
+        //Проверка открыта ли смена
+        if (shiftService.checkShift()) {
+            logger.info("Начало  перемещения графика полета ");
+            ArrayList<FlightSchedule> flightSchedules = new ArrayList<>(flightScheduleMoves.size() * 2);
+            for (FlightScheduleMove flightScheduleMove : flightScheduleMoves) {
+                Optional<FlightSchedule> flightSchedule = flightSheduleDaoService.getFlightSheduleById(flightScheduleMove.getId());
+                if (!flightSchedule.isPresent()) throw new SvopExeption("svop.error.fs.notfound");
+                if ((flightScheduleMove.getDay() == null) || (flightScheduleMove.getDeporture() == null) || (flightScheduleMove.getPrilet() == null))
+                    throw new SvopExeption("svop.error.incorrect");
 
                 //Созданим новый FH на новыую дату
 
-            if (flightSchedule.get().getStatus()==FlightSheduleStatus.NotChanged) {
-                FlightSchedule flightScheduleNew = new FlightSchedule();
-                flightScheduleNew.setDay(flightScheduleMove.getDay());
-                flightScheduleNew.setTimeDeporture(flightScheduleMove.getDeporture());
-                flightScheduleNew.setTimePrilet(flightScheduleMove.getPrilet());
-                flightScheduleNew.setComment("");
-                flightScheduleNew.setFlightSchedule(flightSchedule.get());
-                flightScheduleNew.setStatus(FlightSheduleStatus.NotChanged);
-                flightScheduleNew.setDaily(flightSchedule.get().getDaily());
-                //Пометить как перемещенный
-                flightSchedule.get().setComment(flightScheduleMove.getComment());
-                flightSchedule.get().setStatus(FlightSheduleStatus.Moved);
-                flightSchedules.add(flightScheduleNew);
-                flightSchedules.add(flightSchedule.get());
+                if (flightSchedule.get().getStatus() == FlightSheduleStatus.NotChanged) {
+                    FlightSchedule flightScheduleNew = new FlightSchedule();
+                    flightScheduleNew.setDay(flightScheduleMove.getDay());
+                    flightScheduleNew.setTimeDeporture(flightScheduleMove.getDeporture());
+                    flightScheduleNew.setTimePrilet(flightScheduleMove.getPrilet());
+                    flightScheduleNew.setComment("");
+                    //Определить предыдущий и следующий ФШ
+                    flightScheduleNew.setFlightSchedulePrevious(flightSchedule.get());
+                    flightSchedule.get().setFlightScheduleNext(flightScheduleNew);
+                    flightScheduleNew.setStatus(FlightSheduleStatus.NotChanged);
+                    flightScheduleNew.setDaily(flightSchedule.get().getDaily());
+                    //Пометить как перемещенный
+                    flightSchedule.get().setComment(flightScheduleMove.getComment());
+                    flightSchedule.get().setStatus(FlightSheduleStatus.Moved);
+                    flightSchedules.add(flightScheduleNew);
+                    flightSchedules.add(flightSchedule.get());
+                }
             }
+            flightSheduleDaoService.saveAll(flightSchedules);
+            logger.info("Конец  перемещения графика полета");
         }
-        flightSheduleDaoService.saveAll(flightSchedules);
-        logger.info("Конец  перемещения графика полета");
 
     }
 

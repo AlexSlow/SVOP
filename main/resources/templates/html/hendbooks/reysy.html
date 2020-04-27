@@ -117,7 +117,7 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
 </div>
 
 
-<form th:action="@{'/svop/reysy/edit'}" method="POST" id="form" role="form" >
+<form th:action="@{'/svop/reysy/edit'}" method="POST" id="form" permissions="form" >
 <div class="btn-group fixed-bottom w-50 m-auto">
  <input type="submit" name="add"  th:value="#{buttons.add_bt}"
  class="btn btn-primary">

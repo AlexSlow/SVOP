@@ -1,18 +1,14 @@
 package com.svop.service.secutity;
 
-import com.svop.service.secutity.UserService;
-import com.svop.tables.Users.Role;
-import com.svop.tables.Users.RoleRepository;
-import com.svop.tables.Users.User;
-import com.svop.tables.Users.UserRepository;
+import com.svop.tables.Users.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -40,11 +36,11 @@ private static Logger logger= LoggerFactory.getLogger(UserServiceImpl.class.getN
     public void save(User user) {
         logger.info("Сохранение пользователя");
         //System.out.println("user "+user);
-           user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-           Set<Role> roles=new HashSet<>();
-           roles.add(roleRepository.getOne(0L));
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+         // Role role =new HashSet<>();
+       // role.add(roleRepository.getOne(0L));
 
-           user.setRoles(roles);
+         //  user.setPermissions(permissions);
         userRepository.save(user);
     }
 
@@ -56,7 +52,6 @@ private static Logger logger= LoggerFactory.getLogger(UserServiceImpl.class.getN
     @Override
     public String getLocale(String username) {
         logger.info("плучение локали");
-        //System.out.println("uuuser"+userRepository.findByUsername(username));
         return (userRepository.findByUsername(username).getLocale());
     }
 
@@ -96,4 +91,13 @@ private static Logger logger= LoggerFactory.getLogger(UserServiceImpl.class.getN
         return users;
     }
 
+    @Override
+    public Page<User> findAll(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
+
+    @Override
+    public void deleteByIdIn(List<Integer> idl) {
+
+    }
 }

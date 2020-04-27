@@ -92,8 +92,8 @@ max-width:50em;
 			<a class="dropdown-item" th:href="@{/svop/admin/recovery}"  th:text="#{menu.rollback}">Востановление системы</a>
 		</div>
 		
-			<a class="dropdown-item" href="#"  th:text="#{menu.users}">Пользователи</a>
-			<a class="dropdown-item" href="#"  th:text="#{menu.user_role}">Роли</a>
+			<a class="dropdown-item" th:href="@{/svop/admin/users}"  th:text="#{menu.users}">Пользователи</a>
+			<a class="dropdown-item" th:href="@{/svop/admin/roles}"  th:text="#{menu.user_role}">Роли</a>
 	
 		</div>
 	</div>
@@ -118,7 +118,7 @@ max-width:50em;
  </div>
  
  <div class="col-md-4 col-lg-4">
- <form role="form" method="post"  th:action="@{'/svop/logout?lang='+${current_language}}" class="form-inline">
+ <form permissions="form" method="post"  th:action="@{'/svop/logout?lang='+${current_language}}" class="form-inline">
  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
  <div class="form-group" >
 
