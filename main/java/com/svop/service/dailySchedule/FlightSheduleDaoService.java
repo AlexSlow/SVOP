@@ -1,5 +1,6 @@
 package com.svop.service.dailySchedule;
 
+import com.svop.View.DailyScheduleViews.FlightScheduleLanguageView;
 import com.svop.View.DailyScheduleViews.FlightScheduleView;
 import com.svop.other.HeadProcessing.PageFormatter;
 import com.svop.service.handbooks.RoutesService;
@@ -11,6 +12,7 @@ import com.svop.tables.daily_schedule.FlightSheduleStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,6 +32,36 @@ public class FlightSheduleDaoService {
     @Autowired private UserService userService;
     @Autowired private FlightSheduleRepository flightSheduleRepository;
 
+    /**
+     * Получить локализованное представление
+     * @param pageable
+     * @return
+     */
+    @Cacheable(cacheNames = "fightScheduledLanguage")
+    public List<FlightScheduleLanguageView> getFlightScheduleLanguageList(Pageable pageable,Integer country,Locale locale)
+    {
+        Page<FlightSchedule>  flightScheduleList=flightSheduleRepository.findAllByDay(pageable,new Date(System.currentTimeMillis()));
+        List<FlightScheduleLanguageView> languageViews=new ArrayList<>(flightScheduleList.getSize());
+        for(FlightSchedule flightSchedule:flightScheduleList)
+        {
+            FlightScheduleLanguageView flightScheduleLanguageView=new FlightScheduleLanguageView();
+            flightScheduleLanguageView.setRout(routesService.getRoutsByNomer(country,flightSchedule.getDaily().getRout().getName()));
+            DateFormat df=DateFormat.getDateInstance(DateFormat.SHORT,locale);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm",locale);
+            flightScheduleLanguageView.setDay(df.format(flightSchedule.getDay()));
+            flightScheduleLanguageView.setTimeDeporture(formatter.format(flightSchedule.getTimeDeporture()));
+            flightScheduleLanguageView.setTimePrilet(formatter.format(flightSchedule.getTimePrilet()));
+            flightScheduleLanguageView.setNomer(flightSchedule.getDaily().getNomer().getNomer());
+            languageViews.add(flightScheduleLanguageView);
+        }
+        return languageViews;
+
+    }
+    public int getPageAmout(Pageable pageable)
+    {
+        Page<FlightSchedule> page=flightSheduleRepository.findAll(pageable);
+        return  page.getTotalPages();
+    }
     /**
      * ПОлучить страницу
      * @param pageFormatter

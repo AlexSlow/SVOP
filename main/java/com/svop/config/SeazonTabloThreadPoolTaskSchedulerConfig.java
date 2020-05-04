@@ -16,7 +16,16 @@ public class SeazonTabloThreadPoolTaskSchedulerConfig {
                 = new ThreadPoolTaskScheduler();
         threadPoolTaskScheduler.setPoolSize(1);
         threadPoolTaskScheduler.setThreadNamePrefix(
-                "ThreadPoolTaskScheduler");
+                "ThreadPoolTaskSchedulerSeazon");
+        return threadPoolTaskScheduler;
+    }
+    @Bean("DailyTablo")
+    public ThreadPoolTaskScheduler threadPoolTaskSchedulerDaily(){
+        ThreadPoolTaskScheduler threadPoolTaskScheduler
+                = new ThreadPoolTaskScheduler();
+        threadPoolTaskScheduler.setPoolSize(1);
+        threadPoolTaskScheduler.setThreadNamePrefix(
+                "ThreadPoolTaskSchedulerDaily");
         return threadPoolTaskScheduler;
     }
 }

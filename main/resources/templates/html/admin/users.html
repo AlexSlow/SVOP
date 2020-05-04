@@ -10,6 +10,7 @@
 Пользователи
 </title>
 <link rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
+ <script src="/js/parametrs.js"></script>
 </head>
 <Body>
 
@@ -31,14 +32,13 @@
 <thead>
 <tr> <th name="id"></th>
 <th  name="name" data-notnull="1" data-size="1" data-type="text" th:text="#{users.name}">Название</th>
-<th  name="name" data-notnull="1" data-size="1" data-type="text" th:text="#{users.role}">Роль</th>
+</tr>
 </thead >
 <tbody id="filter_table">
 <tr th:each="item : ${users}">
 
 <td  ><input type="checkbox" th:id="ch+${item.id}" th:value="${item.id}" name="ch[]" th:form="form"/></td>
 <td><label th:for="ch+${item.id}" th:text="${item.username}"> </label></td>
-<td><label th:for="ch+${item.id}" th:text="${item.role.name}"> </label></td>
 </tr>
 <tr >
 <td colspan="7" style="text-align:left;">  <input type='checkbox' 
@@ -80,18 +80,10 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
 
 <div th:insert="/html/modal/base_modal.html" ></div>
   <script th:inline="javascript">
-  //Заголовки для вывода интернационализованного текста
-  var head_add_title=[[#{modal.header_add}]];
-  var head_red_title=[[#{modal.header_red}]];
-  
   //csrf токены
 var token = $("meta[name='_csrf']").attr("content"); 
-var header = $("meta[name='_csrf_header']").attr("content");
-var service_api_save="http://localhost:5000/svop/api/users/save";
-var error=[[#{modal.error}]];
-  
  </script>
-   <script src="/js/modal/basic_modal.js">
+   <script src="/js/modal/role_modal.js">
    </script>
    
 

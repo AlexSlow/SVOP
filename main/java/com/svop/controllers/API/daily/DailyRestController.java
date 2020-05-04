@@ -1,13 +1,8 @@
 package com.svop.controllers.API.daily;
 
-import com.svop.View.DailyScheduleViews.DailySheduleView;
-import com.svop.exeptions.SvopDataBaseExeption;
-import com.svop.exeptions.response.SvopMessage;
-import com.svop.message.Success;
+import com.svop.View.DailyScheduleViews.DailyScheduleView;
 import com.svop.service.dailySchedule.DailyDaoService;
-import com.svop.tables.Handbooks.Airporty;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,9 +22,9 @@ private @Autowired
     DailyDaoService dailyDaoService;
     @ResponseBody
     @RequestMapping(value="/getDailyReysByPeriod")
-    public ResponseEntity<List<DailySheduleView>> update(@RequestBody ArrayList<Date> dates) {
+    public ResponseEntity<List<DailyScheduleView>> update(@RequestBody ArrayList<Date> dates) {
 
-        return new ResponseEntity<List<DailySheduleView>>(dailyDaoService.getDailyViewBetwinPeriod(dates.get(0),dates.get(1)),
+        return new ResponseEntity<List<DailyScheduleView>>(dailyDaoService.getDailyViewBetwinPeriod(dates.get(0),dates.get(1)),
                 HttpStatus.OK);
     }
 }

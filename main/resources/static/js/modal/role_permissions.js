@@ -55,7 +55,7 @@ idRole=id;
 	console.log("id role "+id)
  	 $.ajax({
   type: "POST",
-  url: "http://localhost:5000/svop/api/roles/getRole",
+  url: host+"/svop/api/roles/getRole",
 	data: JSON.stringify(id),
 	contentType: 'application/json',
 	success: function(data) {
@@ -71,7 +71,7 @@ idRole=id;
 
  	 $.ajax({
   type: "POST",
-  url: "http://localhost:5000/svop/api/roles/getPermissionsByRole",
+  url: host+"/svop/api/roles/getPermissionsByRole",
 	data: JSON.stringify(id),
 	contentType: 'application/json',
 	success: function(data) {
@@ -121,7 +121,7 @@ requestObj["list"]=list;
 console.log(requestObj);
  	 $.ajax({
   type: "POST",
-  url: "http://localhost:5000/svop/api/roles/save",
+  url: host+"/svop/api/roles/save",
 	data: JSON.stringify(requestObj),
 	contentType: 'application/json',
 	success: function(data) {

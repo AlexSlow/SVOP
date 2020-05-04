@@ -5,12 +5,10 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.svop.View.DailyScheduleViews.DailySheduleView;
-import com.svop.View.SeazonScheduleViews.SeazonScheduleView;
+import com.svop.View.DailyScheduleViews.DailyScheduleView;
 import com.svop.message.Period;
 import com.svop.tables.Handbooks.TypeReys;
 import com.svop.tables.daily_schedule.DailyDirection;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
@@ -19,11 +17,10 @@ import java.io.IOException;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Locale;
 
 @Service
 public class DailyPlaneOutputPdfService {
-    public  ByteArrayInputStream generate(Period period, java.util.List<DailySheduleView> dailySheduleViewList,String user,Date date_forming) throws IOException, DocumentException {
+    public  ByteArrayInputStream generate(Period period, java.util.List<DailyScheduleView> dailyScheduleViewList, String user, Date date_forming) throws IOException, DocumentException {
         BaseFont times =
                 BaseFont.createFont("c:\\windows\\fonts\\times.ttf", "cp1251", BaseFont.EMBEDDED);
         Document document = new Document(PageSize.A2);
@@ -140,13 +137,13 @@ public class DailyPlaneOutputPdfService {
 
 
             //Теперь Тело таблицы
-            for (DailySheduleView dailySheduleView : dailySheduleViewList) {
+            for (DailyScheduleView dailyScheduleView : dailyScheduleViewList) {
                 PdfPCell bDay = new PdfPCell();
                 bDay.setNoWrap(true);
                 bDay.setHorizontalAlignment(Element.ALIGN_CENTER);
                 bDay.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 bDay.setBorderWidth(1);
-                bDay.setPhrase(new Phrase(dailySheduleView.getDay(), bodyFont));
+                bDay.setPhrase(new Phrase(dailyScheduleView.getDay(), bodyFont));
                 bDay.setColspan(2);
                 table.addCell(bDay);
 
@@ -156,7 +153,7 @@ public class DailyPlaneOutputPdfService {
                 bRoute.setHorizontalAlignment(Element.ALIGN_CENTER);
                 bRoute.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 bRoute.setBorderWidth(1);
-                bRoute.setPhrase(new Phrase(dailySheduleView.getRout(), bodyFont));
+                bRoute.setPhrase(new Phrase(dailyScheduleView.getRout(), bodyFont));
                 bRoute.setColspan(2);
                 table.addCell(bRoute);
 
@@ -165,7 +162,7 @@ public class DailyPlaneOutputPdfService {
                 bNomer.setHorizontalAlignment(Element.ALIGN_CENTER);
                 bNomer.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 bNomer.setBorderWidth(1);
-                bNomer.setPhrase(new Phrase(dailySheduleView.getNomer(), bodyFont));
+                bNomer.setPhrase(new Phrase(dailyScheduleView.getNomer(), bodyFont));
                 bNomer.setColspan(2);
                 table.addCell(bNomer);
 
@@ -177,7 +174,7 @@ public class DailyPlaneOutputPdfService {
                 bDirection.setBorderWidth(1);
                 Phrase direction_phrase;
 
-                if (dailySheduleView.getDirection()== DailyDirection.Prilet.name())
+                if (dailyScheduleView.getDirection()== DailyDirection.Prilet.name())
                     direction_phrase = new Phrase("прилет", bodyFont);
                 else direction_phrase = new Phrase("вылет", bodyFont);
                 bDirection.setPhrase(direction_phrase);
@@ -190,7 +187,7 @@ public class DailyPlaneOutputPdfService {
                 bTimeDeporture.setHorizontalAlignment(Element.ALIGN_CENTER);
                 bTimeDeporture.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 bTimeDeporture.setBorderWidth(1);
-                bTimeDeporture.setPhrase(new Phrase(dailySheduleView.getTimeDeporture(), bodyFont));
+                bTimeDeporture.setPhrase(new Phrase(dailyScheduleView.getTimeDeporture(), bodyFont));
                 bTimeDeporture.setColspan(2);
                 table.addCell(bTimeDeporture);
 
@@ -199,7 +196,7 @@ public class DailyPlaneOutputPdfService {
                 bTimeprilet.setHorizontalAlignment(Element.ALIGN_CENTER);
                 bTimeprilet.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 bTimeprilet.setBorderWidth(1);
-                bTimeprilet.setPhrase(new Phrase(dailySheduleView.getTimePrilet(), bodyFont));
+                bTimeprilet.setPhrase(new Phrase(dailyScheduleView.getTimePrilet(), bodyFont));
                 bTimeprilet.setColspan(2);
                 table.addCell(bTimeprilet);
 
@@ -211,7 +208,7 @@ public class DailyPlaneOutputPdfService {
                 bType.setBorderWidth(1);
                 Phrase type_phrase;
 
-                if (dailySheduleView.getType() == TypeReys.Regular.name())
+                if (dailyScheduleView.getType() == TypeReys.Regular.name())
                     type_phrase = new Phrase("регулярный", bodyFont);
                 else type_phrase = new Phrase("чартер", bodyFont);
                 bType.setPhrase(type_phrase);
@@ -223,7 +220,7 @@ public class DailyPlaneOutputPdfService {
                 bTipVS.setHorizontalAlignment(Element.ALIGN_CENTER);
                 bTipVS.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 bTipVS.setBorderWidth(1);
-                bTipVS.setPhrase(new Phrase(dailySheduleView.getTipVs(), bodyFont));
+                bTipVS.setPhrase(new Phrase(dailyScheduleView.getTipVs(), bodyFont));
                 bTipVS.setColspan(2);
                 table.addCell(bTipVS);
 
@@ -232,7 +229,7 @@ public class DailyPlaneOutputPdfService {
                 bAirline.setHorizontalAlignment(Element.ALIGN_CENTER);
                 bAirline.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 bAirline.setBorderWidth(1);
-                bAirline.setPhrase(new Phrase(dailySheduleView.getAirline(), bodyFont));
+                bAirline.setPhrase(new Phrase(dailyScheduleView.getAirline(), bodyFont));
                 bAirline.setColspan(2);
                 table.addCell(bAirline);
 

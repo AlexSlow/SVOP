@@ -58,7 +58,6 @@ public class SeazonTabloControl implements TabloControl {
 
         @Override
         public void run() {
-
             seazonScheduleLanguageViews=seazonScheduleService.getSeazonScheduleLanguageViews(PageRequest.of(page,page_size),countries);
             Map<String,Object> response=new HashMap<>();
             response.put("header",getHeader());
@@ -73,7 +72,7 @@ public class SeazonTabloControl implements TabloControl {
             {
                 countries=0;
 
-                if (page==totalPage)
+                if (page==totalPage-1)
                 {
                     page=0;
                 }else{

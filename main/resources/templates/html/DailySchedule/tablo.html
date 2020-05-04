@@ -7,7 +7,7 @@
 <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
 
 <title th:text="#{sezon.tablo}">
-Формирование сезонного расписания
+Формирование ежедневного расписания
 </title>
 <link rel="stylesheet" href="/bootstrap/css/bootstrap.css"/>
  <script src="/js/parametrs.js"></script>
@@ -27,7 +27,7 @@ height:100%;
 <script src="/bootstrap/js/popper_min.js" ></script>
 <script src="/bootstrap/js/bootstrap.min.js"></script>
 <script src="/js/jquery/sockjs-min.js"></script>
-    <script src="/js/jquery/stomp.min.js"></script>
+<script src="/js/jquery/stomp.min.js"></script>
 
 <script>
 </script>
@@ -69,30 +69,17 @@ height: 100vh;
 <table class="table tableTablo TabloActive tabloWidth grid" id="content_table" style="width 100%;height:100%;display:none" >
 <thead>
 <tr>
-	<th rowspan="2"  id="aircompanies">Авиакомпания</th>
-	<th rowspan="2"  id="period_start">Начало периода</th>
-	<th rowspan="2" id="period_end">Конец периода</th> 
-	<th  rowspan="2" id="rout" >Маршрут</th>	
-	<th  colspan="4" id="prilet">Прилет</th>
-	<th  colspan="4" id="vilet">Вылет</th>
-	<th rowspan="2" id="Logo" ></th>
-  </tr>
-  <tr>
-  <th id="nomer_reys_p">Номер рейса</th>
-  <th id="prilet_days" >Дни прилета</th>
-  <th id="time_otpravl_p" >Время отправления</th>
-  <th id="time_prib_p">Время прибытия</th>
-  
-  <th id="nomer_reys_v">Номер рейса</th>
-  <th id="vilet_days" >Дни вылета</th>
-  <th id="time_otpravl_v" >Время отправления</th>
-  <th id="time_prib_v">Время прибытия</th>
+	<th   th:text="#{daily.day}">День</th>
+	<th   th:text="#{reysy.rout}" >Маршрут</th>
+	<th   th:text="#{nomer_reys.nomer}">Номер</th>
+	<th th:text="#{reysy.time_otpravl}" >Время отправления</th>
+	<th th:text="#{reysy.time_prib}">Время прибытия</th>
   </tr>
 </thead >
 <tbody id="filter_table">
 </tbody>
 </table>
-<script src="/js/tablo.js">
+<script src="/js/tabloDaily.js">
 //Настройка клиента
 </script>
 </div>

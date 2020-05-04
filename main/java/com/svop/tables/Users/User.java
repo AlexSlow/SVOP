@@ -3,6 +3,7 @@ package com.svop.tables.Users;
 
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -11,7 +12,7 @@ public class User {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name="users_id")
-    private Long id;
+    private Integer id;
     //@NotNull
     @Column(name="username")
     private String username;
@@ -52,14 +53,13 @@ public class User {
         this.locale = locale;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
-
 
     public Set<Role> getRoles() {
         return roles;
@@ -94,7 +94,19 @@ public class User {
         this.locale = locale;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return getId().equals(user.getId()) &&
+                getUsername().equals(user.getUsername());
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getUsername());
+    }
 
     @Override
     public String toString() {

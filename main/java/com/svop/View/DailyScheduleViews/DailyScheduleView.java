@@ -4,7 +4,7 @@ import com.svop.tables.daily_schedule.Daily;
 
 import java.sql.Date;
 
-public class DailySheduleView {
+public class DailyScheduleView {
     private String nomer;
     private String rout;
     private String timeDeporture;
@@ -17,7 +17,7 @@ public class DailySheduleView {
     private String status;
     private String direction;
 
-    public DailySheduleView() {
+    public DailyScheduleView() {
     }
     public String getDirection() {
         return direction;

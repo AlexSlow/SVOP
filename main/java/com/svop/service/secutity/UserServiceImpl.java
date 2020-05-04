@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import javax.validation.constraints.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -98,6 +99,19 @@ private static Logger logger= LoggerFactory.getLogger(UserServiceImpl.class.getN
 
     @Override
     public void deleteByIdIn(List<Integer> idl) {
+    userRepository.deleteAllByIdIn(idl);
+    }
 
+    @Override
+    public User findById(Integer id) throws Exception {
+       Optional<User> user =userRepository.findById(id);
+       if(user.isPresent()) return user.get();
+       else throw new Exception();
+    }
+
+    @Override
+    public void setRoles(@NotNull User user, @NotNull Set<Role> roles) {
+       user.setRoles(roles);
+       userRepository.save(user);
     }
 }

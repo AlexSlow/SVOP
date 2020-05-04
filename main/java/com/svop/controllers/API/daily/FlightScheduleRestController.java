@@ -1,6 +1,5 @@
 package com.svop.controllers.API.daily;
 
-import com.svop.View.DailyScheduleViews.DailySheduleView;
 import com.svop.View.DailyScheduleViews.FlightScheduleView;
 import com.svop.exeptions.response.SvopMessage;
 import com.svop.message.Success;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

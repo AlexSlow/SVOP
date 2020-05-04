@@ -16,7 +16,7 @@ $.ajaxSetup({
 			 $.ajax({
 	 async: false, 			 
   type: "POST",
-  url: host+"/svop/api/tablo/control/status",
+  url: host+"/svop/api/tablo/control/Dailystatus",
 	contentType: 'application/json',
 	success: function(data) {
 		console.log("Получить статус");
@@ -44,13 +44,12 @@ connect();
 
 
 function connect() {
-	//console.log("Начать соединение");
     var socket = new SockJS('/gs-guide-websocket');
     stompClient = Stomp.over(socket);
 	
     stompClient.connect({headers}, function (frame) {
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/seazonTablo', function (greeting) {
+        stompClient.subscribe('/topic/dailyTablo', function (greeting) {
 		//console.log(greeting.body);
 		//Обработка полученного результата
 		if (greeting.body=="off"){
@@ -104,25 +103,11 @@ function on()
 		$("#headTitle").css("display","");
 }
 function setHeaders(message) {
-	$("#aircompanies").text(message["aircompanies"]);
-	$("#period_start").text(message["period_start"]);
-	$("#period_end").text(message["period_end"]);
+	$("#day").text(message["day"]);
 	$("#rout").text(message["rout"]);
-	$("#prilet").text(message["prilet"]);
-	$("#vilet").text(message["vilet"]);
-	$("#Logo").text(message["logo"]);
-	$("#nomer_reys_p").text(message["nomer_reys"]);
-	$("#prilet_days").text(message["prilet_days"]);
-	
-	$("#time_otpravl_p").text(message["time_otpravl"]);
-	$("#nomer_reys_p").text(message["nomer_reys"]);
-	$("#time_prib_p").text(message["time_prib"]);
-	
-	$("#nomer_reys_v").text(message["nomer_reys"]);
-	$("#vilet_days").text(message["vilet_days"]);
-	$("#time_otpravl_v").text(message["time_otpravl"]);
-	$("#time_prib_v").text(message["time_prib"]);
-	$("#head").text(message["tablo_head"]);
+	$("#nomer").text(message["nomer"]);
+	$("#time_otpravl").text(message["time_otpravl"]);
+	$("#time_prib").text(message["time_prib"]);
 }
 function showReys(message) {
 	$("#filter_table").empty();
@@ -130,18 +115,10 @@ function showReys(message) {
 {
 //Переформируем таблицу
 $("#filter_table").append("<tr></tr>");
-$("#filter_table tr:last-child").append("<td>"+sezonSchedule.aircompany+"</td>");	
-$("#filter_table tr:last-child").append("<td>"+sezonSchedule.periodStart+"</td>");	
-$("#filter_table tr:last-child").append("<td>"+sezonSchedule.periodEnd+"</td>");	
-$("#filter_table tr:last-child").append("<td>"+sezonSchedule.rout+"</td>");
-$("#filter_table tr:last-child").append("<td>"+sezonSchedule.nomerPrilet+"</td>");	
-$("#filter_table tr:last-child").append("<td>"+sezonSchedule.priletDays+"</td>");	
-$("#filter_table tr:last-child").append("<td>"+sezonSchedule.prilet_time_otpravl+"</td>");	  
-$("#filter_table tr:last-child").append("<td>"+sezonSchedule.prilet_time_prib+"</td>");	
-$("#filter_table tr:last-child").append("<td>"+sezonSchedule.nomerVilet+"</td>");	
-$("#filter_table tr:last-child").append("<td>"+sezonSchedule.viletDays+"</td>");	
-$("#filter_table tr:last-child").append("<td>"+sezonSchedule.vilet_time_otpravl+"</td>");	  
-$("#filter_table tr:last-child").append("<td>"+sezonSchedule.vilet_time_prib+"</td>");	
-$("#filter_table tr:last-child").append("<td><img src='"+sezonSchedule.img+"'/></td>");	
+$("#filter_table tr:last-child").append("<td>"+sezonSchedule.day+"</td>");	
+$("#filter_table tr:last-child").append("<td>"+sezonSchedule.rout+"</td>");	
+$("#filter_table tr:last-child").append("<td>"+sezonSchedule.nomer+"</td>");	
+$("#filter_table tr:last-child").append("<td>"+sezonSchedule.time_otpravl+"</td>");
+$("#filter_table tr:last-child").append("<td>"+sezonSchedule.time_prib+"</td>");		
 });
 }

@@ -14,6 +14,7 @@ public Success(String msg)
 }
     public Success()
     {
-
+        super();
+        super.setMessage("Success");
     }
 }

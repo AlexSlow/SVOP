@@ -54,7 +54,7 @@ $("#modal_table tbody").empty();
 	//console.log(idlist)
  	 $.ajax({
   type: "POST",
-  url: "http://localhost:5000/svop/api/flightShedule/getById",
+  url: host+"/svop/api/flightShedule/getById",
 	data: JSON.stringify(idlist),
 	contentType: 'application/json',
 	success: function(data) {
@@ -96,7 +96,7 @@ else
 	//console.log(idlist)
  	 $.ajax({
   type: "POST",
-  url: "http://localhost:5000/svop/api/flightShedule/move",
+  url: host+"/svop/api/flightShedule/move",
 	data: JSON.stringify(ajax_array),
 	contentType: 'application/json',
 	success: function(data) {

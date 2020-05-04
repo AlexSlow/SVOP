@@ -10,6 +10,7 @@
 Routs
 </title>
 	<link rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
+ <script src="/js/parametrs.js"></script>
 </head>
 <Body>
 
@@ -100,7 +101,7 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
   //csrf токены
 var token = $("meta[name='_csrf']").attr("content"); 
 var header = $("meta[name='_csrf_header']").attr("content");
-var service_api_save="http://localhost:5000/svop/api/routes/save";
+var service_api_save=host+"/api/routes/save";
 var error=[[#{modal.error}]];
  </script>
    <script src="/js/modal/routes_modal.js">

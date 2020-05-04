@@ -3,9 +3,9 @@
 <div id="addModal" class="modal fade" tabindex="-1">
  <div class="modal-dialog modal-lg">
  <div class="modal-content">
- <div class="modal-header">
+ <div class="modal-header" align="centr">
  
- <h4 id="modal_title"></h4>
+ <h4 id="modal_title" style="margin:0 auto;"></h4>
  </div>
  
 	<div class="modal-body">
@@ -22,7 +22,7 @@
  <div id="content" class="container-fluid">
         <div class="row mb-3" id="add_buttons">
 <div class="col"></div>
-<div class="col">
+<div class="col" id="addRemoveBtBlock">
  <button id="add_str" class="btn-info" th:text="#{modal.add_str}">добавить строку</button>
  <button id="remove_str" class="btn-warning" th:text="#{modal.remove_str}">убрать строку</button>
 </div>

@@ -24,6 +24,7 @@
 	vertical-align:middle;
 }
 	</style>
+ <script src="/js/parametrs.js"></script>
 </head>
 <Body>
 
@@ -155,7 +156,7 @@ request.sezon_selected=$("#sezon_select").val();
 		
 			 $.ajax({
   type: "POST",
-  url: "http://localhost:5000/svop/api/reysy/get_reys_from_period",
+  url: host+"/api/reysy/get_reys_from_period",
 	data: JSON.stringify(request),
 	contentType: 'application/json',
 	success: function(data) {

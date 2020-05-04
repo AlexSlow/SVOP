@@ -10,6 +10,7 @@
 
 </title>
 <link rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
+ <script src="/js/parametrs.js"></script>
 </head>
 <Body>
 
@@ -88,7 +89,7 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
   //csrf токены
 var token = $("meta[name='_csrf']").attr("content"); 
 var header = $("meta[name='_csrf_header']").attr("content");
-var service_api_save="http://localhost:5000/svop/api/sezons/save";  
+var service_api_save=host+"/svop/api/sezons/save";  
  </script>
    <script src="/js/modal/basic_modal.js">
    </script>

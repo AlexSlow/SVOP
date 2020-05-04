@@ -20,6 +20,7 @@
 	
 	}
 	</style>
+ <script src="/js/parametrs.js"></script>
 </head>
 <Body>
 <script>
@@ -180,7 +181,7 @@ console.log(Day);
 Day.setDate(Day.getDate() + 1);
  	 $.ajax({
   type: "POST",
-  url: "http://localhost:5000/svop/api/flightShedule/getByDay",
+  url: host+"/api/flightShedule/getByDay",
 	data: JSON.stringify(Date.parse(Day)),
 	contentType: 'application/json',
 	success: function(data) {
@@ -195,7 +196,7 @@ function requestBuild()
 {
  	 $.ajax({
   type: "POST",
-  url: "http://localhost:5000/svop/api/flightShedule/build",
+  url: host+"/api/flightShedule/build",
 	contentType: 'application/json',
 	success: function(data) {
 	console.log(data);
@@ -209,7 +210,7 @@ function requestCloseShift()
 {
  	 $.ajax({
   type: "POST",
-  url: "http://localhost:5000/svop/api/flightShedule/closeShift",
+  url: host+"/api/flightShedule/closeShift",
 	contentType: 'application/json',
 	success: function(data) {
 	console.log(data);
@@ -221,7 +222,7 @@ function requestCancel(idl)
 {
  	 $.ajax({
   type: "POST",
-  url: "http://localhost:5000/svop/api/flightShedule/cancel",
+  url: host+"/api/flightShedule/cancel",
 	contentType: 'application/json',
 	data: JSON.stringify(idl),
 	success: function(data) {
@@ -234,7 +235,7 @@ function requestUncancel(idl)
 {
  	 $.ajax({
   type: "POST",
-  url: "http://localhost:5000/svop/api/flightShedule/uncancel",
+  url: host+"/api/flightShedule/uncancel",
 	contentType: 'application/json',
 	data: JSON.stringify(idl),
 	success: function(data) {

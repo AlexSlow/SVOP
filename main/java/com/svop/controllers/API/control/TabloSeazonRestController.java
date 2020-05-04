@@ -6,6 +6,7 @@ import com.svop.message.Success;
 import com.svop.message.tabloSeazon.TabloControleMessage;
 import com.svop.message.tabloSeazon.TabloInitResponse;
 import com.svop.service.SeazonSchedule.SeazonScheduleService;
+import com.svop.service.control.DailyTabloControl;
 import com.svop.service.control.SeazonTabloControl;
 import com.svop.tables.Handbooks.Airporty;
 import org.slf4j.Logger;
@@ -30,11 +31,12 @@ import java.util.List;
 public class TabloSeazonRestController {
     private static Logger logger= LoggerFactory.getLogger(TabloSeazonRestController.class);
     @Autowired private SeazonTabloControl seazonTabloControl;
+    @Autowired private DailyTabloControl dailyTabloControl;
     @Autowired
     private SimpMessageSendingOperations simpMessageSendingOperations; //Упаравление брокером сообщений
     @ResponseBody
     @RequestMapping(value="/control")
-    public ResponseEntity<SvopMessage> open(@RequestBody TabloControleMessage message) {
+    public ResponseEntity<SvopMessage> setStatus(@RequestBody TabloControleMessage message) {
 
         logger.info("Табло перешло в состояние "+message);
         seazonTabloControl.active(message.isActive());
@@ -42,6 +44,35 @@ public class TabloSeazonRestController {
             simpMessageSendingOperations.convertAndSend("/topic/seazonTablo", "on");
         else  simpMessageSendingOperations.convertAndSend("/topic/seazonTablo", "off");
         return new ResponseEntity<>(new Success("Успех"), HttpStatus.OK);
+    }
+
+    @ResponseBody
+    @RequestMapping(value="/DailyControl")
+    public ResponseEntity<SvopMessage> setDailyStatus(@RequestBody TabloControleMessage message) {
+
+        logger.info(" Суточное Табло перешло в состояние "+message);
+        dailyTabloControl.active(message.isActive());
+        if (dailyTabloControl.isActive())
+            simpMessageSendingOperations.convertAndSend("/topic/dailyTablo", "on");
+        else  simpMessageSendingOperations.convertAndSend("/topic/dailyTablo", "off");
+        return new ResponseEntity<>(new Success("Успех"), HttpStatus.OK);
+    }
+
+    @ResponseBody
+    @RequestMapping(value="/control/Dailystatus")
+    public ResponseEntity<TabloInitResponse> getDailyStatus() {
+        logger.info("Получение статуса " + dailyTabloControl.isActive());
+        TabloInitResponse tabloInitResponse = new TabloInitResponse();
+        if (dailyTabloControl.isActive())
+        {
+            tabloInitResponse.setMessage("on");
+            tabloInitResponse.setList(dailyTabloControl.getFlightScheduleLanguageViews());
+            tabloInitResponse.setHeaders(dailyTabloControl.getHeader());
+        }
+        else  {
+            tabloInitResponse.setMessage("off");
+        }
+        return new ResponseEntity<>(tabloInitResponse,HttpStatus.OK);
     }
 
     @ResponseBody

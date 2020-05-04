@@ -14,6 +14,7 @@ import com.svop.tables.SeazonSchedule.SeazonScheduleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -120,6 +121,7 @@ public class SeazonScheduleService {
      * @param pageable Интерейс для работы со страницами
      * @return
      */
+    @Cacheable(cacheNames = "SeazonScheduleLanguageViews")
     public List<SeazonScheduleLanguageView> getSeazonScheduleLanguageViews(Pageable pageable,Integer country_nomer)
     {
         Page<SeazonSchedule> seazonSchedules=sezonScheduleRepository.findAll(pageable);

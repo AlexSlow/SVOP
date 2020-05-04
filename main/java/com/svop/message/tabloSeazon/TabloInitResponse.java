@@ -7,10 +7,10 @@ import java.util.Map;
 
 public class TabloInitResponse {
     private String message;
-    private List<SeazonScheduleLanguageView> list;
+    private List list;
     private Map<String,String> headers;
     public TabloInitResponse(){}
-    public TabloInitResponse(String message, List<SeazonScheduleLanguageView> list) {
+    public TabloInitResponse(String message, List list) {
         this.message = message;
         this.list = list;
     }
@@ -23,11 +23,11 @@ public class TabloInitResponse {
         this.message = message;
     }
 
-    public List<SeazonScheduleLanguageView> getList() {
+    public List getList() {
         return list;
     }
 
-    public void setList(List<SeazonScheduleLanguageView> list) {
+    public void setList(List list) {
         this.list = list;
     }
 

@@ -8,7 +8,7 @@
 <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
 
 <title th:text="#{sezon_control.title}">
-Управление таблом сезонного расписания
+Управление таблом ежедневного расписания
 </title>
 <link rel="stylesheet" href="/bootstrap/css/bootstrap.css"/>
 <style>
@@ -51,7 +51,6 @@
  </div>
  <div id="load_window">
  </div>
-
 <script src="/js/jquery/jquery-3.3.1.min.js"></script>
 <script src="/bootstrap/js/popper_min.js" ></script>
 <script src="/bootstrap/js/bootstrap.min.js"></script>
@@ -80,10 +79,9 @@ $.ajaxSetup({
             'X-Csrf-Token':token
         }
     });
-	
 			 $.ajax({
   type: "POST",
-  url: host+"/svop/api/tablo/control",
+  url: host+"/svop/api/tablo/DailyControl",
 	data: JSON.stringify(json),
 	contentType: 'application/json',
 	success: function(data) {
@@ -92,10 +90,16 @@ $.ajaxSetup({
 });	
 }
 
+//ПОдгружать в цикле окно из табло
+/*
+$("load_window").everyTime(30000,function(i){
+$("load_window").load(host+"SeasonSchedule/tablo");
+})
+*/
+
  function refresh() {
- //https://localhost:7000/svop/SeasonSchedule/tablo #tablo
- $("#load_window").load(host+"/svop/SeasonSchedule/tablo #tablo");
- $.getScript('/js/tablo.js', function() {
+ $("#load_window").load(host+"/svop/DailySchedule/tablo #tablo");
+ $.getScript('/js/tabloDaily.js', function() {
 
     });
 	};

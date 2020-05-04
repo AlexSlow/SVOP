@@ -1,6 +1,6 @@
 package com.svop.controllers.dailySchedule;
 import com.itextpdf.text.DocumentException;
-import com.svop.View.DailyScheduleViews.DailySheduleView;
+import com.svop.View.DailyScheduleViews.DailyScheduleView;
 import com.svop.message.Period;
 import com.svop.other.HeadProcessing.Head_parser;
 import com.svop.other.HeadProcessing.PageFormatter;
@@ -8,7 +8,6 @@ import com.svop.service.dailySchedule.DailyDaoService;
 import com.svop.service.dailySchedule.DailySheduleService;
 import com.svop.service.documentOutputPdf.DailyPlaneOutputPdfService;
 import com.svop.service.secutity.UserService;
-import org.apache.tomcat.util.descriptor.web.ContextHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Pageable;
@@ -57,7 +56,7 @@ public class DailyScheduleHttpController {
     public String open_document_forming_page(Model model) {
         Head_parser head_parser = new Head_parser();
         head_parser.setModel(userService, model);
-        return "/html/DailySchedule/DailyDocumentFormong.html";
+        return "/html/DailySchedule/DailyDocumentForming.html";
     }
 
     /**
@@ -87,7 +86,7 @@ public class DailyScheduleHttpController {
         //Сформировать расписание
         if (period.getStart()==null)period.setStart(new Date(0));
         if (period.getEnd()==null)period.setEnd(new Date(System.currentTimeMillis()));
-              List<DailySheduleView> list= dailyDaoService.getDailyViewBetwinPeriod(period.getStart(),period.getEnd());
+              List<DailyScheduleView> list= dailyDaoService.getDailyViewBetwinPeriod(period.getStart(),period.getEnd());
               String name= SecurityContextHolder.getContext().getAuthentication().getName();
               ByteArrayInputStream bis= dailyPlaneOutputPdfService.generate(period,list,name,new Date(System.currentTimeMillis()));
 
@@ -98,6 +97,28 @@ public class DailyScheduleHttpController {
                 .headers(headers)
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(new InputStreamResource(bis));
+    }
+
+    /**
+     * Страница табло
+     * @param model
+     * @return
+     */
+    @RequestMapping(value="DailySchedule/tablo")
+    public String tablo( Model model) {
+        return "/html/DailySchedule/tablo.html";
+    }
+
+    /**
+     * Страница управления таблом
+     * @param model
+     * @return
+     */
+    @RequestMapping(value="DailySchedule/control")
+    public String getControlWindow( Model model) {
+        Head_parser head_parser=new Head_parser();
+        head_parser.setModel(userService,model);
+        return "/html/control/daily_tablo_managment.html";
     }
 
 
