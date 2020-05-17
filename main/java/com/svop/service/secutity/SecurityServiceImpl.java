@@ -34,11 +34,11 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public void autoLogin(String username, String password) {
+        System.out.println("security" + username+" "+password);
         //Тут мы получаем из БД пользователя и его роли из БД. После этого возвращаем spring детали пользователя и его роли
         UserDetails userDetails=userDetailsService.loadUserByUsername(username);
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken=
                 new UsernamePasswordAuthenticationToken(userDetails,password,userDetails.getAuthorities());
-
         authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
         if (usernamePasswordAuthenticationToken.isAuthenticated())

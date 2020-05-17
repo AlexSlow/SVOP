@@ -4,8 +4,8 @@
 <meta http-equiv="Content-type" Content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<meta th:name="_csrf" th:content="${_csrf.token}"/>
-<meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+<meta th:name="_csrf" th:content="${_csrf?.token}"/>
+<meta th:name="_csrf_header" th:content="${_csrf?.headerName}"/>
 <title th:text="#{airports.title}">
 Аэропорты
 </title>
@@ -17,13 +17,9 @@
 
 <div id="header" th:insert="/html/nmenu.html"></div>
  <div id="content" class="container-fluid">
- 
- 
- 
         <div class="row" >
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-5">
 		<div id="filter"  th:insert="/html/filter.html">
-		
 		</div>
 		<div class="pages" th:insert="/html/pages.html"></div>
 <h2 class="text-center" th:text="#{airports.title_tab}">Таблица аэропортов</h2>
@@ -72,8 +68,7 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
 
  <input type="button" name="add" data-toggle="modal" data-target="#addModal" data-content="add" th:value="#{buttons.add_bt}" 
  class="btn btn-primary"  />
- <input type="button" name="redact" data-content="redact" th:value="#{buttons.red_bt}"  data-toggle="modal" data-target="#addModal" 
- class="btn btn-warning"/>
+ <input type="button" name="redact" data-content="redact" th:value="#{buttons.red_bt}"  data-toggle="modal" data-target="#addModal" class="btn btn-warning"/>
  <input type="submit" name="delete" th:value="#{buttons.del_bt}" 
  class="btn btn-danger"/>
  </div>
@@ -99,9 +94,8 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
   //csrf токены
 var token = $("meta[name='_csrf']").attr("content"); 
 var header = $("meta[name='_csrf_header']").attr("content");
-var service_api_save=host+"/api/airports/save";
-var error=[[#{modal.error}]];
-  
+var service_api_save=host+"/svop/api/airports/save";
+var error=[[#{modal.error}]]; 
  </script>
    <script src="/js/modal/basic_modal.js">
    </script>

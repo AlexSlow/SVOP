@@ -1,0 +1,368 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-type" Content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title th:text="#{menu.receptions}" >
+Стойки
+</title>
+	<link rel="stylesheet" href="bootstrap.css" >
+</head>
+<Body>
+<div id="header" th:insert="/content/html/nmenu.html"></div>
+ <div id="content" class="container-fluid">
+        <div class="row" >
+        <div class="col-auto">
+		<h2 class="text-center" th:text="#{menu.receptions}">Стойки</h2>
+<div class="table-responsive">
+<table class="table table-striped table-bordered mb-5" id="content_table">
+<thead>
+<tr> 
+<th name="id"></th><th name="nomer" th:text="#{reception.nomer}" data-type="text">Номер стойки</th>
+</tr>
+</thead >
+<tbody id="filter_table">
+<tr>
+<td><input type="checkbox" id="ch1" value="1" name="ch[]" form="form"></td>
+<td><label for="ch1">Стойка 1</label></td>
+</tr>
+<tr>
+<td><input type="checkbox" id="ch1" value="1" name="ch[]" form="form"></td>
+<td><label for="ch1">Стойка 2</label></td>
+</tr>
+<tr>
+<td><input type="checkbox" id="ch1" value="1" name="ch[]" form="form"></td>
+<td><label for="ch1">Стойка 3</label></td>
+</tr>
+</tbody>
+<tfoot>
+<tr >
+<td colspan="2" style="text-align:left;">  <input type='checkbox' 
+id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выделить все </label></td>
+</tr>
+</tfoot>
+</table>
+</div>
+</div> 
+<div class="col-auto">
+<div id="rightMenu">
+</div> 
+
+</div> 
+</div> 
+</div> 
+<form action="" method="POST" id="form">
+<div class="btn-group fixed-bottom m-auto">
+
+
+ <input type="button" name="add" data-toggle="modal" data-target="#addModal" data-content="add" th:value="#{buttons.add_bt}"class="btn btn-primary"/>
+ <input type="button" name="off_on" id="off_on" class="btn btn-primary"/>
+ <input type="button" name="showStoic" id="showStoic" class="btn btn-primary"/>
+ <input type="button" name="showReys" id="showReys" class="btn btn-primary"/>
+ <input type="submit" name="delete" th:value="#{buttons.del_bt}" class="btn btn-danger" formaction="http://localhost:8080/svop/api/stiocManager/delete"/>
+ </div>
+ 
+ 
+</form>
+<script src="jquery-3.3.1.min.js"></script>
+<script src="popper_min.js" ></script>
+<script src="bootstrap.min.js"></script>
+
+
+
+
+
+
+
+<div id="addModal" class="modal fade" tabindex="-1">
+ <div class="modal-dialog modal-lg">
+ <div class="modal-content">
+ <div class="modal-header" align="centr">
+ 
+ <h4 id="modal_title" style="margin:0 auto;"></h4>
+ </div>
+ 
+	<div class="modal-body">
+	<div class="table-responsive">
+	<table class="table  mb-5"  id="modal_table">
+	<thead><tr></tr></thead>
+	<tbody></tbody>
+	</table>
+	</div>
+	</div>
+ 
+ <div class="modal-footer">
+ 
+ <div id="content" class="container-fluid">
+        <div class="row mb-3" id="add_buttons">
+<div class="col"></div>
+<div class="col" id="addRemoveBtBlock">
+ <button id="add_str" class="btn-info" th:text="#{modal.add_str}">добавить строку</button>
+ <button id="remove_str" class="btn-warning" th:text="#{modal.remove_str}">убрать строку</button>
+</div>
+ </div>
+ <div class="row">
+ <div class="col"></div>
+<div class="col">
+ <div id="modal_error" style="color:red;font-size:14px;"></div>
+  <button id="save" class="btn-success" th:text="#{modal.save}">Применить</button>
+ <button class="btn-danger" data-dismiss="modal" th:text="#{modal.close}" >закрыть</button>
+ 
+ </div>
+ </div>
+
+ 
+ </div>
+ </div>
+ </div>
+</div>  
+ </div>
+
+
+
+
+
+
+
+<script>
+
+  var head_add_title="";
+  var head_red_title="";
+  
+  //csrf токены
+var token = ""; 
+var header = "";
+var service_api_save="";
+
+//поместить токен csrf
+var Headers = new Map(); // Заголовки главной таблицы
+var Names = new Map(); //Атрибуты name заголовков главной таблицы, они не зависят от языка
+var is_null_map = new Map(); //валидация не пустых элементов
+var content;
+$('#addModal').on('show.bs.modal', function (event) {
+clean();
+//Получим ширину таблици из анотации
+let minwidth=$("#content_table thead").attr('data-minwidth');
+if (minwidth!=null)
+{
+	$("#modal_table").css("min-width",minwidth);
+}
+// получить кнопку, которая его открыло
+var button = $(event.relatedTarget)
+// извлечь информацию из атрибута data-content
+content= button.data('content') 
+// вывести колонки таблицы
+$("#modal_table thead").append("<tr></tr>");
+$("#content_table thead tr").children("th").each(function(){
+if ($(this).text()!="")
+{ 8
+Headers.set($(this).text(),$(this).attr('data-type'));
+Names.set($(this).text(),$(this).attr('name'));
+is_null_map.set($(this).text(),$(this).attr('data-notnull'));
+$("#modal_table thead tr").append("<th>"+$(this).text()+"</th>");
+}
+});
+  
+  if (content=="add")
+  {
+  $("#modal_title").text(head_add_title);
+  $("#modal_table thead tr ").prepend("<th></th>");
+  $("#modal_table tbody ").append("<tr><td><input class='d-none' value='"+null+"' type='text'></td></tr>");
+   //console.log(Headers);
+	for (let key of Headers.keys()) {
+	let val=Headers.get(key);
+	let name=Names.get(key);
+	let is_null=is_null_map.get(key);
+	$("#modal_table tbody tr:last-child").append("<td><input class='form-control'   name='"+name+"' data-notnull='"+is_null+"' type='"+val+"'+  /></td>");
+}
+  }
+  
+  
+  
+  
+  else
+  {
+  //Добавим колонку под id 
+  $("#modal_title").text(head_red_title);
+  $("#modal_table thead tr ").prepend("<th></th>");
+   //$("#add_buttons").addClass("d-none");
+   
+   //Выбор строк для редактирования
+    $("#content_table tbody tr").each(function(){
+	if ($(this).children("td:first-child").children("input").prop('checked')) //Если строка выбрана
+	{
+	let id=$(this).children("td:first-child").children("input").val();
+	let data=[];
+	
+	$(this).children("td").each(function(){
+	
+	
+$(this).children("label").each(function(){
+	//Получение полей
+	data.push($(this).text());
+	});
+	});
+	//Вставим строку
+	 $("#modal_table tbody ").append("<tr></tr>");
+	 $("#modal_table tbody tr:last-child ").append("<td>"+"<input class='d-none' value='"+id+"' type='text'/></td>");
+	 let i=0;
+	for (let key of Headers.keys()) {
+	let name=Names.get(key);
+	let val=Headers.get(key);
+	let is_null=is_null_map.get(key);
+	let input_value=data[i];
+	$("#modal_table tbody tr:last-child").append("<td>"+"<input class=' form-control' name='"+name+"' data-notnull='"+is_null+"' value='"+input_value+"' type='"+val+"'/></td>");
+	i++;
+	  }
+ }
+ });
+  }//конец else
+   });
+  
+  
+    //Добавить строку
+   $("#add_str").on('click', function(e) {
+   
+   $("#modal_table tbody ").append("<tr></tr>");
+   $("#modal_table tbody tr:last-child").append("<td><input class='d-none' value='"+null+"' type='text'></td>");
+   //Выставить все цвета нейтральным
+   //console.log(Headers);
+	for (let key of Headers.keys()) {
+	let val=Headers.get(key);
+	let name=Names.get(key);
+	let is_null=is_null_map.get(key);
+	$("#modal_table tbody tr:last-child").append("<td>"+"<input class=' form-control' data-notnull='"+is_null+"' name='"+name+"'  type='"+val+"'/></td>");
+}
+ }); 
+    //Удалить строку
+   $("#remove_str").on('click', function(e) {
+   $("#modal_table tbody tr:last-child").remove();
+
+   });
+   
+   
+   //Сохраняем в массив объектов
+    $("#save").on('click', function(e) {
+		
+		if (check()==true)
+		{
+			//console.log("Выход");
+			$("#modal_error").text("Ошибка. Неккоректные данные");
+			return;
+		}
+		
+	var ajax_array =[]
+
+    $("#modal_table tbody tr").each(function(){
+	let ajax_object ={}
+	$(this).children("td").each(function(){
+	//Индекс столбца и инодекс поля
+	let collumn=$(this).children("input").attr('name');
+	if (collumn==null) collumn="id";//колонка с нулеваым именем это id
+
+	ajax_object[collumn]=$(this).children("input").val();
+	});
+	//console.log(ajax_object);
+	ajax_array.push(ajax_object);
+	});
+	//Мы получили объект запроса
+	console.log(ajax_array);
+
+	//Отправка Ajax запроса
+	//send_request(ajax_array,service_api_save);
+
+	
+	
+   });
+   
+   
+   function clean()
+   {
+   $("#modal_table tbody").empty();
+    $("#modal_table thead").empty();
+   Headers.clear();
+   Names.clear();
+   is_null_map.clear();
+   }
+   // Проверка на соответствие данных анотациям таблицы
+   function check()
+   {
+	   	$("#modal_error").text("");
+	   //Очистим строки от подцветки
+	   $("#modal_table tbody tr").each(function(){
+	$(this).children("td").each(function(){
+		$(this).parent("tr").css("background-color","white");
+	});
+	});
+	   
+	   let is_error=false;
+	$("#modal_table tbody tr").each(function(){
+
+	$(this).children("td").each(function(){
+	
+	let value =$(this).children("input").val();
+	let is_not_null_attr=$(this).children("input").attr("data-notnull");
+	
+	if (is_not_null_attr==1){ if (value==""){
+		//console.log("isnull "+is_not_null_attr+" "+value);
+		$(this).parent("tr").css("background-color","red");
+		is_error=true;
+	}
+	}
+	});
+	});  
+	   //console.log("true");
+	   return is_error;
+   }
+   
+   
+  
+   
+   function send_request(ajax_array,adress)
+  { 
+ 
+  $.ajax({
+  type: "POST",
+  url: adress,
+	data: JSON.stringify(ajax_array),
+	contentType: 'application/json',
+	success: function(data) {
+   // alert(data);
+   //console.log(data);
+   $("#modal_error").text(data.message);
+   if (data.kod==0)
+   {
+	location.reload();
+  }
+	}
+});
+
+   }
+   
+
+</script>
+
+
+
+</Body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

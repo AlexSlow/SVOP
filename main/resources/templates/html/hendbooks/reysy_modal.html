@@ -5,8 +5,8 @@
 <meta http-equiv="Content-type" Content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<meta th:name="_csrf" th:content="${_csrf.token}"/>
-<meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+<meta th:name="_csrf" th:content="${_csrf?.token}"/>
+<meta th:name="_csrf_header" th:content="${_csrf?.headerName}"/>
 
 <title th:text="#{reysy.title}">
 Рейсы
@@ -221,7 +221,7 @@ if (type_operation!="redact")
  {
 	 $.ajax({
   type: "POST",
-  url: host+"/api/nomer_reys/get_from_aircompanies",
+  url: host+"/svop/api/nomer_reys/get_from_aircompanies",
 	data: JSON.stringify(aircompany),
 	contentType: 'application/json',
 	success: function(data) {

@@ -33,23 +33,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     SvopLogoutSuccessHandler svopLogoutSuccessHandler;
     @Autowired
     SvopAuthenticationSuccessHandler svopAuthenticationSuccessHandler;
-    @Autowired
-    UserService userService;
+    //@Autowired
+   // UserService userService;
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
         //снять защиту с конечной точки
-        http
+                http
                 .requiresChannel()
                 .anyRequest()
                 .requiresSecure();
-        http
+                http
                 .csrf()
                 // ignore our stomp endpoints since they are protected using Stomp headers
                 .ignoringAntMatchers("/gs-guide-websocket/**")
                 .and()
                 .headers()
-              //  .httpStrictTransportSecurity().disable()
+              //  .httpStrictTransportSecurity().disable()  //Что то для https
                 // allow same origin to frame our site to support iframe SockJS
                 .frameOptions().sameOrigin()
                 .and()
@@ -64,28 +64,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout()
                 .logoutUrl("/svop/logout") //default is /logout
-               //.logoutSuccessUrl("/svop/login") //default is /login?logout
+                .logoutSuccessUrl("/svop/login") //default is /login?logout
                 .logoutSuccessHandler(svopLogoutSuccessHandler)
                 .permitAll()
                 .and()
                 .sessionManagement().sessionFixation().migrateSession() //Защита от фиксации сессии. При создании новой сессии атрибуты старой будут копированы
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)//Сессия создается если ее нет
                 .maximumSessions(1).sessionRegistry(sessionRegistry())//Только одна сессия
-                .expiredUrl("/svop/login")
+               // .expiredUrl("/svop/login")
 
         ;
-
         http.exceptionHandling().accessDeniedPage("/svop/403");
-
-
-
         //Сессии
        //Если сессия истекла
-
-                //.invalidSessionUrl("/invalidSession.html");
-
+        // .invalidSessionUrl("/invalidSession.html");
         ;
-
     }
 
     @Override

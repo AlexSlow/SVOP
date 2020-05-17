@@ -6,8 +6,10 @@ import com.svop.other.HeadProcessing.Head_parser;
 import com.svop.other.HeadProcessing.PageFormatter;
 import com.svop.service.dailySchedule.DailyDaoService;
 import com.svop.service.dailySchedule.DailySheduleService;
+import com.svop.service.dailySchedule.StoicDaoService;
 import com.svop.service.documentOutputPdf.DailyPlaneOutputPdfService;
 import com.svop.service.secutity.UserService;
+import com.svop.tables.daily_schedule.Stoic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -40,6 +43,8 @@ public class DailyScheduleHttpController {
     @Autowired private DailyDaoService dailyDaoService;
     @Autowired
     private  DailyPlaneOutputPdfService dailyPlaneOutputPdfService;
+    @Autowired
+    private StoicDaoService stoicDaoService;
 
     @RequestMapping(value = "DailySchedule")
     public String open(Model model, @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable page) {
@@ -120,6 +125,24 @@ public class DailyScheduleHttpController {
         head_parser.setModel(userService,model);
         return "/html/control/daily_tablo_managment.html";
     }
+    /**
+     * Открыть окно управления
+     *
+     */
+    @RequestMapping(value="DailySchedule/stoicsManager")
+    public String openStoicPage( Model model) {
+        Head_parser head_parser=new Head_parser();
+        head_parser.setModel(userService,model);
+        model.addAttribute("stoics",stoicDaoService.findDtoAll());
+        return "/html/DailySchedule/stoicManager.html ";
+    }
+
+    @RequestMapping(value="stoic/{stoic}")
+    public String openStoicPage(@PathVariable("stoic") Stoic stoic, Model model) {
+        model.addAttribute("stoic",stoicDaoService.getStoic(stoic.getId()));
+        return "/html/DailySchedule/stoicTablo.html";
+    }
+
 
 
 

@@ -75,9 +75,13 @@ function disconnect() {
     if (stompClient !== null) {
         stompClient.disconnect();
     }
-    setConnected(false);
+  
     console.log("Disconnected");
 }
+//При закрытии окна
+window.onbeforeunload = function() {
+   disconnect();
+};
 function off()
 {
 	console.log("выключить");

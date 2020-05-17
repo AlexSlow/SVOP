@@ -21,17 +21,17 @@ public class Reysy {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reysy_nomer_prilet", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private NomerReys nomer_prilet;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reysy_nomer_vilet", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private NomerReys nomer_vilet;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reysy_rout", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Routes rout;
 
     @Column(name="reysy_period_start")

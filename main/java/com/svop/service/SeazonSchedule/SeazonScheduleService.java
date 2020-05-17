@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 @Transactional
 @Service
-public class SeazonScheduleService {
+public class SeazonScheduleService implements SeazonScheduleInterface {
     private static  final Logger logger= LoggerFactory.getLogger(SeazonSchedule.class);
     @Autowired
     private ReysyService reysyService;
@@ -37,6 +37,7 @@ public class SeazonScheduleService {
     /**
      * ПРоцедура формирования сезонного расписания
      */
+    @Override
     public void forming()
     {
         logger.info("Начало формирования сезонного расписания");
@@ -83,7 +84,7 @@ public class SeazonScheduleService {
      * Получить весь список представлений сезонного расписания
      * @return Списко представлений сезонного расписания
      */
-
+    @Override
     public List<SeazonScheduleView> getSeazonScheduleViews()
     {
         List<SeazonSchedule> seazonSchedules=sezonScheduleRepository.findAll();
@@ -102,6 +103,7 @@ public class SeazonScheduleService {
      * @param pageable Интерейс для работы со страницами
      * @return
      */
+    @Override
     public List<SeazonScheduleView> getSeazonScheduleViews(PageFormatter pageFormatter, Pageable pageable)
     {
         Page<SeazonSchedule> seazonSchedules=sezonScheduleRepository.findAll(pageable);
@@ -122,6 +124,7 @@ public class SeazonScheduleService {
      * @return
      */
     @Cacheable(cacheNames = "SeazonScheduleLanguageViews")
+    @Override
     public List<SeazonScheduleLanguageView> getSeazonScheduleLanguageViews(Pageable pageable,Integer country_nomer)
     {
         Page<SeazonSchedule> seazonSchedules=sezonScheduleRepository.findAll(pageable);
@@ -139,6 +142,7 @@ public class SeazonScheduleService {
      * @param pageable Интерейс для работы со страницами
      * @return
      */
+    @Override
     public Integer getPageAmount(Pageable pageable)
     {
         Page<SeazonSchedule> seazonSchedules=sezonScheduleRepository.findAll(pageable);

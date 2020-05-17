@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-type" Content="text/html; charset=utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<meta th:name="_csrf" th:content="${_csrf.token}"/>
-<meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+<meta th:name="_csrf" th:content="${_csrf?.token}"/>
+<meta th:name="_csrf_header" th:content="${_csrf?.headerName}"/>
 
 <title th:text="#{sezon.tablo}">
 Формирование ежедневного расписания
@@ -69,11 +69,11 @@ height: 100vh;
 <table class="table tableTablo TabloActive tabloWidth grid" id="content_table" style="width 100%;height:100%;display:none" >
 <thead>
 <tr>
-	<th   th:text="#{daily.day}">День</th>
-	<th   th:text="#{reysy.rout}" >Маршрут</th>
-	<th   th:text="#{nomer_reys.nomer}">Номер</th>
-	<th th:text="#{reysy.time_otpravl}" >Время отправления</th>
-	<th th:text="#{reysy.time_prib}">Время прибытия</th>
+	<th   th:text="#{daily.day}" id="day">День</th>
+	<th   th:text="#{reysy.rout}" id="rout">Маршрут</th>
+	<th   th:text="#{nomer_reys.nomer}" id="nomer">Номер</th>
+	<th th:text="#{reysy.time_otpravl}" id="time_otpravl" >Время отправления</th>
+	<th th:text="#{reysy.time_prib}" id="time_prib">Время прибытия</th>
   </tr>
 </thead >
 <tbody id="filter_table">

@@ -50,7 +50,6 @@ function connect() {
     stompClient.connect({headers}, function (frame) {
         console.log('Connected: ' + frame);
         stompClient.subscribe('/topic/dailyTablo', function (greeting) {
-		//console.log(greeting.body);
 		//Обработка полученного результата
 		if (greeting.body=="off"){
 		off();
@@ -74,9 +73,12 @@ function disconnect() {
     if (stompClient !== null) {
         stompClient.disconnect();
     }
-    setConnected(false);
     console.log("Disconnected");
 }
+//При закрытии окна
+window.onbeforeunload = function() {
+   disconnect();
+};
 function off()
 {
 	console.log("выключить");
@@ -106,8 +108,8 @@ function setHeaders(message) {
 	$("#day").text(message["day"]);
 	$("#rout").text(message["rout"]);
 	$("#nomer").text(message["nomer"]);
-	$("#time_otpravl").text(message["time_otpravl"]);
-	$("#time_prib").text(message["time_prib"]);
+	$("#time_otpravl").text(message["timeDeporture"]);
+	$("#time_prib").text(message["timePrilet"]);
 }
 function showReys(message) {
 	$("#filter_table").empty();
@@ -118,7 +120,7 @@ $("#filter_table").append("<tr></tr>");
 $("#filter_table tr:last-child").append("<td>"+sezonSchedule.day+"</td>");	
 $("#filter_table tr:last-child").append("<td>"+sezonSchedule.rout+"</td>");	
 $("#filter_table tr:last-child").append("<td>"+sezonSchedule.nomer+"</td>");	
-$("#filter_table tr:last-child").append("<td>"+sezonSchedule.time_otpravl+"</td>");
-$("#filter_table tr:last-child").append("<td>"+sezonSchedule.time_prib+"</td>");		
+$("#filter_table tr:last-child").append("<td>"+sezonSchedule.timeDeporture+"</td>");
+$("#filter_table tr:last-child").append("<td>"+sezonSchedule.timePrilet+"</td>");		
 });
 }

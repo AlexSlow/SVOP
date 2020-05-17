@@ -60,7 +60,7 @@ public class LoginController {
         }else
         {
             userService.save(user);
-            securityService.autoLogin(user.getUsername(),user.getPassword());
+           // securityService.autoLogin(user.getUsername(),user.getPassword());
             return "redirect:/svop/";
         }
 
@@ -72,11 +72,11 @@ public class LoginController {
                         @RequestParam(name = "password",required = false) String password, Model model) {
         //System.out.println("user= "+username);
         if ((username!=null)&&(password!=null)) {
-            securityService.autoLogin(username, password);
+          //  securityService.autoLogin(username, password);
             return "redirect:/svop/";
         }else{
             return "/html/login.html";
-        }
+             }
 
     }
 

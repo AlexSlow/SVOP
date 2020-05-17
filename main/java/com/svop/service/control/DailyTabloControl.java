@@ -52,7 +52,7 @@ public class DailyTabloControl  implements TabloControl {
         public class SchedulePlanFormingTask implements Runnable{
             @Override
             public void run() {
-                flightScheduleLanguageViews=flightSheduleDaoService.getFlightScheduleLanguageList(PageRequest.of(page,page_size),countries,locales[countries]);
+                flightScheduleLanguageViews=flightSheduleDaoService.getActualFlightScheduleLanguageList(PageRequest.of(page,page_size),countries,locales[countries]);
                 Map<String,Object> response=new HashMap<>();
                 response.put("header",getHeader());
                 response.put("body",flightScheduleLanguageViews);

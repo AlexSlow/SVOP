@@ -1,0 +1,1 @@
+var TimeBeforePosadka=20;

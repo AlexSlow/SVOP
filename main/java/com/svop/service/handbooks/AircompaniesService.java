@@ -19,10 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.nio.file.attribute.FileAttribute;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +40,17 @@ public class AircompaniesService {
     private Integer width_x;
     @Value("${svop.size_logo_y}")
     private Integer width_y;
+    //Загрузка больших изображений
+    @Value("${svop.size_lage_logo_x}")
+    private Integer width_lage_x;
+    @Value("${svop.size_lage_logo_y}")
+    private Integer width_lage_y;
+
+    @Value("${upload.path_server_lage}")
+    private String uploadPathServerLage;
+    //Каталог для отображения файлов для http
+    @Value("${upload.lage_path}")
+    private String uploadPathLage;
     @Autowired
     AircompanyRepositpry aircompanyRepositpry;
     public List<Aircompany> getAircompanies()
@@ -62,19 +70,22 @@ public class AircompaniesService {
             if (aircompanyOldData.get().getLogo()!=null) {
                 String[] nameItems = aircompanyOldData.get().getLogo().split(Pattern.quote("/"));
                 String name = nameItems[nameItems.length - 1];
+                //Удалить лого
                 Path oldFilePath = Paths.get(uploadPathServer, name);
                 if (Files.exists(oldFilePath)) {
                     Files.delete(oldFilePath);
                 }
+                //Удалить большое лого
+                Path oldFilePathLage = Paths.get(uploadPathServerLage, name);
+                if (Files.exists(oldFilePathLage)) {
+                    Files.delete(oldFilePathLage);
+                }
             }
         }
-        //Если файл  был отправлен
-        //Сохдадим директорию, если ее нет
-        if (!aircompanyView.getFile().getOriginalFilename().isEmpty()){
-        Path upload_dir= Paths.get(uploadPathServer);
-        if (!Files.isDirectory(upload_dir,LinkOption.NOFOLLOW_LINKS)){
-                Files.createDirectory(upload_dir);
-        }
+        if (!aircompanyView.getFile().getOriginalFilename().isEmpty()) {
+        createDirectory(uploadPathServer);
+        createDirectory(uploadPathServerLage);
+
 
         //Универсальный номер
         String uuidFile= UUID.randomUUID().toString();
@@ -83,8 +94,17 @@ public class AircompaniesService {
         aircompanyView.getFile().transferTo(filePathUpload);
         //Это путь для отбражение для Spring
         aircompany.setLogo(uploadPath+fileName);
+        aircompany.setLogoLage(uploadPathLage+fileName);
 
 
+            Path fileUploadLage=Paths.get(uploadPathServerLage,fileName);
+            if (Files.exists(filePathUpload))
+            {
+                Files.copy(filePathUpload,fileUploadLage, StandardCopyOption.REPLACE_EXISTING);
+            }
+            BufferedImage imagelage = ImageIO.read(fileUploadLage.toFile());
+            BufferedImage resizedLage = resize(imagelage, width_lage_y, width_lage_x);
+            ImageIO.write(resizedLage, "png", fileUploadLage.toFile());
 
         //Поптыаемся маштабировать файл
 
@@ -114,5 +134,20 @@ public class AircompaniesService {
         g2d.dispose();
         return resized;
     }
+    private static void createDirectory(String uploadPathServer) throws IOException {
+        //Если файл  был отправлен
+        //Сохдадим директорию, если ее нет
+        Path upload_dir = Paths.get(uploadPathServer);
+        if (!Files.isDirectory(upload_dir, LinkOption.NOFOLLOW_LINKS)) {
+            Files.createDirectory(upload_dir);
+        }
+    }
+
+        private static Path getUUID(String uploadPathServer,String file){
+            String uuidFile= UUID.randomUUID().toString();
+            String fileName=uuidFile+"_"+file;
+            Path filePathUpload=Paths.get(uploadPathServer,fileName);
+            return filePathUpload;
+        }
 
 }

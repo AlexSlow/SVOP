@@ -67,18 +67,14 @@ max-width:50em;
 			<a class="dropdown-item"  th:href="@{/svop/shifts}"  th:text="#{menu.shifts}" >Смены</a>
 			<a class="dropdown-item"  th:href="@{/svop/FlightShedule/}"  th:text="#{menu.flight_plan}" >График полетов</a>
 		</div>
-		<a class="dropdown-item submenu" href="#" th:text="#{menu.tehn_plan}">Технологические графики</a>
-		<div class="dropdown-menu" id="1">
-			<a class="dropdown-item" href="#"  th:text="#{menu.temlate_forming}" >Формирование шаблонов</a>
-			<a class="dropdown-item" href="#" th:text="#{menu.init}" >Инициализация</a>
-		</div>
-		
 		<a class="dropdown-item submenu" href="#" th:text="#{menu.io}" >Система вывода</a>
 		<div class="dropdown-menu" id="1">
 		<a class="dropdown-item" th:href="@{/svop/SeasonSchedule/control}"  th:text="#{menu.tablo_sezon_control}">Управление таблом сезонного расписания</a>
 		<a class="dropdown-item" th:href="@{/svop/DailySchedule/control}"  th:text="#{menu.tablo_daily_control}">Управление таблом суточного расписания</a>
 		<a class="dropdown-item" th:href="@{/svop/SeasonSchedule/tablo}"  th:text="#{menu.tablo_sezon}">Табло сезонного расписания</a>
 		<a class="dropdown-item" th:href="@{/svop/DailySchedule/tablo}"  th:text="#{menu.tablo_dayly}">Суточное расписание</a>
+		<a class="dropdown-item" th:href="@{/svop/DailySchedule/tablo}"  th:text="#{menu.tablo_info}">Информационное табло</a>
+		<a class="dropdown-item" th:href="@{/svop/DailySchedule/stoicsManager}"  th:text="#{menu.receptions}">Стойки</a>
 		</div>
 		<a class="dropdown-item submenu" href="#"  th:text="#{menu.admin}">Администрирование</a>
 		<div class="dropdown-menu" id="1">

@@ -4,7 +4,6 @@
             'X-Csrf-Token':token
         }
     });
-
 var Headers = new Map(); // Заголовки главной таблицы
 var Names = new Map(); //Атрибуты name заголовков главной таблицы, они не зависят от языка
 var is_null_map = new Map(); //валидация не пустых элементов
@@ -25,11 +24,15 @@ content= button.data('content')
 $("#modal_table thead").append("<tr></tr>");
 $("#content_table thead tr").children("th").each(function(){
 if ($(this).text()!="")
-{ 8
+{ 
+//Если нет аннотации игнорирования
+if ($(this).attr('data-ignore')!=1)
+{
 Headers.set($(this).text(),$(this).attr('data-type'));
 Names.set($(this).text(),$(this).attr('name'));
 is_null_map.set($(this).text(),$(this).attr('data-notnull'));
 $("#modal_table thead tr").append("<th>"+$(this).text()+"</th>");
+}
 }
 });
   
@@ -96,7 +99,7 @@ $(this).children("label").each(function(){
    $("#modal_table tbody ").append("<tr></tr>");
    $("#modal_table tbody tr:last-child").append("<td><input class='d-none' value='"+null+"' type='text'></td>");
    //Выставить все цвета нейтральным
-   //console.log(Headers);
+   console.log(Headers);
 	for (let key of Headers.keys()) {
 	let val=Headers.get(key);
 	let name=Names.get(key);

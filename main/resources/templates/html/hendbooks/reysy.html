@@ -156,7 +156,7 @@ request.sezon_selected=$("#sezon_select").val();
 		
 			 $.ajax({
   type: "POST",
-  url: host+"/api/reysy/get_reys_from_period",
+  url: host+"svop/api/reysy/get_reys_from_period",
 	data: JSON.stringify(request),
 	contentType: 'application/json',
 	success: function(data) {

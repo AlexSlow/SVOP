@@ -27,6 +27,10 @@ public class Aircompany {
 
     @Column(name="aircompany_logo")
     private String logo;
+
+    @Column(name="aircompany_logo_lage")
+    private String logoLage;
+
     public Aircompany(){}
     public Aircompany(String nameLong, String nameShort, String logo) {
         this.nameLong = nameLong;
@@ -39,6 +43,14 @@ public class Aircompany {
         this.nameShort = nameShort;
         this.nomers = nomers;
         this.logo = logo;
+    }
+
+    public String getLogoLage() {
+        return logoLage;
+    }
+
+    public void setLogoLage(String logoLage) {
+        this.logoLage = logoLage;
     }
 
     public Aircompany(AircompanyView aircompanyView)

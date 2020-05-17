@@ -4,8 +4,8 @@
 <meta http-equiv="Content-type" Content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<meta th:name="_csrf" th:content="${_csrf.token}"/>
-<meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+<meta th:name="_csrf" th:content="${_csrf?.token}"/>
+<meta th:name="_csrf_header" th:content="${_csrf?.headerName}"/>
 <title th:text="#{nomer_reys.title}">
 Номера рейсов
 </title>
@@ -82,8 +82,8 @@ id="maincheck"/> <label for="maincheck" th:text="#{buttons.fire_all}"> Выде�
   //csrf токены
 var token = $("meta[name='_csrf']").attr("content"); 
 var header = $("meta[name='_csrf_header']").attr("content");
-var service_api_get=host+"/api/nomer_reys/get_from_aircompanies";
-var service_api_save=host+"/api/nomer_reys/save";  
+var service_api_get=host+"/svop/api/nomer_reys/get_from_aircompanies";
+var service_api_save=host+"/svop/api/nomer_reys/save";  
  </script>
  <script src="/js/modal/nomer_reys_modal.js">
  </script>

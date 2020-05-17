@@ -20,7 +20,6 @@ public class SvopLogoutSuccessHandler implements LogoutSuccessHandler {
     public void onLogoutSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
                                 Authentication authentication) throws IOException, ServletException {
         logger.info("выход "+authentication.getName()+" "+authentication.getAuthorities());
-        System.out.println("выход "+authentication.getName());
        httpServletResponse.setStatus(HttpServletResponse.SC_OK);
        httpServletResponse.sendRedirect("svop/login");
     }

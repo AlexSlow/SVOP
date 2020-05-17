@@ -4,8 +4,8 @@
 <meta http-equiv="Content-type" Content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<meta th:name="_csrf" th:content="${_csrf.token}"/>
-<meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+<meta th:name="_csrf" th:content="${_csrf?.token}"/>
+<meta th:name="_csrf_header" th:content="${_csrf?.headerName}"/>
 <title th:text="#{routs.title}">
 Routs
 </title>
@@ -101,7 +101,7 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
   //csrf токены
 var token = $("meta[name='_csrf']").attr("content"); 
 var header = $("meta[name='_csrf_header']").attr("content");
-var service_api_save=host+"/api/routes/save";
+var service_api_save=host+"/svop/api/routes/save";
 var error=[[#{modal.error}]];
  </script>
    <script src="/js/modal/routes_modal.js">

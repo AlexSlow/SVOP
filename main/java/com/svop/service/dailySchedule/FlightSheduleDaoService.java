@@ -26,7 +26,7 @@ import java.util.*;
 
 @Service
 @Transactional
-public class FlightSheduleDaoService {
+public class FlightSheduleDaoService implements FlightSheduleDaoServiceInterface {
     private static final Logger logger= LoggerFactory.getLogger(FlightSheduleDaoService.class);
     @Autowired private RoutesService routesService;
     @Autowired private UserService userService;
@@ -37,10 +37,11 @@ public class FlightSheduleDaoService {
      * @param pageable
      * @return
      */
+    @Override
     @Cacheable(cacheNames = "fightScheduledLanguage")
-    public List<FlightScheduleLanguageView> getFlightScheduleLanguageList(Pageable pageable,Integer country,Locale locale)
+    public List<FlightScheduleLanguageView> getActualFlightScheduleLanguageList(Pageable pageable,Integer country,Locale locale)
     {
-        Page<FlightSchedule>  flightScheduleList=flightSheduleRepository.findAllByDay(pageable,new Date(System.currentTimeMillis()));
+        Page<FlightSchedule>  flightScheduleList=flightSheduleRepository.findByDayAndStatus(pageable,new Date(System.currentTimeMillis()),FlightSheduleStatus.NotChanged);
         List<FlightScheduleLanguageView> languageViews=new ArrayList<>(flightScheduleList.getSize());
         for(FlightSchedule flightSchedule:flightScheduleList)
         {
@@ -57,6 +58,7 @@ public class FlightSheduleDaoService {
         return languageViews;
 
     }
+    @Override
     public int getPageAmout(Pageable pageable)
     {
         Page<FlightSchedule> page=flightSheduleRepository.findAll(pageable);
@@ -68,6 +70,7 @@ public class FlightSheduleDaoService {
      * @param pageable
      * @return
      */
+    @Override
     public List<FlightScheduleView> getPage(PageFormatter pageFormatter,Pageable pageable)
     {
         logger.info("Начало получения страницы рейсов");
@@ -122,6 +125,7 @@ public class FlightSheduleDaoService {
      * Удалить
      * @param id_list
      */
+    @Override
     public void delete(List<Integer> id_list)
     {
         logger.info("Начало удаление  графика полетов  "+id_list);
@@ -134,6 +138,7 @@ public class FlightSheduleDaoService {
      * @param day
      * @return
      */
+    @Override
     public List<FlightScheduleView> getByDay(Date day)
     {
         logger.info("Начало получения графика полетов на день "+day);
@@ -148,11 +153,27 @@ public class FlightSheduleDaoService {
         return flightScheduleViewList;
     }
 
+    @Override
+    public List<FlightScheduleView> getActulaByDay(Date day)
+    {
+        logger.info("Начало получения графика полетов на день "+day);
+        //Получим все дни, когда по основному дню
+        List<FlightSchedule> flightScheduleList= flightSheduleRepository.findByDayAndStatus(day,FlightSheduleStatus.NotChanged);
+        List<FlightScheduleView> flightScheduleViewList =new ArrayList<>(flightScheduleList.size());
+        for(FlightSchedule flightSchedule:flightScheduleList)
+        {
+            flightScheduleViewList.add(getView(flightSchedule));
+        }
+        logger.info("Завершение получения  графика полетов на день "+day);
+        return flightScheduleViewList;
+    }
+
     /**
      *
      * @param day
      * @return
      */
+    @Override
     public List<FlightSchedule> getFlightShedulesByDay(Date day)
     {
         logger.info("Начало получения  графика полетов на день "+day);
@@ -161,7 +182,7 @@ public class FlightSheduleDaoService {
         logger.info("Завершение получения  графика полетов на день "+day);
         return flightScheduleList;
     }
-
+    @Override
     public List<FlightScheduleView> getFlightShedulesViewById(List<Integer> idl)
     {
         logger.info("Начало получения  графика полетов по id "+idl);
@@ -177,6 +198,7 @@ public class FlightSheduleDaoService {
         logger.info("Завершение получения  списка");
         return flightScheduleViewList;
     }
+    @Override
     public List<FlightSchedule> getFlightShedulesById(List<Integer> idl)
     {
         logger.info("Начало получения  графика полетов по id "+idl);
@@ -190,6 +212,7 @@ public class FlightSheduleDaoService {
      * @param dailies
      */
 //Сохранить ежедневное расписание
+    @Override
     public void saveDaily(List<Daily> dailies,Date date)
     {
        List<FlightSchedule> schedules=getFlightShedulesByDay(date);
@@ -224,10 +247,12 @@ public class FlightSheduleDaoService {
         flightSchedule.setTimePrilet(daily.getTimePrilet());
         return flightSchedule;
     }
+    @Override
     public Optional<FlightSchedule> getFlightSheduleById(Integer id)
     {
         return flightSheduleRepository.findById(id);
     }
+    @Override
     public void saveAll(List<FlightSchedule> flightSchedules){
         flightSheduleRepository.saveAll(flightSchedules);
     }
