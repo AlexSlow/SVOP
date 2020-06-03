@@ -32,17 +32,33 @@ $("#modal_table tbody").empty();
    
    
    //Сохраняем в массив объектов
-    $("#save").on('click', function(e) {	
-	var ajax_array =[]
+    $("#save").on('click', function(e) {
+	var ajax_array =[];
 	$("#modal_table tbody tr").each(function(){ 
 		 let ajax_object={};
-		 ajax_object["id"]=$(this).children("td:eq(0)").text();
-		 ajax_object["day"]=Date.parse($(this).children("td:eq(5)").children("input").val());
-		 ajax_object["deporture"]=$(this).children("td:eq(6)").children("input").val();
-		 ajax_object["prilet"]=$(this).children("td:eq(7)").children("input").val();
-		 ajax_object["comment"]=$(this).children("td:eq(8)").children("input").val();
-		 ajax_object["status"]=$(this).children("td:eq(9)").text();
-		 ajax_array.push(ajax_object);
+		 let id=$(this).children("td:eq(0)").text();
+		 ajax_object["id"]=id;
+		 ajax_object["day"]=Date.parse($(this).find("#day").val());
+		 
+		 ajax_object["deporture"]=$(this).find("#deporture").val();
+		 ajax_object["prilet"]=$(this).find("#prilet").val();
+		 ajax_object["comment"]=$(this).find("#comment").val();
+		  ajax_object["vs"]=$(this).find("#vs").val();
+		 ajax_object["status"]=$(this).find("#status").text();
+		 let undoMoving=$(this).find(".checkboxClass").prop("checked");
+		 if (undoMoving==null) undoMoving=false;
+		 ajax_object["undoMoving"]=undoMoving;
+		 //ПРоверить объект перед добавлением.
+		 /*
+		 let isValidate=true;
+		 for (var key in ajax_object) {
+		console.log(key, ':', ajax_object[key]);
+		if (ajax_object[key]==null) isValidate=false;
+			}
+		if (isValidate)
+			*/
+		ajax_array.push(ajax_object);
+		 
 	});
 	console.log(ajax_array);
 	requestMove(ajax_array);
@@ -72,25 +88,35 @@ $("#modal_table tbody").empty();
 	let dayNext=item.dayNext;
 	let comment=item.comment;
 	
+	let moveable=item.moveable;
+	let dateMills=item.dateNextMills;
+	let vs=item.tipVs;
 	//Сформируем запрос на сервер и получим информацию о нужных рейсах
-	if (type!="Moved")
+	if (type!="Перемещенный")
 	{
 $("#modal_table tbody ").append("<tr><td class='d-none'>"+id+"</td><td>"+day+"</td><td>"+nomer+"</td>"+
-"<td>"+timeDep+"</td><td>"+timePril+"</td><td><input type='date'/></td><td><input type='time'/></td><td><input type='time'/></td>"+
-"<td><input type='text'/></td><td class='d-none'>"+type+"</td></tr>"); 
+"<td>"+timeDep+"</td><td>"+timePril+"</td><td>"+vs+"</td><td><input type='date' id='day' /></td><td><input id='deporture' type='time'/></td><td><input id='prilet' type='time'/></td>"+
+"<td><input id='vs' type='text'/></td><td><input id='comment' type='text'/></td><td id='status' class='d-none'>"+type+"</td></tr>"); 
 	} 
 else
 {
+	if (moveable!=true)
+{
 	$("#modal_table tbody ").append("<tr><td class='d-none'>"+id+"</td><td>"+day+"</td><td>"+nomer+"</td>"+
-"<td>"+timeDep+"</td><td>"+timePril+"</td><td>"+dayNext+"</td><td>"+timeDeportureNext+"</td><td>"+timePriletNext+"</td><td>"+comment+"</td>"+
+"<td>"+timeDep+"</td><td>"+timePril+"</td><td>"+vs+"</td><td>"+dayNext+"</td><td>"+timeDeportureNext+"</td><td>"+timePriletNext+"</td><td>"+vs+"</td><td>"+comment+"</td>"+
 "<td class='d-none'>"+type+"</td></tr>"); 
+}else{
+	
+	var d = new Date(dateMills);
+	$("#modal_table tbody ").append("<tr><td class='d-none'>"+id+"</td><td>"+day+"</td><td>"+nomer+"</td>"+
+"<td>"+timeDep+"</td><td>"+timePril+"</td><td>"+vs+"</td><td><input type='date' id='day' value='"+dateFormat(d)+"'/></td><td><input type='time' id='deporture' value='"+timeDeportureNext+"'/></td><td><input type='time' id='prilet' value='"+timePriletNext+"'/></td><td><input type='text' id='vs' value='"+vs+"' /></td>"+
+"<td><input id='comment' value='"+comment+"'  type='text'/></td>  <td id='status' class='d-none'>"+type+"</td> <td>Отменить перемещение <input class='checkboxClass'  type='checkbox'/></td></tr>"); 
+}
 }
 });
-	
   }
 });
 }
-
   	function requestMove(ajax_array)
 {
 	//console.log(idlist)
@@ -100,9 +126,26 @@ else
 	data: JSON.stringify(ajax_array),
 	contentType: 'application/json',
 	success: function(data) {
+	$('#addModal').modal('hide');
 	console.log(data);
-  }
+  },
+  	error: function (jqXHR, exception) {
+		console.log(jqXHR);
+	$("#modal_error").text(jqXHR.responseJSON.message);
+    // Your error handling logic here..
+}
 });
+}
+
+function dateFormat(d) {
+  let month = String(d.getMonth() + 1);
+  let day = String(d.getDate());
+  const year = String(d.getFullYear());
+
+  if (month.length < 2) month = '0' + month;
+  if (day.length < 2) day = '0' + day;
+
+  return `${year}-${month}-${day}`;
 }
    
 

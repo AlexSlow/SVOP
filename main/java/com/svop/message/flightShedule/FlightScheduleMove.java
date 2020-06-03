@@ -10,6 +10,24 @@ public class FlightScheduleMove {
     private LocalTime prilet;
     private String comment;
     private String status;
+    private boolean undoMoving;
+    private String vs;
+
+    public String getVs() {
+        return vs;
+    }
+
+    public void setVs(String vs) {
+        this.vs = vs;
+    }
+
+    public boolean isUndoMoving() {
+        return undoMoving;
+    }
+
+    public void setUndoMoving(boolean undoMoving) {
+        this.undoMoving = undoMoving;
+    }
 
     public String getStatus() {
         return status;

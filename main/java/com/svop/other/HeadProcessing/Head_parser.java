@@ -14,6 +14,7 @@ public class Head_parser {
     {
         Localformatter localformatter=new Localformatter();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth==null) return;
         String locale=userService.getLocale(auth.getName());
        //Тут должен быть запрос из БД
 

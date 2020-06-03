@@ -45,7 +45,7 @@ public class DailyDaoService {
     }
     public  List<DailyScheduleView> getDailyViewBetwinPeriod(Date begin, Date end)
     {
-        List<Daily> dailyPage=dailyRepository.findDailiesByDayBetween(begin,end);
+        List<Daily> dailyPage=dailyRepository.findDailiesByDayBetweenOrderByDay(begin,end);
         //Преобразуем для отображения
         List<DailyScheduleView> dailyScheduleViews =new ArrayList<>(dailyPage.size());
         for(Daily daily:dailyPage)
@@ -56,12 +56,12 @@ public class DailyDaoService {
     }
     public  List<Daily> getDailyBetweenPeriod(Date begin,Date end)
     {
-        List<Daily> dailyPage=dailyRepository.findDailiesByDayBetween(begin,end);
+        List<Daily> dailyPage=dailyRepository.findDailiesByDayBetweenOrderByDay(begin,end);
         return dailyPage;
     }
     public  List<Daily> getActualDailyBetweenPeriod(Date begin,Date end)
     {
-        List<Daily> dailyPage=dailyRepository.findDailiesByDayBetweenAndIzmenOmenNot(begin,end, ReysyStatus.Canceled);
+        List<Daily> dailyPage=dailyRepository.findDailiesByDayBetweenAndIzmenOmenNotOrderByDay(begin,end, ReysyStatus.Изменен);
         return dailyPage;
     }
 

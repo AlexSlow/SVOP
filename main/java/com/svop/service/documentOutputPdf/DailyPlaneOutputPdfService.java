@@ -25,7 +25,6 @@ public class DailyPlaneOutputPdfService {
                 BaseFont.createFont("c:\\windows\\fonts\\times.ttf", "cp1251", BaseFont.EMBEDDED);
         Document document = new Document(PageSize.A2);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-
         try {
             PdfWriter.getInstance(document, out);
             document.open();
@@ -47,7 +46,7 @@ public class DailyPlaneOutputPdfService {
             document.add(autor);
             document.add(Chunk.NEWLINE);
 
-            PdfPTable table = new PdfPTable(18);
+            PdfPTable table = new PdfPTable(20);
             table.setWidthPercentage(100);
             // Add PDF Table Header ->
             Font headFont = new Font(times, 16);
@@ -68,7 +67,7 @@ public class DailyPlaneOutputPdfService {
             rout.setHorizontalAlignment(Element.ALIGN_CENTER);
             rout.setVerticalAlignment(Element.ALIGN_MIDDLE);
             rout.setBorderWidth(2);
-            rout.setColspan(2);
+            rout.setColspan(4);
             rout.setPhrase(new Phrase("Маршрут", headFont));
             table.addCell(rout);
 
@@ -107,7 +106,7 @@ public class DailyPlaneOutputPdfService {
             timePril.setColspan(2);
             timePril.setPhrase(new Phrase("Время прилета", headFont));
             table.addCell(timePril);
-
+//16
             PdfPCell type = new PdfPCell();
             type.setNoWrap(true);
             type.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -154,7 +153,7 @@ public class DailyPlaneOutputPdfService {
                 bRoute.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 bRoute.setBorderWidth(1);
                 bRoute.setPhrase(new Phrase(dailyScheduleView.getRout(), bodyFont));
-                bRoute.setColspan(2);
+                bRoute.setColspan(4);
                 table.addCell(bRoute);
 
                 PdfPCell bNomer = new PdfPCell();
@@ -165,19 +164,15 @@ public class DailyPlaneOutputPdfService {
                 bNomer.setPhrase(new Phrase(dailyScheduleView.getNomer(), bodyFont));
                 bNomer.setColspan(2);
                 table.addCell(bNomer);
-
+//12
 
                 PdfPCell bDirection = new PdfPCell();
                 bDirection.setNoWrap(true);
                 bDirection.setHorizontalAlignment(Element.ALIGN_CENTER);
                 bDirection.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 bDirection.setBorderWidth(1);
-                Phrase direction_phrase;
-
-                if (dailyScheduleView.getDirection()== DailyDirection.Prilet.name())
-                    direction_phrase = new Phrase("прилет", bodyFont);
-                else direction_phrase = new Phrase("вылет", bodyFont);
-                bDirection.setPhrase(direction_phrase);
+                bDirection.setColspan(2);
+                bDirection.setPhrase(new Phrase(dailyScheduleView.getDirection(),bodyFont));
                 bDirection.setColspan(2);
                 table.addCell(bDirection);
 
@@ -206,12 +201,7 @@ public class DailyPlaneOutputPdfService {
                 bType.setHorizontalAlignment(Element.ALIGN_CENTER);
                 bType.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 bType.setBorderWidth(1);
-                Phrase type_phrase;
-
-                if (dailyScheduleView.getType() == TypeReys.Regular.name())
-                    type_phrase = new Phrase("регулярный", bodyFont);
-                else type_phrase = new Phrase("чартер", bodyFont);
-                bType.setPhrase(type_phrase);
+                bType.setPhrase(new Phrase(dailyScheduleView.getType(),bodyFont));
                 bType.setColspan(2);
                 table.addCell(bType);
 
@@ -232,14 +222,12 @@ public class DailyPlaneOutputPdfService {
                 bAirline.setPhrase(new Phrase(dailyScheduleView.getAirline(), bodyFont));
                 bAirline.setColspan(2);
                 table.addCell(bAirline);
-
             }
             try {
                 document.add(table);
             } catch (DocumentException ex) {
                 ex.printStackTrace();
             }
-
             document.close();
         } catch (DocumentException e) {
             e.printStackTrace();

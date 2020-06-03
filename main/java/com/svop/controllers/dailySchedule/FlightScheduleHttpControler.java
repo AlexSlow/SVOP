@@ -24,7 +24,7 @@ public class FlightScheduleHttpControler {
     @Autowired private UserService userService;
     @Autowired private FlightSheduleDaoService flightSheduleDaoService;
     @RequestMapping(value = "FlightShedule")
-    public String open(Model model, @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable page) {
+    public String open(Model model, @PageableDefault(sort = {"day"}, direction = Sort.Direction.DESC) Pageable page) {
         Head_parser head_parser = new Head_parser();
 
         PageFormatter pageFormatter = new PageFormatter();

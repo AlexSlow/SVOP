@@ -1,5 +1,6 @@
 package com.svop.tables.Handbooks;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -22,14 +23,16 @@ public class Routes {
     @Column(name="routs_vilet")
     private String vilet;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, optional = false,cascade = {CascadeType.MERGE,CascadeType.PERSIST})
     @JoinColumn(name = "routs_airport_arrival", nullable = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Airporty arrival;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = {CascadeType.MERGE,CascadeType.PERSIST})
     @JoinColumn(name = "routs_airport_departure", nullable = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Airporty deporture;
 
     public Routes(String name,Airporty arrival,Airporty deporture,String prilet, String vilet) {

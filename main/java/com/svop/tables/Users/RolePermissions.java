@@ -62,8 +62,8 @@ public class RolePermissions implements Serializable {
     public String toString() {
         return "RolePermissions{" +
                 "id=" + id +
-                ", role=" + role +
-                ", permission=" + permission +
+                ", role=" + role.getName() +
+                ", permission=" + permission.getName() +
                 ", access=" + access +
                 '}';
     }

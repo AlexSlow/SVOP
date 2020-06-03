@@ -18,6 +18,27 @@ public class FlightScheduleView {
     private String timePriletNext;
     private String dayNext;
 
+    private boolean moveable;
+    private long dateNextMills;
+
+    public boolean isMoveable() {
+        return moveable;
+    }
+
+    public void setMoveable(boolean moveable) {
+        this.moveable = moveable;
+    }
+
+
+
+    public long getDateNextMills() {
+        return dateNextMills;
+    }
+
+    public void setDateNextMills(long dateNextMills) {
+        this.dateNextMills = dateNextMills;
+    }
+
     public FlightScheduleView() {
         comment=new String();
         timeDeportureNext=new String();

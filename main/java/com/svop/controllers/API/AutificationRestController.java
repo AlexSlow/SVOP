@@ -6,10 +6,7 @@ import com.svop.service.secutity.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +17,19 @@ public class AutificationRestController {
 private @Autowired
 SecurityService securityService;
     @ResponseBody
-    @RequestMapping(value="/")
+    @PostMapping(value="/")
     public ResponseEntity<String> auth(@RequestBody UserView user) {
 
+        System.out.println("Получить токен");
         if ((user.getUsername()!=null)&&(user.getPassword()!=null)) {
             securityService.autoLogin(user.getUsername(), user.getPassword());
         }
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+    @ResponseBody
+    @GetMapping(value="/test")
+    public ResponseEntity<String> test() {
+
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 }

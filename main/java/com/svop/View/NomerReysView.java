@@ -3,6 +3,8 @@ package com.svop.View;
 import com.svop.tables.Handbooks.NomerReys;
 import com.svop.tables.Handbooks.ReysyNomerType;
 
+import java.util.Locale;
+
 public class NomerReysView {
     private String nomer;
     private ReysyNomerType type;

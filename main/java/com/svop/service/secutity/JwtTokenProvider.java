@@ -17,7 +17,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-@Component
+//@Component
 public class JwtTokenProvider  implements JwtTokenProviderInterface{
   @Autowired private UserDetailsServiceImpl userDetailsService;
     //@Value("{jwt.token.secret}")

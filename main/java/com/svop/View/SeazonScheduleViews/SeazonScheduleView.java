@@ -30,6 +30,9 @@ public class SeazonScheduleView {
     private Airline airline;
     private String aircompany;
     private String img;
+    private String type;
+
+
 
     public SeazonScheduleView() {
     }
@@ -65,6 +68,7 @@ public class SeazonScheduleView {
         this.prilet_time_prib= formatter.format( seazonSchedule.getPrilet_time_prib());
         this.vilet_time_otpravl= formatter.format(seazonSchedule.getVilet_time_otpravl());
         this.vilet_time_prib= formatter.format(seazonSchedule.getVilet_time_prib());
+        this.type=seazonSchedule.getTypeReys().name();
 
     }
     public Integer getId() {
@@ -209,5 +213,13 @@ public class SeazonScheduleView {
 
     public void setImg(String img) {
         this.img = img;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

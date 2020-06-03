@@ -3,6 +3,7 @@ package com.svop.service.dailySchedule;
 import com.svop.View.DailyScheduleViews.StoicBindDto;
 import com.svop.View.DailyScheduleViews.StoicDto;
 import com.svop.View.DailyScheduleViews.StoicsAndFlightSheduleDto;
+import com.svop.tables.daily_schedule.FlightSchedule;
 import com.svop.tables.daily_schedule.Stoic;
 
 import javax.validation.constraints.NotNull;
@@ -19,5 +20,6 @@ public interface StoicDaoInterface {
     void bind(@NotNull StoicBindDto stoicBindDto) throws Exception;
     public void fire(@NotNull List<Integer> idl);
     public StoicDto getStoic(@NotNull Integer id);
+    void delete(List<Integer> id);
 
 }

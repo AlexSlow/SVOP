@@ -35,7 +35,7 @@ public class AirportyController {
     @Autowired
     UserService userService;
     @RequestMapping(value="/svop/airports")
-    public String open(Model model,@PageableDefault(sort = {"id"},direction = Sort.Direction.DESC) Pageable page) {
+    public String open(Model model,@PageableDefault(sort = {"nameRu"},direction = Sort.Direction.ASC) Pageable page) {
         Head_parser head_parser=new Head_parser();
         head_parser.setModel(userService,model);
         Page<Airporty> Airports=airportsService.getPage(page);

@@ -105,7 +105,7 @@ public class ReysViewElement {
         this.vilet_time_prib = reys.getVilet_time_prib();
         this.tip_vs = reys.getTip_vs();
         //Reysy статус
-        if (reys.getIzmen_otmen()==ReysyStatus.Canceled){ this.izmen_otmen =true;}else{this.izmen_otmen =false;}
+        if (reys.getIzmen_otmen()==ReysyStatus.Отменен){ this.izmen_otmen =true;}else{this.izmen_otmen =false;}
 
         this.osnovanie_izmen_otmen = reys.getOsnovanie_izmen_otmen();
         this.type = reys.getType();

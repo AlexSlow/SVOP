@@ -11,6 +11,9 @@ import com.svop.tables.Handbooks.ReysyStatus;
 import com.svop.tables.Handbooks.TypeReys;
 import com.svop.tables.SeazonSchedule.SeazonSchedule;
 import com.svop.tables.SeazonSchedule.SeazonScheduleRepository;
+import com.svop.tables.journal.SeazonJournalProcedure;
+import com.svop.tables.journal.SeazonJournalRepository;
+import com.svop.tables.journal.SeazonProcedureJournalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.file.Path;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +37,7 @@ public class SeazonScheduleService implements SeazonScheduleInterface {
     @Autowired private RoutesService routesService;
     @Autowired private SeazonScheduleRepository sezonScheduleRepository;
     @Autowired private UserService userService;
-
+    @Autowired private SeazonProcedureJournalService seazonProcedureJournalService;
     /**
      * ПРоцедура формирования сезонного расписания
      */
@@ -43,12 +47,11 @@ public class SeazonScheduleService implements SeazonScheduleInterface {
         logger.info("Начало формирования сезонного расписания");
         sezonScheduleRepository.deleteAll();
         //Сформируем сезонное расписание
-        List<Reysy> reysyList=reysyService.getActualReysListByType(TypeReys.Regular,new Date(System.currentTimeMillis()));
-
+        List<Reysy> reysyList=reysyService.getAllActualReys(new Date(System.currentTimeMillis()));
         for (Reysy reysy:reysyList)
         {
            // System.out.println(reysy);
-            if (reysy.getIzmen_otmen().equals(ReysyStatus.Canceled)) continue;
+            if (reysy.getIzmen_otmen().equals(ReysyStatus.Отменен)) continue;
 
             SeazonSchedule seazonSchedule=new SeazonSchedule();
             seazonSchedule.setId(reysy.getId());
@@ -76,7 +79,9 @@ public class SeazonScheduleService implements SeazonScheduleInterface {
 
             seazonSchedule.setAircompany(reysy.getNomer_prilet().getAircompany().getNameLong());
             seazonSchedule.setImg(reysy.getNomer_prilet().getAircompany().getLogo());
+            seazonSchedule.setTypeReys(reysy.getType());
             sezonScheduleRepository.save(seazonSchedule);
+            seazonProcedureJournalService.save(SecurityContextHolder.getContext().getAuthentication().getName(),new Date(System.currentTimeMillis()));
         }
     }
 
@@ -150,5 +155,13 @@ public class SeazonScheduleService implements SeazonScheduleInterface {
         return seazonSchedules.getTotalPages();
     }
 
-
+    /**
+     * Проверка на наличие изображения
+     * @param path
+     * @return
+     */
+    @Override
+    public Boolean isImgExists(String path) {
+        return sezonScheduleRepository.findByImg(path).isPresent();
+    }
 }

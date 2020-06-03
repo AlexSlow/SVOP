@@ -152,10 +152,11 @@ $(this).children("label").each(function(){
    function clean()
    {
    $("#modal_table tbody").empty();
-    $("#modal_table thead").empty();
+   $("#modal_table thead").empty();
    Headers.clear();
    Names.clear();
    is_null_map.clear();
+   $("#modal_error").text("");
    }
    // Проверка на соответствие данных анотациям таблицы
    function check()
@@ -201,14 +202,23 @@ $(this).children("label").each(function(){
 	contentType: 'application/json',
 	success: function(data) {
    // alert(data);
-   //console.log(data);
-   $("#modal_error").text(data.message);
-   if (data.kod==0)
-   {
-	location.reload();
-  }
-	}
+  //Получть страницу
+  getPage();
+	},
+	error: function (jqXHR, exception) {
+		console.log(jqXHR);
+	$("#modal_error").text(jqXHR.responseJSON.message);
+    // Your error handling logic here..
+}
 });
 
    }
+   
+   function $_GET(key) {
+    var p = window.location.search;
+    p = p.match(new RegExp(key + '=([^&=]+)'));
+    return p ? p[1] : 0;
+}
+   
+   
    

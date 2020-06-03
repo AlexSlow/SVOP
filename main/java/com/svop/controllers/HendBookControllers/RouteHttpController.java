@@ -28,7 +28,7 @@ public class RouteHttpController {
     @Autowired
     UserService userService;
     @RequestMapping(value="/svop/routs")
-    public String open( Model model,@PageableDefault(sort = {"id"},direction = Sort.Direction.DESC) Pageable page) {
+    public String open( Model model,@PageableDefault(sort = {"name"},direction = Sort.Direction.DESC) Pageable page) {
         Head_parser head_parser=new Head_parser();
         head_parser.setModel(userService,model);
         PageFormatter pageFormatter=new PageFormatter();

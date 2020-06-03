@@ -104,7 +104,11 @@ $("#Img").append("<img src='"+message.img+"'/>");
 $("#StoicText").text(titleRu+message.nomer);
 $("#NomerText").text(ReysRu+message.nomerReys);
 $("#RoutText").text(getLastAirport(message.routeRu)+" / "+getLastAirport(message.routeEn));
-$("#TimeText").text(EndPosadkaTeks+message.timeViletRu);	
+console.log(message.timeViletRu);
+date=new Date(message.timeViletRu);
+console.log(date);
+date.setMinutes(date.getMinutes() - TimeBeforePosadka);
+$("#TimeText").text(EndPosadkaTeks+date);	
 }
 function getLastAirport(route)
 {

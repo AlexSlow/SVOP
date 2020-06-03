@@ -16,6 +16,7 @@
   }
 
 $("#modal_table tbody").empty();
+$("#modal_error").text("");
   // получить кнопку, которая его открыло
   var button = $(event.relatedTarget)
   // извлечь информацию из атрибута data-content
@@ -86,16 +87,12 @@ wrap_object["nomers"]=ajax_array;
 	data: JSON.stringify(wrap_object),
 	contentType: 'application/json',
 	success: function(data) {
-   // alert(data);
-   $("#input_select").val(aircompany);
-	//location.reload();
-$("#modal_error").text(data.message);
- if (data.kod==0)
-   {
-	$('#contentForm').submit();
-  }
-	
-  }
+	$("#input_select").val(aircompany);
+	$("#modal_error").text(data.message);
+	$('#addModal').modal('hide');
+	select();	
+  },
+  error:(jqXHR, exception)=>{$("#modal_error").text(jqXHR.responseJSON.message);}
 });
 }else{
 	  alert(error_aircompany_msg);
@@ -107,15 +104,15 @@ $("#modal_error").text(data.message);
    {
 	   if (selected==null)
 	   {
-	   return "<td><select class='form-control'><option>Prilet</option><option>Vilet</option><option>Tranzit</option></select></td>";
-	   }else if (selected=="Prilet"){
-		return "<td><select class='form-control'><option selected>Prilet</option><option>Vilet</option><option>Tranzit</option></select></td>";
+	   return "<td><select class='form-control'><option value='Прилет'>На прилет</option><option value='Вылет'>На вылет</option><option value='Транзит'>Транизит</option></select></td>";
+	   }else if (selected=="Прилет"){
+		return "<td><select class='form-control'><option selectedvalue='Прилет'>На прилет</option><option value='Вылет'>На вылет</option><option value='Транзит'>Транизит</option></select></td>";
 	   }
-	   else if (selected=="Vilet"){
-		return "<td><select class='form-control'><option>Prilet</option><option selected>Vilet</option><option>Tranzit</option></select></td>";
+	   else if (selected=="Вылет"){
+		return "<td><select class='form-control'><option value='Прилет'>На прилет</option><option selected value='Вылет'>На вылет</option><option value='Транзит'>Транизит</option></select></td>";
 	   }
-	   else if (selected=="Tranzit"){
-		return "<td><select class='form-control'><option>Prilet</option><option selected>Vilet</option><option selected>Tranzit</option></select></td>";
+	   else if (selected=="Транзит"){
+		return "<td><select class='form-control'><option value='Прилет'>На прилет</option><option value='Вылет'>На вылет</option><option selected value='Транзит'>Транизит</option></select></td>";
 	   }
    }
    

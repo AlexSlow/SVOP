@@ -19,6 +19,7 @@ public interface AirportyRepo extends CrudRepository<Airporty,Long> {
     Airporty findById(Integer integer);
    void deleteByIdIn(List<Integer> ids);
     List<Airporty> findByNameRu(String name);
+    List<Airporty> findAll();
     /*
     @Modifying
     @Query("UPDATE Airporty e SET e.nameRu = :nameRu, e.nameEng = :nameEng,e.nameCh=:nameCh,e.gmt=:GMT,e.icao=:ICAO, e.iata=:IATA where e.id = :id")

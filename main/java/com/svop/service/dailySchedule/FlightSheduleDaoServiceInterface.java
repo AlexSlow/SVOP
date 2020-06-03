@@ -25,5 +25,6 @@ public interface FlightSheduleDaoServiceInterface {
     public void saveDaily(List<Daily> dailies, Date date);
     public Optional<FlightSchedule> getFlightSheduleById(Integer id);
     public void saveAll(List<FlightSchedule> flightSchedules);
+    void deleteList(List<FlightSchedule> flightSchedules);
 
 }

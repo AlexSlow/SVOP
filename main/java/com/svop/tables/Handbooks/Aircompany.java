@@ -22,7 +22,7 @@ public class Aircompany {
     private String nameShort;
 
     //Это таблица хозяин и у него нет внешнего ключа
-    @OneToMany(mappedBy="aircompany")
+    @OneToMany(mappedBy="aircompany",cascade=CascadeType.ALL)
     private Set<NomerReys> nomers;
 
     @Column(name="aircompany_logo")

@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface StoicRepository extends JpaRepository<Stoic,Integer> {
     void deleteByIdIn(List<Integer> id_list);
-    List<Stoic> findByIdIn(List<Integer> idl);
+    List<Stoic> findByIdInOrderByNomer(List<Integer> idl);
 
-    List<Stoic> findByFlightScheduleId(Integer id);
+    List<Stoic> findByFlightScheduleIdOrderByNomer(Integer id);
 }

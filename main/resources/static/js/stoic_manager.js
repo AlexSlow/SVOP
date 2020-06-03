@@ -85,7 +85,7 @@ function refreshStoicsTable(Stoic)
 	if (stoic.status){sts="Включен";}else{sts="Выключен";}
 	
 	$("#content_table tbody").append("<tr><td><input type='checkbox' id='ch"+stoic.id+"' value='"+stoic.id+"' name='ch[]' form='form'/></td>"+
-	"<td><label for='ch"+stoic.id+"'>"+stoic.nomer+"</label></td>"+
+	"<td><a href='"+host+"/stoic/"+stoic.id+"' taget=_blank>"+stoic.nomer+"</a></td>"+
 	"<td><label for='ch"+stoic.id+"' >"+stoic.nomerReys+" </label></td>"+
 	"<td>"+sts+"</td></tr>");
 });
@@ -94,6 +94,7 @@ function refreshStoicsTable(Stoic)
 //--------------------------------------------------------------------- Запросы
 function getReysAjax(id,adress)
   { 
+  if (id==null) return;
   console.log("Получение стойки с id= "+id);
   $.ajax({
   type: "POST",
@@ -112,6 +113,8 @@ function getReysAjax(id,adress)
    function bindStoicAndReys(stoic_id,reys_id,adress)
   { 
   console.log("Связь стойки с id= "+stoic_id+" рейса"+reys_id);
+  if (reys_id==null) return;
+  if (stoic_id==null) return;
   let obj={};
   obj["reysId"]=reys_id;
   obj["stoicId"]=stoic_id;

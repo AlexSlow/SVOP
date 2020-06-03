@@ -4,8 +4,8 @@
 <meta http-equiv="Content-type" Content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<meta th:name="_csrf" th:content="${_csrf.token}"/>
-<meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+<meta th:name="_csrf" th:content="${_csrf?.token}"/>
+<meta th:name="_csrf_header" th:content="${_csrf?.headerName}"/>
 
 <title th:text="#{menu.receptions}" >
 Стойки
@@ -31,7 +31,7 @@
 <tbody id="filter_table">
 <tr th:each="stoic : ${stoics}">
 <td><input type="checkbox" th:id="ch+${stoic.id}" th:value="${stoic.id}" name="ch[]" th:form="form"/></td>
-<td><label th:for="ch+${stoic.id}" th:text="${stoic.nomer}"> </label></td>
+<td><a th:href="@{'/svop/stoic/'+${stoic.id}}" th:text="${stoic.nomer}"> </a></td>
 <td><label th:for="ch+${stoic.id}" th:text="${stoic.nomerReys}"> </label></td>
 <td><span th:if="${stoic.status}">Включен</span> <span th:th:unless="${stoic.status}">Выключен</span></td>
 </tr>
@@ -70,7 +70,7 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
  <input type="button" name="showStoic" id="showStoic" th:value="#{buttons.showStoic}" class="btn btn-primary"/>
  <input type="button" name="showReys" id="showReys" th:value="#{buttons.showReys}" class="btn btn-primary"/>
   <input type="button" name="bindReysAndStoic" id="bindReysAndStoic" th:value="#{buttons.bindReysAndStoic}" class="btn btn-primary"/>
- <input type="submit" name="delete" th:value="#{buttons.del_bt}" class="btn btn-danger" formaction="http://localhost:8080/svop/api/stiocManager/delete"/>
+ <input type="button" id="delete" name="delete" th:value="#{buttons.del_bt}" class="btn btn-danger" formaction="http://localhost:8080/svop/api/stiocManager/delete"/>
  </div>
 </form>
 <script src="/js/jquery/jquery-3.3.1.min.js"></script>
@@ -79,28 +79,59 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
 <script src="/js/fire_check.js"></script>
 <script src="/js/stoic_manager.js"></script>
 
-<div th:insert="/html/modal/base_modal.html" ></div>
-  <script th:inline="javascript">
-  //Заголовки для вывода интернационализованного текста
-  var head_add_title=[[#{modal.header_add}]];
-  var head_red_title=[[#{modal.header_red}]];
+<div th:insert="/html/modal/base_modal.html"></div>
+<script th:inline="javascript">
+//Заголовки для вывода интернационализованного текста
+var head_add_title=[[#{modal.header_add}]];
+var head_red_title=[[#{modal.header_red}]];
   //csrf токены
 var token = $("meta[name='_csrf']").attr("content"); 
-var service_api_save=host+"/svop/api/stoic/save";  
+var service_api_save=host+"/svop/api/stoic/";  
 var service_api_getReys=host+"/svop/api/stoic/getStoicsReys";  
 var service_api_bindStoicReys=host+"/svop/api/stoic/bindStoicReys"; 
 var service_api_fefresh=host+"/svop/api/stoic/getStoics"; 
 var service_api_fire=host+"/svop/api/stoic/fire"; 
- </script>
-   <script src="/js/modal/basic_modal.js">
-   </script>
+</script>
 
+<script>
+ 
+function getPage()
+{
+console.log("getPage");
+	refreshStoicsRequest(service_api_fefresh);
+	$('#addModal').modal('hide');
+}
 
+//Функция удаления
+$('#delete').on('click', function() {
+ onDelete();
+});
+function onDelete()
+{
+let array=[];
+$("#content_table tbody tr").each(function(){
+	if ($(this).children("td:first-child").children("input").prop('checked')) //Если строка выбрана
+	{
+	array.push($(this).children("td:first-child").children("input").val());
+	}
+	});
+	
+	//Удалить
+	console.log(array);
+  $.ajax({
+  type: "delete",
+  url: service_api_save,
+	data: JSON.stringify(array),
+	contentType: 'application/json',
+	success:function() {getPage();}
+});
+  }
 
-
-
-
-
+	
+  </script>
+  
+<script src="/js/modal/basic_modal.js">
+</script>
 </Body>
 </html>
 

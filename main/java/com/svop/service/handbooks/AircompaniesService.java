@@ -1,6 +1,7 @@
 package com.svop.service.handbooks;
 
 import com.svop.View.AircompanyView;
+import com.svop.service.SeazonSchedule.SeazonScheduleInterface;
 import com.svop.tables.Handbooks.Aircompany;
 import com.svop.tables.Handbooks.AircompanyRepositpry;
 import org.slf4j.Logger;
@@ -53,6 +54,7 @@ public class AircompaniesService {
     private String uploadPathLage;
     @Autowired
     AircompanyRepositpry aircompanyRepositpry;
+    @Autowired private SeazonScheduleInterface seazonSchedule;
     public List<Aircompany> getAircompanies()
     {
         return aircompanyRepositpry.findAll();
@@ -73,6 +75,8 @@ public class AircompaniesService {
                 //Удалить лого
                 Path oldFilePath = Paths.get(uploadPathServer, name);
                 if (Files.exists(oldFilePath)) {
+                    //Если изображение еще используется, тогда
+                    if (!seazonSchedule.isImgExists(oldFilePath.toString()))
                     Files.delete(oldFilePath);
                 }
                 //Удалить большое лого

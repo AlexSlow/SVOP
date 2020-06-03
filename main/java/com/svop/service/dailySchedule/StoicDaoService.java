@@ -1,5 +1,4 @@
 package com.svop.service.dailySchedule;
-
 import com.svop.View.DailyScheduleViews.FlightScheduleView;
 import com.svop.View.DailyScheduleViews.StoicBindDto;
 import com.svop.View.DailyScheduleViews.StoicDto;
@@ -12,7 +11,7 @@ import com.svop.tables.daily_schedule.StoicStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import javax.validation.constraints.NotNull;
 import java.sql.Date;
 import java.time.format.DateTimeFormatter;
@@ -22,6 +21,7 @@ import java.util.Locale;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class StoicDaoService implements StoicDaoInterface {
     @Autowired private StoicRepository stoicRepository;
     @Autowired private FlightSheduleDaoService flightSheduleDaoService;
@@ -69,7 +69,7 @@ public class StoicDaoService implements StoicDaoInterface {
 
     @Override
     public List<StoicDto> getStoicsDtoListByIdList(@NotNull List<Integer> idList){
-        List<Stoic> stoicList=stoicRepository.findByIdIn(idList);
+        List<Stoic> stoicList=stoicRepository.findByIdInOrderByNomer(idList);
         return getStoicsDtoList(stoicList);
     };
     @Override
@@ -130,7 +130,7 @@ public class StoicDaoService implements StoicDaoInterface {
        flightSchedules.forEach(flightScheduleView -> {
            //Получить график для тог что бы проверить
 
-           List<Stoic> stoic=stoicRepository.findByFlightScheduleId(flightScheduleView.getId());
+           List<Stoic> stoic=stoicRepository.findByFlightScheduleIdOrderByNomer(flightScheduleView.getId());
            String stoikaStr="Не задан";
 
            if (stoic!=null)
@@ -181,7 +181,7 @@ public class StoicDaoService implements StoicDaoInterface {
 
     @Override
     public void fire(@NotNull List<Integer> idl) {
-        List<Stoic> stoics=stoicRepository.findByIdIn(idl);
+        List<Stoic> stoics=stoicRepository.findByIdInOrderByNomer(idl);
         stoics.forEach(stoic -> {
                 if(stoic.getStatus()==null)
                 {
@@ -212,5 +212,10 @@ public class StoicDaoService implements StoicDaoInterface {
     @Override
     public StoicDto getStoic(@NotNull Integer id) {
         return stoicDtoFactory((stoicRepository.findById(id).get()));
+    }
+
+    @Override
+    public void delete(List<Integer> id) {
+        stoicRepository.deleteByIdIn(id);
     }
 }

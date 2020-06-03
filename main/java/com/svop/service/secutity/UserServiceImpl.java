@@ -52,8 +52,9 @@ private static Logger logger= LoggerFactory.getLogger(UserServiceImpl.class.getN
 
     @Override
     public String getLocale(String username) {
-        logger.info("плучение локали");
-        return (userRepository.findByUsername(username).getLocale());
+        User usr=userRepository.findByUsername(username);
+        String user=usr==null ? "ru" : usr.getLocale();
+        return (user);
     }
 
     @Override

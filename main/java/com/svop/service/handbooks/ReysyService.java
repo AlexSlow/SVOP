@@ -213,17 +213,17 @@ public class ReysyService {
 
         //Остальные параметры
         reysy.setTip_vs(reysViewElement.getTip_vs());
-        ReysyStatus reysyStatus=ReysyStatus.Unchanged;;
+        ReysyStatus reysyStatus=ReysyStatus.Неизменный;;
         //Если чекбокс не нажат, то рейс считается изменненным ??? А если по факту ничего не поменяется?
         if (reysViewElement.getIzmen_otmen()==null)
         {
             if (reysViewElement.getId()!=null)
             {
-                reysyStatus=ReysyStatus.Modified;
+                reysyStatus=ReysyStatus.Изменен;
             }
         }
         else if (reysViewElement.getIzmen_otmen()==true)
-        {reysyStatus=ReysyStatus.Canceled;}
+        {reysyStatus=ReysyStatus.Отменен;}
         reysy.setIzmen_otmen(reysyStatus);
         reysy.setOsnovanie_izmen_otmen(reysViewElement.getOsnovanie_izmen_otmen());
         reysy.setType(reysViewElement.getType());
@@ -236,7 +236,6 @@ public class ReysyService {
         logger.info("Удаление списка рейсов");
         reysyRepository.deleteByIdIn(id_list);
     }
-
     //----------------------------------------------------------------------------------------
     /**
      * Метод для работы с временной таблицей

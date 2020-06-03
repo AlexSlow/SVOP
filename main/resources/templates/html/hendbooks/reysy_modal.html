@@ -153,7 +153,7 @@
 		
 		<div class="form-group">
 		<label th:text="#{reysy.airlines}" >Тип воздушной линии</label>
-		 <select name="airline" class="form-control"><option value="VVL">ВВЛ</option><option value="MVL">МВЛ</option></select>
+		 <select name="airline" class="form-control"><option value="ВВЛ">ВВЛ</option><option value="МВЛ">МВЛ</option></select>
 		 </div>
 		 
 		 
@@ -229,14 +229,14 @@ if (type_operation!="redact")
 	$.each(data,function(index,value){
 	
 	//console.log(value);
-	if (value.type=="Tranzit")
+	if (value.type=="Транзит")
 	{
 	$("#nomer_prilet_id").append( $("<option value="+value.id+">"+value.nomer+"</option>"));
 	$("#nomer_vilet_id").append( $("<option value="+value.id+">"+value.nomer+"</option>"));
-	}else if(value.type=="Prilet")
+	}else if(value.type=="Прилет")
 	{
 	$("#nomer_prilet_id").append( $("<option value="+value.id+">"+value.nomer+"</option>"));
-	}else if (value.type=="Vilet")
+	}else if (value.type=="Вылет")
 	{
 	$("#nomer_vilet_id").append( $("<option value="+value.id+">"+value.nomer+"</option>"));
 	}

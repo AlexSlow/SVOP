@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 public class DbExeptionController {
 private static  final Logger logger= LoggerFactory.getLogger(DbExeptionController.class);
     @ExceptionHandler(SvopDataBaseExeption.class)
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public @ResponseBody
     ExceptionResponse handleResourceNotFound(final SvopDataBaseExeption exception,
                                              final HttpServletRequest request) {

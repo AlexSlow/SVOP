@@ -4,8 +4,8 @@
 <meta http-equiv="Content-type" Content="text/html; charset=utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-<meta th:name="_csrf" th:content="${_csrf.token}"/>
-<meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+<meta th:name="_csrf" th:content="${_csrf?.token}"/>
+<meta th:name="_csrf_header" th:content="${_csrf?.headerName}"/>
 
 <title th:text="#{flightSchedule.title}">
 Формирование рафиков полета расписания
@@ -34,12 +34,14 @@
 		<div class="form-group">
 		<label th:text="#{daily.day}"  class = "col-sm-2 control-label"> >Дата</label>
 		<input  id="day" name="start" form="form" type="Date" class="form-control"/>
+		<label th:text="#{flightShedule.selectAfter}"  class = "col-sm-2 control-label"> >Выбрать за сутки</label>
+		<input  id="selectAfter" name="selectAfter" form="form" checked type="checkbox"/>
 		</div>
 		<div class="form-group">
 		<button th:text="#{buttons.select}" id="select"  class="btn btn-primary">Выбрать</button>
 		</div>
 
- <div id="content" class="container-fluid">
+<div id="content" class="container-fluid">
         <div class="row" >
 		<div class="col-12">
 <div class="pages" th:insert="/html/pages.html"></div>
@@ -106,19 +108,18 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
  </script>
 </body>
 <script>
-unCurrentShift();
+//unCurrentShift();
+select();
 //Скрыть кнопки редактирования
+//Пусть кока что азрешить редактирование всего 
 function unCurrentShift()
   {
-  //$("#delete").css("display","none");
-  $("#build").css("display","none");
+ // $("#build").css("display","none");
   }
   //Показать кнопки редактирования
   function currentShift()
   {
- 
- // $("#delete").css("display","");
-  $("#build").css("display","");
+  //$("#build").css("display","");
   }
    var token = $("meta[name='_csrf']").attr("content");  
  $.ajaxSetup({
@@ -127,7 +128,9 @@ function unCurrentShift()
         }
     });
 //Обработчик кнопки выбрать
- $('#select').on('click', function() {
+ $('#select').on('click',function(){select();});
+function select()
+{
 let day=$("#day").val(); 
 if (day!="")
 {
@@ -139,12 +142,16 @@ requestFlightShedule(day);
 unCurrentShift();
 }
 }
-});
+}
 //Выбрать тек смену
  $('#shift').on('click', function() {
+getShift();
+});
+function getShift(){
 requestFlightShedule(new Date());
 currentShift();
-});
+};
+
 
 //построить ГП
  $('#build').on('click', function() {
@@ -177,11 +184,15 @@ requestUncancel(getFire());
 function requestFlightShedule(day)
 {
 var Day= new Date(day)
-console.log(Day);
+
+if ($("#selectAfter").prop("checked"))
+{
 Day.setDate(Day.getDate() + 1);
+}
+console.log(Day);
  	 $.ajax({
   type: "POST",
-  url: host+"/api/flightShedule/getByDay",
+  url: host+"/svop/api/flightShedule/getByDay",
 	data: JSON.stringify(Date.parse(Day)),
 	contentType: 'application/json',
 	success: function(data) {
@@ -196,7 +207,8 @@ function requestBuild()
 {
  	 $.ajax({
   type: "POST",
-  url: host+"/api/flightShedule/build",
+  data:JSON.stringify(new Date()),
+  url: host+"/svop/api/flightShedule/build",
 	contentType: 'application/json',
 	success: function(data) {
 	console.log(data);
@@ -210,7 +222,7 @@ function requestCloseShift()
 {
  	 $.ajax({
   type: "POST",
-  url: host+"/api/flightShedule/closeShift",
+  url: host+"/svop/api/flightShedule/closeShift",
 	contentType: 'application/json',
 	success: function(data) {
 	console.log(data);
@@ -222,11 +234,12 @@ function requestCancel(idl)
 {
  	 $.ajax({
   type: "POST",
-  url: host+"/api/flightShedule/cancel",
+  url: host+"/svop/api/flightShedule/cancel",
 	contentType: 'application/json',
 	data: JSON.stringify(idl),
 	success: function(data) {
 	console.log(data);
+	getShift();
   }
 });
 }
@@ -235,19 +248,15 @@ function requestUncancel(idl)
 {
  	 $.ajax({
   type: "POST",
-  url: host+"/api/flightShedule/uncancel",
+  url: host+"/svop/api/flightShedule/uncancel",
 	contentType: 'application/json',
 	data: JSON.stringify(idl),
 	success: function(data) {
 	console.log(data);
+	getShift();
   }
 });
 }
-
-
-
-
-
 //ПРоверить, текущая ли смена  без БД
 function compareDay()
 {

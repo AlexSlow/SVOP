@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -38,7 +35,7 @@ public class NomerReysRestController {
         return null;
     }
     @ResponseBody
-    @RequestMapping(value="/save")
+    @RequestMapping(value="/")
     public ResponseEntity<SvopMessage> save(@RequestBody NomerReysViewRequest nomerReysView) {
        try{
             nomerReysService.save(nomerReysView) ;
@@ -48,5 +45,17 @@ public class NomerReysRestController {
             throw new SvopDataBaseExeption(ex.getLocalizedMessage());
         }
        return new ResponseEntity<SvopMessage>(new Success("Success"),HttpStatus.OK);
+    }
+
+    @ResponseBody
+    @DeleteMapping(value="/")
+    public ResponseEntity delete(@RequestBody List<Integer> id) {
+        try {
+            nomerReysService.delete(id);
+            return new ResponseEntity("Success",HttpStatus.OK);
+        }catch (Exception ex)
+        {
+            throw new SvopDataBaseExeption(ex.getLocalizedMessage());
+        }
     }
 }

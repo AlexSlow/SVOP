@@ -19,9 +19,9 @@ public class NomerReys {
 
     @Column(name="reysy_nomer_type")
     private ReysyNomerType type;
-    @ManyToOne(cascade=CascadeType.ALL,fetch = FetchType.LAZY)    //Когда
+    @ManyToOne(cascade={CascadeType.PERSIST,CascadeType.MERGE},fetch = FetchType.LAZY)    //Когда
     @JoinColumn(name = "reysy_nomer_aircompany_id", nullable = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Aircompany aircompany;
     public NomerReys(){}
     public NomerReys(String nomer, ReysyNomerType type, Aircompany aircompany) {

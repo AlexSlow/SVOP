@@ -74,7 +74,7 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
  class="btn btn-primary"  />
  <input type="button" name="redact" data-content="redact" th:value="#{buttons.red_bt}"  data-toggle="modal" data-target="#addModal" 
  class="btn btn-warning"/>
- <input type="submit" name="delete" th:value="#{buttons.del_bt}" 
+ <input type="button"id="delete" name="delete" th:value="#{buttons.del_bt}" 
  class="btn btn-danger"/>
  </div>
  
@@ -101,9 +101,73 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
   //csrf токены
 var token = $("meta[name='_csrf']").attr("content"); 
 var header = $("meta[name='_csrf_header']").attr("content");
-var service_api_save=host+"/svop/api/routes/save";
+var service_api_save=host+"/svop/api/routes/";
 var error=[[#{modal.error}]];
  </script>
+ 
+ <script>
+ 
+ function fillTableFromAjax (data){
+$("#content_table tbody").empty();
+data.forEach(function(rout, i, arr) {
+ $("#content_table tbody").append("<tr><td  ><input type='checkbox' id='ch"+rout.id+"'"+
+ "value='"+rout.id+"' name='ch[]' form='form'/></td>"+
+"<td><label for='ch"+rout.id+"'>"+rout.name+"</label></td>"+
+"</tr>"); 
+});
+}
+function getPage()
+{
+$.ajax({
+  type: "post",
+  url: service_api_save+"get",
+	data:JSON.stringify({page:$_GET("page"),size:10}),
+	contentType: 'application/json',
+	success: function(data) {
+	console.log(data);
+	//Успех
+	fillTableFromAjax(data);
+	$('#addModal').modal('hide');
+  }
+	});
+}
+//Функция удаления
+$('#delete').on('click', function() {
+ onDelete();
+});
+function onDelete()
+{
+let array=[];
+$("#content_table tbody tr").each(function(){
+	if ($(this).children("td:first-child").children("input").prop('checked')) //Если строка выбрана
+	{
+	array.push($(this).children("td:first-child").children("input").val());
+	}
+	});
+	//Удалить
+	console.log(array);
+	const promise=new Promise((res,rej)=>{
+	 $.ajax({
+  type: "delete",
+  url: service_api_save,
+	data: JSON.stringify(array),
+	contentType: 'application/json',
+	success:res,
+	error: (jqXHR, exception)=>{
+	$("#errors").text(jqXHR.responseJSON.message);
+	console.log(jqXHR);
+	console.log(exception);
+	rej(jqXHR.responseJSON.message);}
+});
+	});
+	promise.then(data=>{console.log(data)}).catch(err=>{console.log("err "+err);}).finally((data)=>{getPage();});
+ 
+  }
+
+  
+	
+  </script>
+ 
    <script src="/js/modal/routes_modal.js">
    </script>
    

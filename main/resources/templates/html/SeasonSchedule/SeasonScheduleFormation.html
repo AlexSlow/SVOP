@@ -4,8 +4,8 @@
 <meta http-equiv="Content-type" Content="text/html; charset=utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-<meta th:name="_csrf" th:content="${_csrf.token}"/>
-<meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+<meta th:name="_csrf" th:content="${_csrf?.token}"/>
+<meta th:name="_csrf_header" th:content="${_csrf?.headerName}"/>
 
 <title th:text="#{sezon.title}">
 Формирование сезонного расписания
@@ -51,6 +51,7 @@
 	<th  colspan="4" th:text="#{reysy.vilet}">Вылет</th>
 	<th rowspan="2" th:text="#{reysy.tip_vs}">Тип ВС</th>
 	<th rowspan="2" th:text="#{reysy.airlines}" >Вид авиалинии</th>
+	<th rowspan="2" th:text="#{reysy.type}" >Тип рейса</th>
   </tr>
   <tr>
 
@@ -87,6 +88,7 @@
 
 <td><label th:for="ch+${sezonSchedule.id}" th:text="${sezonSchedule.tip_vs}"> </label></td>
 <td><label th:for="ch+${sezonSchedule.id}" th:text="${sezonSchedule.airline}"> </label></td>
+<td><label th:for="ch+${sezonSchedule.id}" th:text="${sezonSchedule.type}"> </label></td>
 </tr>
 
 </tbody>

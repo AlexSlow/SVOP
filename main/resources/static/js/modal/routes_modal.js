@@ -9,6 +9,7 @@
 	function clean()
 	{
 		 $("#modal_table").find ("tr").remove();
+		 $("#modal_error").text("");
 	}
 	var content;
  $('#addModal').on('show.bs.modal', function (event) {
@@ -126,22 +127,28 @@
 	});
    function send_request(ajax_array,adress)
   { 
-
-  $.ajax({
+const promise=new Promise((resolved,reject)=>{
+	 $.ajax({
   type: "POST",
   url: adress,
 	data: JSON.stringify(ajax_array),
 	contentType: 'application/json',
-	success: function(data) {
-  $("#modal_error").text(data.message);
-   if (data.kod==0)
-   {
-	location.reload();
-  }
-
-  }
+	success: 
+	resolved,
+	error:(jqXHR, exception)=>{new Error(jqXHR.responseJSON.message);}
+	
 });
+});
+promise.then(data=>{console.log(data);getPage();}).catch(Exception=>$("#modal_error").text(Exception));
+ 
   }
+  
+   function $_GET(key) {
+    var p = window.location.search;
+    p = p.match(new RegExp(key + '=([^&=]+)'));
+    return p ? p[1] : 0;
+}
+   
   
    
   

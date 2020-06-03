@@ -1,9 +1,7 @@
 
 package com.svop.config;
 
-import com.svop.service.secutity.SvopAuthenticationSuccessHandler;
-import com.svop.service.secutity.SvopLogoutSuccessHandler;
-import com.svop.service.secutity.UserService;
+import com.svop.service.secutity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,23 +38,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         //снять защиту с конечной точки
                 http
-                .requiresChannel()
+                .requiresChannel()//Для https
                 .anyRequest()
-                .requiresSecure();
+                .requiresSecure();//Для https
                 http
                 .csrf()
+                .disable()
                 // ignore our stomp endpoints since they are protected using Stomp headers
-                .ignoringAntMatchers("/gs-guide-websocket/**")
-                .and()
+               // .ignoringAntMatchers("/gs-guide-websocket/**")  //Включить в продакшен
+               // .and()
                 .headers()
-              //  .httpStrictTransportSecurity().disable()  //Что то для https
+                //.httpStrictTransportSecurity().disable()  //Что то для https
                 // allow same origin to frame our site to support iframe SockJS
                 .frameOptions().sameOrigin()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/","/svop/login","/svop/registration").permitAll()
+                .antMatchers("/**","/svop/login","/svop/registration","/svop/public/api/**","/public/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
+                //.apply(new JwtConfigurer(new JwtTokenFilter(new JwtTokenProvider()))) //-------------------------------------JWT
+                //.and()
                 .formLogin()
                 .loginPage("/svop/login")
                 .successHandler(svopAuthenticationSuccessHandler) //Обработчик входа пользователя
@@ -69,8 +70,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .sessionManagement().sessionFixation().migrateSession() //Защита от фиксации сессии. При создании новой сессии атрибуты старой будут копированы
-                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)//Сессия создается если ее нет
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)//Сессия Не создается
+                //.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)//Сессия создается если ее нет
                 .maximumSessions(1).sessionRegistry(sessionRegistry())//Только одна сессия
+
                // .expiredUrl("/svop/login")
 
         ;

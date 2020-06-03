@@ -155,15 +155,8 @@ if (Integer.parseInt(item)==airport.getId()) {isBax=true;break;}
         routesRepository.deleteByIdIn(idl);
     }
 
-    /**
-     * ПОлучить списк для вывода на форму
-     * @return
-     */
-//Ответ для представления маршрутов
-    public ArrayList<RoutesView> getRouts(){
-        List<Routes> routs=routesRepository.findAll();
-        ArrayList<RoutesView> output_routes=new ArrayList<>();
-
+    private List<RoutesView> routesDtoFactory (Iterable<Routes> routs){
+        List<RoutesView> output_routes=new ArrayList<>();
         for(Routes rout:routs)
         {
 
@@ -172,19 +165,35 @@ if (Integer.parseInt(item)==airport.getId()) {isBax=true;break;}
             String[] airports_id_into_route=rout.getName().split("/");
             for(String id:airports_id_into_route)
             {
-               Airporty airporty= airportyRepo.findById(Integer.parseInt(id));
-               if (!routesView.getName().isEmpty())
-               {
-                   routesView.setName( routesView.getName()+"—"+airporty.getNameRu());
-               }else
-               {
-                   routesView.setName(airporty.getNameRu());
-               }
+                Airporty airporty= airportyRepo.findById(Integer.parseInt(id));
+                if (!routesView.getName().isEmpty())
+                {
+                    routesView.setName( routesView.getName()+"—"+airporty.getNameRu());
+                }else
+                {
+                    routesView.setName(airporty.getNameRu());
+                }
             }
             //Получить результат
             output_routes.add(routesView);
         }
+        return output_routes;
+    }
+
+    /**
+     * ПОлучить списк для вывода на форму
+     * @return
+     */
+//Ответ для представления маршрутов
+    public List<RoutesView> getRouts(){
+        List<Routes> routs=routesRepository.findAll();
+        List<RoutesView> output_routes=routesDtoFactory(routs);
         logger.info("Формирование ответа для представления маршрутов");
+        return  output_routes;
+    }
+    public List<RoutesView> getRouts(Pageable pageable){
+        Page<Routes> routs=routesRepository.findAll(pageable);
+        List<RoutesView> output_routes=routesDtoFactory(routs);
         return  output_routes;
     }
 
@@ -197,6 +206,7 @@ if (Integer.parseInt(item)==airport.getId()) {isBax=true;break;}
      */
     public List<RoutesView> getPageRouts(PageFormatter pageFormatter, Pageable pageable){
         Page<Routes> routs=routesRepository.findAll(pageable);
+        if (pageFormatter!=null)
         pageFormatter.setSize(routs.getTotalPages()); //Для контроллера
         ArrayList<RoutesView> output_routes=new ArrayList<>();
 
@@ -304,5 +314,13 @@ if (Integer.parseInt(item)==airport.getId()) {isBax=true;break;}
                 return getRouts(route_string);
         }
 
+    }
+    public Page<Routes> getPage(Pageable pageable)
+    {
+      return routesRepository.findAll(pageable) ;
+    }
+    public List<Routes> findAll()
+    {
+        return routesRepository.findAll() ;
     }
 }

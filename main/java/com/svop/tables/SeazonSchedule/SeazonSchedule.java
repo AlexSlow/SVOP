@@ -3,6 +3,7 @@ package com.svop.tables.SeazonSchedule;
 import com.svop.tables.Handbooks.Airline;
 import com.svop.tables.Handbooks.ReysyNomerType;
 import com.svop.tables.Handbooks.ReysyStatus;
+import com.svop.tables.Handbooks.TypeReys;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -69,6 +70,10 @@ public class SeazonSchedule {
 
     @Column(name="output_sezon_aircompany_img")
     private String img;
+
+
+    @Column(name="output_sezon_type")
+    private TypeReys typeReys;
 
     public SeazonSchedule() {
     }
@@ -216,5 +221,14 @@ public class SeazonSchedule {
 
     public void setImg(String img) {
         this.img = img;
+    }
+
+
+    public TypeReys getTypeReys() {
+        return typeReys;
+    }
+
+    public void setTypeReys(TypeReys typeReys) {
+        this.typeReys = typeReys;
     }
 }

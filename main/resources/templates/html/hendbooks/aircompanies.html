@@ -4,8 +4,8 @@
 <meta http-equiv="Content-type" Content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<meta th:name="_csrf" th:content="${_csrf.token}"/>
-<meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+<meta th:name="_csrf" th:content="${_csrf?.token}"/>
+<meta th:name="_csrf_header" th:content="${_csrf?.headerName}"/>
 <title th:text="#{aircompanies.title}">
 Заголовок
 </title>
@@ -90,22 +90,15 @@ $('.btn').click(function( event ){
  <input type="submit" name="delete" th:value="#{buttons.del_bt}" 
  class="btn btn-warning"/>
  </div>
- 
- 
 </form>
-
 </div>
  </div>
-
-
 <script src="/js/jquery/jquery-3.3.1.min.js"></script>
 <script src="/bootstrap/js/popper_min.js" ></script>
 <script src="/bootstrap/js/bootstrap.min.js"></script>
 <script src="/js/fire_check.js"></script>
 <script src="/js/filter.js"></script>
-
-
-<div th:insert="/html/modal/aircompanies_modal.html" ></div>
+<div th:insert="/html/modal/aircompanies_modal.html"></div>
   <script th:inline="javascript">
   //Заголовки для вывода интернационализованного текста
   var head_add_title=[[#{modal.header_add}]];

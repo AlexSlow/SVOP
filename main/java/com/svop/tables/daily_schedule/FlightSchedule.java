@@ -17,9 +17,9 @@ public class FlightSchedule {
     @Column(name = "Flight_Schedule_id")
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.MERGE,CascadeType.PERSIST})
     @JoinColumn(name = "Flight_Schedule_daily", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Daily daily;
 
 
@@ -33,7 +33,8 @@ public class FlightSchedule {
     @Column(name = "Flight_Schedule_day")
     private Date day;
 
-
+    @Column(name = "Flight_Schedule_vs")
+    private String vs;
 
     @Column(name = "Flight_Schedule_Comment")
     private String comment;
@@ -42,18 +43,26 @@ public class FlightSchedule {
     private FlightSheduleStatus status;
 
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.MERGE,CascadeType.PERSIST})
     @JoinColumn(name = "Flight_Schedule_Previous", nullable = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private FlightSchedule flightSchedulePrevious;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.MERGE,CascadeType.PERSIST})
     @JoinColumn(name = "Flight_Schedule_next", nullable = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private FlightSchedule flightScheduleNext;
 
 
     public FlightSchedule() {
+    }
+
+    public String getVs() {
+        return vs;
+    }
+
+    public void setVs(String vs) {
+        this.vs = vs;
     }
 
     public Integer getId() {
@@ -97,7 +106,7 @@ public class FlightSchedule {
     }
 
     public String getComment() {
-        return comment;
+      return comment==null? "":comment;
     }
 
     public void setComment(String comment) {

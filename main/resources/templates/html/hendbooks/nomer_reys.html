@@ -54,7 +54,7 @@ id="maincheck"/> <label for="maincheck" th:text="#{buttons.fire_all}"> Выде�
  class="btn btn-primary"  />
  <input type="button" name="redact" data-content="redact" th:value="#{buttons.red_bt}"  data-toggle="modal" data-target="#addModal" 
  class="btn btn-warning"/>
- <input type="submit" name="delete" th:value="#{buttons.del_bt}" 
+ <input type="button" id="delete" name="delete" th:value="#{buttons.del_bt}" 
  class="btn btn-danger"/>
  </div>
 </form>
@@ -83,7 +83,7 @@ id="maincheck"/> <label for="maincheck" th:text="#{buttons.fire_all}"> Выде�
 var token = $("meta[name='_csrf']").attr("content"); 
 var header = $("meta[name='_csrf_header']").attr("content");
 var service_api_get=host+"/svop/api/nomer_reys/get_from_aircompanies";
-var service_api_save=host+"/svop/api/nomer_reys/save";  
+var service_api_save=host+"/svop/api/nomer_reys/";  
  </script>
  <script src="/js/modal/nomer_reys_modal.js">
  </script>
@@ -114,8 +114,42 @@ var service_api_save=host+"/svop/api/nomer_reys/save";
 }		
 	};
 	
+	
+	//Функция удаления
+$('#delete').on('click', function() {
+ onDelete();
+});
+function onDelete()
+{
+let array=[];
+$("#content_table tbody tr").each(function(){
+	if ($(this).children("td:first-child").children("input").prop('checked')) //Если строка выбрана
+	{
+	array.push($(this).children("td:first-child").children("input").val());
+	}
+	});
+	//Удалить
+	console.log(array);
+	const promise=new Promise((res,rej)=>{
+	 $.ajax({
+  type: "delete",
+  url: service_api_save,
+	data: JSON.stringify(array),
+	contentType: 'application/json',
+	success:res,
+	error: (jqXHR, exception)=>{
+	$("#errors").text(jqXHR.responseJSON.message);
+	rej(jqXHR.responseJSON.message);}
+});
+	});
+	promise.then(data=>{console.log(data)}).catch(err=>{console.log("err "+err);}).finally((data)=>{select();});
+ 
+  }
+	
  </script>
-
+<div id="errors" style="color:red;font-size:18px;">
+<span th:text="${error}"></span>
+</div> 
 </Body>
 </html>
 <script>

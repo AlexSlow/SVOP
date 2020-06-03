@@ -12,9 +12,10 @@ import java.util.Optional;
 public interface FlightSheduleRepository extends JpaRepository<FlightSchedule,Integer> {
     @Override
     Page<FlightSchedule> findAll(Pageable pageable);
-    Page<FlightSchedule> findAllByDay(Pageable pageable, Date date);
-    List<FlightSchedule> findByDay(Date date);
-    Page<FlightSchedule> findByDayAndStatus(Pageable pageable,Date date,FlightSheduleStatus status);
-    List<FlightSchedule> findByDayAndStatus(Date date,FlightSheduleStatus status);
+    Page<FlightSchedule> findAllByDayOrderByDay(Pageable pageable, Date date);
+    List<FlightSchedule> findByDayOrderByDay(Date date);
+    Page<FlightSchedule> findByDayAndStatusOrderByDay(Pageable pageable,Date date,FlightSheduleStatus status);
+    List<FlightSchedule> findByDayAndStatusOrderByDay(Date date,FlightSheduleStatus status);
+    List<FlightSchedule> findAllByDailyIdIsIn(List<Integer> idl);
     void deleteByIdIn(List<Integer> ids);
 }

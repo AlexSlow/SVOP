@@ -8,6 +8,7 @@ import com.svop.tables.Handbooks.NomerReysRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class NomerReysService {
     private NomerReysRepository nomerReysRepository;
     @Autowired
     private AircompaniesService aircompaniesService;
+    @Autowired private MessageSource messageSource; //Бундлы
     public List<NomerReysView> getNomerReysFromAircompany(Integer id){
 
         logger.info("Запрос на получение номеров рейсов авиакомпании");
@@ -42,10 +44,8 @@ public class NomerReysService {
     {
         if (id==null)
         {
-            logger.error("Ошибка. Запрос с пустым id");
             return null;
         }
-        logger.info("Запрос на получение номера реса с id ="+id);
         return nomerReysRepository.findById(id);
 
     }

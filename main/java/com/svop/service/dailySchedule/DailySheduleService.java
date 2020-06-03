@@ -67,10 +67,10 @@ public class DailySheduleService {
                 //Проверка дня прилета
                 if (checkWorkDay(prilet_days,calendar.get(Calendar.DAY_OF_WEEK)))
                 {
-                    save(calendar,reys, DailyDirection.Prilet);
+                    save(calendar,reys, DailyDirection.Прилет);
                 }if (checkWorkDay(vilet_days,calendar.get(Calendar.DAY_OF_WEEK)))
             {
-                save(calendar,reys,DailyDirection.Vilet);
+                save(calendar,reys,DailyDirection.Вылет);
             }
             calendar.add(Calendar.DATE,1);
             }
@@ -98,7 +98,7 @@ public class DailySheduleService {
                {
                    Calendar cal=GregorianCalendar.getInstance();
                    cal.setTime(daily.getDay());
-                   if (daily.getDirection().equals(DailyDirection.Prilet))
+                   if (daily.getDirection().equals(DailyDirection.Прилет))
                    {
                       if(checkWorkDay(prilet_days_temp,cal.get(Calendar.DAY_OF_WEEK)))
                       {
@@ -115,7 +115,7 @@ public class DailySheduleService {
                logger.info("Отмена "+deleteDaily);
             //   dailyRepository.deleteAll(deleteDaily);
                for (Daily daily:deleteDaily){
-                   daily.setIzmenOmen(ReysyStatus.Canceled);
+                   daily.setIzmenOmen(ReysyStatus.Отменен);
                }
                dailyRepository.saveAll(deleteDaily);
 
@@ -135,14 +135,14 @@ public class DailySheduleService {
         daily.setDay(new Date(day.getTimeInMillis()));
         daily.setIzmenOmen(reysy.getIzmen_otmen());
         daily.setRout(reysy.getRout());
-        if (direction==DailyDirection.Prilet)
+        if (direction==DailyDirection.Прилет)
         {
             daily.setNomer(reysy.getNomer_prilet());
             daily.setTimeDeporture(reysy.getPrilet_time_otpravl());
             daily.setTimePrilet(reysy.getPrilet_time_prib());
         }
 
-        if (direction==DailyDirection.Vilet)
+        if (direction==DailyDirection.Вылет)
         {
             daily.setNomer(reysy.getNomer_vilet());
             daily.setTimeDeporture(reysy.getVilet_time_otpravl());
@@ -171,8 +171,8 @@ public class DailySheduleService {
                 System.out.println(dailyOld.get());
                 logger.info("Изменения обнаружены");
                 daily.setId(dailyOld.get().getId());
-                if (reysy.getIzmen_otmen()!=ReysyStatus.Canceled)
-                daily.setIzmenOmen(ReysyStatus.Modified);
+                if (reysy.getIzmen_otmen()!=ReysyStatus.Отменен)
+                daily.setIzmenOmen(ReysyStatus.Изменен);
                 dailyRepository.save(daily);
             }
         }

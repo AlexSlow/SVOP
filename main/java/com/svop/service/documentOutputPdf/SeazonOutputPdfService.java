@@ -6,26 +6,40 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.svop.View.SeazonScheduleViews.SeazonScheduleView;
+import com.svop.tables.journal.SeazonJournalProcedure;
+import com.svop.tables.journal.SeazonProcedureJournalService;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.sql.Date;
+import java.text.DateFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Stream;
 
 @Service
 public class SeazonOutputPdfService {
-
+@Autowired
+private SeazonProcedureJournalService seazonProcedureJournalService;
     public ByteArrayInputStream generate(List<SeazonScheduleView> seazonScheduleViewList) throws IOException, DocumentException {
          BaseFont times =
                 BaseFont.createFont("c:\\windows\\fonts\\times.ttf","cp1251",BaseFont.EMBEDDED);
         Document document = new Document(PageSize.A3);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-
+        String username="AnonimUser";
+        String dateFoming="Не было проведено";
         try {
             PdfWriter.getInstance(document, out);
             document.open();
+
+            SeazonJournalProcedure seazonJournalProcedure=seazonProcedureJournalService.getLast();
+            username=seazonJournalProcedure.getName();
+            DateFormat dateFormat=DateFormat.getDateInstance(DateFormat.SHORT,new Locale("ru"));
+            dateFoming=dateFormat.format(seazonJournalProcedure.getDate());
+
             // Add Text to PDF file ->
             Font font = new Font(times,18);
             Paragraph para = new Paragraph( "Расписание на сезон", font);
@@ -33,17 +47,17 @@ public class SeazonOutputPdfService {
             document.add(para);
             document.add(Chunk.NEWLINE);
 
-            Paragraph date = new Paragraph( "Дата формирования - 23.0.3.2020", new Font(times,14));
+            Paragraph date = new Paragraph( "Дата формирования - "+dateFoming, new Font(times,14));
             para.setAlignment(Element.ALIGN_CENTER);
             document.add(date);
             document.add(Chunk.NEWLINE);
 
-            Paragraph autor = new Paragraph( "Сформировано пользователем - АС", new Font(times,14));
+            Paragraph autor = new Paragraph( "Сформировано пользователем - "+username, new Font(times,14));
             para.setAlignment(Element.ALIGN_CENTER);
             document.add(autor);
             document.add(Chunk.NEWLINE);
 
-            PdfPTable table = new PdfPTable(27);
+            PdfPTable table = new PdfPTable(29);
             table.setWidthPercentage (100);
             // Add PDF Table Header ->
             Font headFont  = new Font(times,12);
@@ -79,7 +93,7 @@ public class SeazonOutputPdfService {
             rout.setPhrase(new Phrase("Маршрут" ,headFont));
             rout.setRowspan(2);
             table.addCell(rout);
-
+//16
             PdfPCell prilet = new PdfPCell();
             prilet.setNoWrap(true);
             prilet.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -88,7 +102,7 @@ public class SeazonOutputPdfService {
             prilet.setPhrase(new Phrase("Прилет" ,new Font(times,16)));
             prilet.setColspan(7);
             table.addCell(prilet);
-
+//23
             PdfPCell vilet = new PdfPCell();
            vilet.setNoWrap(true);
             vilet.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -97,7 +111,7 @@ public class SeazonOutputPdfService {
             vilet.setPhrase(new Phrase("Вылет" ,new Font(times,16)));
             vilet.setColspan(7);
             table.addCell(vilet);
-
+//25
             PdfPCell tip_vs = new PdfPCell();
            tip_vs.setNoWrap(true);
             tip_vs.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -107,7 +121,7 @@ public class SeazonOutputPdfService {
             tip_vs.setColspan(2);
             tip_vs.setRowspan(2);
             table.addCell(tip_vs);
-
+//27
             PdfPCell airline = new PdfPCell();
             airline.setNoWrap(true);
             airline.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -117,6 +131,16 @@ public class SeazonOutputPdfService {
             airline.setPhrase(new Phrase("Авиалиния" ,headFont));
             airline.setRowspan(2);
             table.addCell(airline);
+//29
+            PdfPCell type = new PdfPCell();
+            type.setNoWrap(true);
+            type.setHorizontalAlignment(Element.ALIGN_CENTER);
+            type.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            type.setBorderWidth(2);
+            type.setColspan(2);
+            type.setPhrase(new Phrase("Тип" ,headFont));
+            type.setRowspan(2);
+            table.addCell(type);
 
             //Вторая строка
 
@@ -314,6 +338,15 @@ public class SeazonOutputPdfService {
                 bAirline.setPhrase(new Phrase(seazonScheduleView.getAirline().name(),bodyFont));
                 bAirline.setColspan(2);
                 table.addCell(bAirline);
+
+                PdfPCell bType = new PdfPCell();
+                bType.setNoWrap(true);
+                bType.setHorizontalAlignment(Element.ALIGN_CENTER);
+                bType.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                bType.setBorderWidth(1);
+                bType.setPhrase(new Phrase(seazonScheduleView.getType(),bodyFont));
+                bType.setColspan(2);
+                table.addCell(bType);
 
             }
             document.add(table);

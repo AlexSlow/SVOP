@@ -45,4 +45,8 @@ public class AirportsService  {
     public Page<Airporty> getPage(Pageable pageable) {
         return airportyRepo.findAll(pageable);
     }
+    public List<Airporty> getAll()
+    {
+        return airportyRepo.findAll();
+    }
 }

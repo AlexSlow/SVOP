@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <meta th:name="_csrf" th:content="${_csrf?.token}"/>
-<meta th:name="_csrf_header" th:content="${_csrf>.headerName}"/>
+<meta th:name="_csrf_header" th:content="${_csrf?.headerName}"/>
 <title th:text="#{sezons.title}">
 
 </title>
@@ -64,7 +64,7 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
  class="btn btn-primary"  />
  <input type="button" name="redact" data-content="redact" th:value="#{buttons.red_bt}"  data-toggle="modal" data-target="#addModal" 
  class="btn btn-warning"/>
- <input type="submit" name="delete" th:value="#{buttons.del_bt}" 
+ <input type="button" id="delete" name="delete" th:value="#{buttons.del_bt}" 
  class="btn btn-danger"/>
  </div>
  
@@ -89,8 +89,63 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
   //csrf токены
 var token = $("meta[name='_csrf']").attr("content"); 
 var header = $("meta[name='_csrf_header']").attr("content");
-var service_api_save=host+"/svop/api/sezons/save";  
+var service_api_save=host+"/svop/api/sezons/";  
  </script>
+ 
+ <script>
+ 
+ function fillTableFromAjax (data){
+$("#content_table tbody").empty();
+data.forEach(function(seazon, i, arr) {
+ $("#content_table tbody").append("<tr><td  ><input type='checkbox' id='ch"+seazon.id+"'"+
+ "value='"+seazon.id+"' name='ch[]' form='form'/></td>"+
+"<td><label for='ch"+seazon.id+"'>"+seazon.name+"</label></td>"+
+"<td><label for='ch"+seazon.id+"'>"+seazon.begin+"</label></td>"+
+"<td><label for='ch"+seazon.id+"'>"+seazon.end+"</label></td>"+
+"</tr>"); 
+});
+}
+function getPage()
+{
+$.ajax({
+  type: "post",
+  url: service_api_save+"get",
+	data:JSON.stringify({page:$_GET("page"),size:10}),
+	contentType: 'application/json',
+	success: function(data) {
+	console.log(data);
+	//Успех
+	fillTableFromAjax(data.content);
+	$('#addModal').modal('hide');
+  }
+	});
+}
+//Функция удаления
+$('#delete').on('click', function() {
+ onDelete();
+});
+function onDelete()
+{
+let array=[];
+$("#content_table tbody tr").each(function(){
+	if ($(this).children("td:first-child").children("input").prop('checked')) //Если строка выбрана
+	{
+	array.push($(this).children("td:first-child").children("input").val());
+	}
+	});
+	
+  $.ajax({
+  type: "delete",
+  url: service_api_save,
+	data: JSON.stringify(array),
+	contentType: 'application/json',
+	success:function() {getPage();}
+});
+  }
+
+	
+  </script>
+ 
    <script src="/js/modal/basic_modal.js">
    </script>
    

@@ -23,6 +23,7 @@ import java.sql.Date;
 import java.text.DateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -31,6 +32,7 @@ public class FlightSheduleDaoService implements FlightSheduleDaoServiceInterface
     @Autowired private RoutesService routesService;
     @Autowired private UserService userService;
     @Autowired private FlightSheduleRepository flightSheduleRepository;
+    @Autowired private FlightScheduleStatusManagerInt flightScheduleStatusManagerInt;
 
     /**
      * Получить локализованное представление
@@ -41,7 +43,7 @@ public class FlightSheduleDaoService implements FlightSheduleDaoServiceInterface
     @Cacheable(cacheNames = "fightScheduledLanguage")
     public List<FlightScheduleLanguageView> getActualFlightScheduleLanguageList(Pageable pageable,Integer country,Locale locale)
     {
-        Page<FlightSchedule>  flightScheduleList=flightSheduleRepository.findByDayAndStatus(pageable,new Date(System.currentTimeMillis()),FlightSheduleStatus.NotChanged);
+        Page<FlightSchedule>  flightScheduleList=flightSheduleRepository.findByDayAndStatusOrderByDay(pageable,new Date(System.currentTimeMillis()),FlightSheduleStatus.Неизмененный);
         List<FlightScheduleLanguageView> languageViews=new ArrayList<>(flightScheduleList.getSize());
         for(FlightSchedule flightSchedule:flightScheduleList)
         {
@@ -104,19 +106,23 @@ public class FlightSheduleDaoService implements FlightSheduleDaoServiceInterface
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm", new Locale(loc));
         flightScheduleView.setDay(df.format(flightSchedule.getDay()));
 
+
         flightScheduleView.setTimeDeporture(flightSchedule.getTimeDeporture().format(dateTimeFormatter));
         flightScheduleView.setTimePrilet(flightSchedule.getTimePrilet().format(dateTimeFormatter));
         flightScheduleView.setTipVs(flightSchedule.getDaily().getTipVs());
         flightScheduleView.setComment(flightSchedule.getComment());
         flightScheduleView.setStatus(flightSchedule.getStatus().name());
         flightScheduleView.setDirection(flightSchedule.getDaily().getDirection().name());
+        flightScheduleView.setTipVs(flightSchedule.getVs());
 
         if(flightSchedule.getFlightScheduleNext()!=null)
         {
             flightScheduleView.setTimeDeportureNext(flightSchedule.getFlightScheduleNext().getTimeDeporture().format(dateTimeFormatter));
             flightScheduleView.setTimePriletNext(flightSchedule.getFlightScheduleNext().getTimePrilet().format(dateTimeFormatter));
             flightScheduleView.setDayNext(df.format(flightSchedule.getFlightScheduleNext().getDay()));
+            flightScheduleView.setDateNextMills(flightSchedule.getFlightScheduleNext().getDay().getTime());
         }
+        flightScheduleView.setMoveable(flightScheduleStatusManagerInt.isMoveAvalible(flightSchedule));
 
         return flightScheduleView;
     }
@@ -143,7 +149,7 @@ public class FlightSheduleDaoService implements FlightSheduleDaoServiceInterface
     {
         logger.info("Начало получения графика полетов на день "+day);
         //Получим все дни, когда по основному дню
-       List<FlightSchedule> flightScheduleList= flightSheduleRepository.findByDay(day);
+       List<FlightSchedule> flightScheduleList= flightSheduleRepository.findByDayOrderByDay(day);
        List<FlightScheduleView> flightScheduleViewList =new ArrayList<>(flightScheduleList.size());
         for(FlightSchedule flightSchedule:flightScheduleList)
         {
@@ -158,7 +164,7 @@ public class FlightSheduleDaoService implements FlightSheduleDaoServiceInterface
     {
         logger.info("Начало получения графика полетов на день "+day);
         //Получим все дни, когда по основному дню
-        List<FlightSchedule> flightScheduleList= flightSheduleRepository.findByDayAndStatus(day,FlightSheduleStatus.NotChanged);
+        List<FlightSchedule> flightScheduleList= flightSheduleRepository.findByDayAndStatusOrderByDay(day,FlightSheduleStatus.Неизмененный);
         List<FlightScheduleView> flightScheduleViewList =new ArrayList<>(flightScheduleList.size());
         for(FlightSchedule flightSchedule:flightScheduleList)
         {
@@ -178,7 +184,7 @@ public class FlightSheduleDaoService implements FlightSheduleDaoServiceInterface
     {
         logger.info("Начало получения  графика полетов на день "+day);
         //Получим все дни, когда по основному дню
-        List<FlightSchedule> flightScheduleList= flightSheduleRepository.findByDay(day);
+        List<FlightSchedule> flightScheduleList= flightSheduleRepository.findByDayOrderByDay(day);
         logger.info("Завершение получения  графика полетов на день "+day);
         return flightScheduleList;
     }
@@ -215,19 +221,33 @@ public class FlightSheduleDaoService implements FlightSheduleDaoServiceInterface
     @Override
     public void saveDaily(List<Daily> dailies,Date date)
     {
-       List<FlightSchedule> schedules=getFlightShedulesByDay(date);
+        System.out.println("Сохранение");
+        dailies.forEach(d->System.out.println(d.getId()+" "+d.getDay()));
+      //List<FlightSchedule> schedules=getFlightShedulesByDay(date);
 
-        List<FlightSchedule> flightSchedules=new ArrayList<>(dailies.size());
+        List<FlightSchedule> flightSchedulesforSave=new ArrayList<>();
+
+
         //Проверка на наличие в графике такой же записи
+        List<Integer> id_condidats=dailies.stream().map(Daily::getId).collect(Collectors.toList());
+        System.out.println(id_condidats);
+        List<FlightSchedule> flightSchedules=flightSheduleRepository.findAllByDailyIdIsIn(id_condidats);
+        flightSchedules.forEach(d->System.out.println(d.getId()));
+
+
         for(Daily daily:dailies)
         {
+
             boolean find=false;
-           for(FlightSchedule flightSchedule:schedules) {
+           for(FlightSchedule flightSchedule:flightSchedules) {
+
                if (flightSchedule.getDaily().getId().equals(daily.getId())) find=true;
            }
-        if(!find) flightSchedules.add(DailyIntoFlightShedule(daily));
+        if(!find) {flightSchedules.add(DailyIntoFlightShedule(daily));};
 
         }
+
+
         logger.info("Начало сохранения  графика полетов "+flightSchedules);
         flightSheduleRepository.saveAll(flightSchedules);
     }
@@ -242,9 +262,10 @@ public class FlightSheduleDaoService implements FlightSheduleDaoServiceInterface
         FlightSchedule flightSchedule=new FlightSchedule();
         flightSchedule.setDaily(daily);
         flightSchedule.setDay(daily.getDay());
-        flightSchedule.setStatus(FlightSheduleStatus.NotChanged);
+        flightSchedule.setStatus(FlightSheduleStatus.Неизмененный);
         flightSchedule.setTimeDeporture(daily.getTimeDeporture());
         flightSchedule.setTimePrilet(daily.getTimePrilet());
+        flightSchedule.setVs(daily.getTipVs());
         return flightSchedule;
     }
     @Override
@@ -256,5 +277,8 @@ public class FlightSheduleDaoService implements FlightSheduleDaoServiceInterface
     public void saveAll(List<FlightSchedule> flightSchedules){
         flightSheduleRepository.saveAll(flightSchedules);
     }
-
+    @Override
+    public  void deleteList(List<FlightSchedule> flightSchedules){
+        flightSheduleRepository.deleteAll(flightSchedules);
+    }
 }

@@ -1,6 +1,7 @@
 package com.svop.controllers.API.daily;
 
 import com.svop.View.DailyScheduleViews.FlightScheduleView;
+import com.svop.exeptions.SvopExeption;
 import com.svop.exeptions.response.SvopMessage;
 import com.svop.message.Success;
 import com.svop.message.flightShedule.FlightScheduleMove;
@@ -34,10 +35,8 @@ public class FlightScheduleRestController {
     }
     @ResponseBody
     @RequestMapping(value="/build")
-    public ResponseEntity<List<FlightScheduleView>> build() {
-
-
-        return new ResponseEntity<List<FlightScheduleView>>(flightSheduleService.build(),
+    public ResponseEntity<List<FlightScheduleView>> build(@RequestBody Date date) {
+        return new ResponseEntity<List<FlightScheduleView>>(flightSheduleService.build(date),
                 HttpStatus.OK);
     }
 
@@ -51,6 +50,7 @@ public class FlightScheduleRestController {
         }catch (Exception e)
         {
             e.printStackTrace();
+            throw new SvopExeption(e.getLocalizedMessage());
         }
         return new ResponseEntity<>(new Success("Успех"),
                 HttpStatus.OK);
@@ -77,7 +77,6 @@ public class FlightScheduleRestController {
     @RequestMapping(value="/getById")
     public ResponseEntity<List<FlightScheduleView>> getById(@RequestBody List<Integer> idl) {
 
-        System.out.println(idl);
         if (idl==null) return new ResponseEntity<>(null,HttpStatus.OK);
         return new ResponseEntity<>(flightSheduleDaoService.getFlightShedulesViewById(idl),
                 HttpStatus.OK);

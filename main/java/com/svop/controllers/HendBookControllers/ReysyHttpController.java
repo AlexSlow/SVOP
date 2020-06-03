@@ -62,10 +62,10 @@ public class ReysyHttpController {
         Head_parser head_parser=new Head_parser();
         head_parser.setModel(userService,model);
         //Определить тип рейса
-        model.addAttribute("type",TypeReys.Regular);
+        model.addAttribute("type",TypeReys.Регулярный);
         //Если есть отбор по периоду
         PageFormatter pageFormatter=new PageFormatter();
-        model.addAttribute("reysy",reysyService.getReysPageByType(TypeReys.Regular,sezon_selected,page,pageFormatter));
+        model.addAttribute("reysy",reysyService.getReysPageByType(TypeReys.Регулярный,sezon_selected,page,pageFormatter));
         pageFormatter.fillModel(model,page.getPageNumber());
         fillSezons(model);
         return "/html/hendbooks/reysy.html";
@@ -75,9 +75,9 @@ public class ReysyHttpController {
     public String open_chartery( Model model) {
         Head_parser head_parser=new Head_parser();
         head_parser.setModel(userService,model);
-        model.addAttribute("type",TypeReys.Charter);
+        model.addAttribute("type",TypeReys.Чартерный);
         Integer sezon_selected=(Integer) model.getAttribute("sezon_selected");
-        model.addAttribute("reysy",reysyService.getReysListByType(TypeReys.Charter,sezon_selected));
+        model.addAttribute("reysy",reysyService.getReysListByType(TypeReys.Чартерный,sezon_selected));
         fillSezons(model);
         return "/html/hendbooks/reysy.html";
     }
@@ -131,14 +131,14 @@ public class ReysyHttpController {
                     new DeleteFromDBExeption(redirectAttributes,ex.getLocalizedMessage());
                     ex.printStackTrace();
                     logger.error("Не найден рейс для редактирования");
-                    if (type==TypeReys.Regular)
+                    if (type==TypeReys.Регулярный)
                         return "redirect:/svop/reysy";
                     else  return "redirect:/svop/chartery";
                 }
                 return fillModelForRedact(reysy,model,redirectAttributes);
             }else {
                 logger.error("Список id нулевой");
-                if (type==TypeReys.Regular)
+                if (type==TypeReys.Регулярный)
                     return "redirect:/svop/reysy";
                 else  return "redirect:/svop/chartery";
             }
@@ -153,7 +153,7 @@ public class ReysyHttpController {
                     ex.printStackTrace();
                 }
 
-            if (type==TypeReys.Regular)
+            if (type==TypeReys.Регулярный)
                 return "redirect:/svop/reysy";
             else  return "redirect:/svop/chartery";
         }
@@ -190,7 +190,7 @@ public class ReysyHttpController {
         if (exitBt!=null)
         {
 
-            if (reysy.getType()==TypeReys.Regular)
+            if (reysy.getType()==TypeReys.Регулярный)
                 return "redirect:/svop/reysy";
             else  return "redirect:/svop/chartery";
         }
@@ -223,7 +223,7 @@ public class ReysyHttpController {
 
         }
 
-        if (reysy.getType()==TypeReys.Regular)
+        if (reysy.getType()==TypeReys.Регулярный)
             return "redirect:/svop/reysy";
         else  return "redirect:/svop/chartery";
     }
@@ -276,7 +276,7 @@ public class ReysyHttpController {
             if (nomerReys==null)
             {
                 logger.error("Не найден номер рейса для рейса");
-                if (reysy.getType()==TypeReys.Regular)
+                if (reysy.getType()==TypeReys.Регулярный)
                     return "redirect:/svop/reysy";
                 else  return "redirect:/svop/chartery";
             }
@@ -294,19 +294,19 @@ public class ReysyHttpController {
                 new DeleteFromDBExeption(redirectAttributes,ex.getLocalizedMessage());
                 ex.printStackTrace();
                 logger.error("Список номеров рейсов отсутствует");
-                if (reysy.getType()==TypeReys.Regular)
+                if (reysy.getType()==TypeReys.Регулярный)
                     return "redirect:/svop/reysy";
                 else  return "redirect:/svop/chartery";
             }
 
             //Распределить номера рейсов по коллекциям
             for (NomerReysView item : nomerReysViews) {
-                if (item.getType() == ReysyNomerType.Tranzit) {
+                if (item.getType() == ReysyNomerType.Прилет) {
                     nomerReysViewPrilet.add(item);
                     nomerReysViewVilet.add(item);
-                } else if (item.getType() == ReysyNomerType.Prilet) {
+                } else if (item.getType() == ReysyNomerType.Вылет) {
                     nomerReysViewPrilet.add(item);
-                } else if (item.getType() == ReysyNomerType.Vilet) {
+                } else if (item.getType() == ReysyNomerType.Транзит) {
                     nomerReysViewVilet.add(item);
                 }
             }

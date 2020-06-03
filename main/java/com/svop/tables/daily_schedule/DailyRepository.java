@@ -14,6 +14,6 @@ import java.util.Optional;
 public interface DailyRepository   extends JpaRepository<Daily,Integer> {
 Page<Daily> findAllByDayAfter(Pageable pageable,Date date);
 Optional<Daily> findByReysAndDayAndDirection(Reysy reysy, Date day,DailyDirection direction);
-List<Daily> findDailiesByDayBetween(Date start,Date end);
-List<Daily> findDailiesByDayBetweenAndIzmenOmenNot(Date start,Date end,ReysyStatus reysyStatus);
+List<Daily> findDailiesByDayBetweenOrderByDay(Date start,Date end);
+List<Daily> findDailiesByDayBetweenAndIzmenOmenNotOrderByDay(Date start,Date end,ReysyStatus reysyStatus);
 }

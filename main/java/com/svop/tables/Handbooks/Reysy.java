@@ -19,17 +19,17 @@ public class Reysy {
     @Column(name="reysy_id")
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER,cascade = {CascadeType.MERGE,CascadeType.PERSIST})
     @JoinColumn(name = "reysy_nomer_prilet", nullable = false)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private NomerReys nomer_prilet;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER,cascade = {CascadeType.MERGE,CascadeType.PERSIST})
     @JoinColumn(name = "reysy_nomer_vilet", nullable = false)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private NomerReys nomer_vilet;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER,cascade = {CascadeType.MERGE,CascadeType.PERSIST})
     @JoinColumn(name = "reysy_rout", nullable = false)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Routes rout;

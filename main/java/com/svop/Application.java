@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 
 
 
+
 @EnableScheduling
 @EnableAspectJAutoProxy(proxyTargetClass=true) //АОП
 @EnableCaching    //подключение Spring Cache
