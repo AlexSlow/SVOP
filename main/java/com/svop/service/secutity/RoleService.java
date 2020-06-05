@@ -4,6 +4,7 @@ import com.svop.View.Auth.PermissionsView;
 import com.svop.View.Auth.RolePermissionsView;
 import com.svop.View.Auth.RoleView;
 import com.svop.View.Auth.UserRoleView;
+import com.svop.tables.Users.Role;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -13,4 +14,5 @@ public interface RoleService {
     public List<PermissionsView> getPermissionsByRole(@NotNull Integer id);
     public List<RoleView> getAllRoleByUser(@NotNull Integer userId);
     public void saveRolesForUser(@NotNull UserRoleView userRoleView);
+    Role getBaseRole() throws RuntimeException;
 }

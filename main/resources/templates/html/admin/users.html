@@ -13,13 +13,8 @@
  <script src="/js/parametrs.js"></script>
 </head>
 <Body>
-
-
 <div id="header" th:insert="/html/nmenu.html"></div>
  <div id="content" class="container-fluid">
- 
- 
- 
         <div class="row" >
         <div class="col-12  mb-5">
 		<div id="filter"  th:insert="/html/filter.html">
@@ -37,10 +32,10 @@
 <tbody id="filter_table">
 <tr th:each="item : ${users}">
 
-<td  ><input type="checkbox" th:id="ch+${item.id}" th:value="${item.id}" name="ch[]" th:form="form"/></td>
+<td><input type="checkbox" th:id="ch+${item.id}" th:value="${item.id}" name="ch[]" th:form="form"/></td>
 <td><label th:for="ch+${item.id}" th:text="${item.username}"> </label></td>
 </tr>
-<tr >
+<tr>
 <td colspan="7" style="text-align:left;">  <input type='checkbox' 
 id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выделить все </label></td>
 </tr>
@@ -57,17 +52,14 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
 
 
 <form th:action="@{/svop/admin/users/delete}" method="POST" id="form" >
-
 <div class="btn-group fixed-bottom w-50 m-auto">
-
-
- <input type="button" name="add" data-toggle="modal" data-target="#addModal" data-content="add" th:value="#{buttons.add_bt}" 
- class="btn btn-primary"  />
- <input type="button" name="redact" data-content="redact" th:value="#{buttons.red_bt}"  data-toggle="modal" data-target="#addModal" 
- class="btn btn-warning"/>
- <input type="submit" name="delete" th:value="#{buttons.del_bt}" 
- class="btn btn-danger"/>
- </div>
+<input type="button" name="add" data-toggle="modal" data-target="#userModal" data-content="add" th:value="#{buttons.add_bt}" 
+class="btn btn-primary"/>
+<input type="button" name="redact" data-content="redact" th:value="#{buttons.red_bt}"  data-toggle="modal" data-target="#addModal" 
+class="btn btn-warning"/>
+<input type="submit" name="delete" th:value="#{buttons.del_bt}" 
+class="btn btn-danger"/>
+</div>
 </form>
 </div>
 </div>
@@ -79,13 +71,14 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
 
 
 <div th:insert="/html/modal/base_modal.html" ></div>
+<div th:insert="/html/modal/userModal.html" ></div>
   <script th:inline="javascript">
   //csrf токены
 var token = $("meta[name='_csrf']").attr("content"); 
+var save_api_adress = host+"/svop/api/admin/updateUsers"; 
  </script>
-   <script src="/js/modal/role_modal.js">
-   </script>
-   
+   <script src="/js/modal/role_modal.js"></script>
+   <script src="/js/modal/userModal.js"> </script>
 
  
 </Body>

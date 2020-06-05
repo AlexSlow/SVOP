@@ -6,9 +6,8 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.svop.View.DailyScheduleViews.DailyScheduleView;
+import com.svop.View.DailyScheduleViews.FlightScheduleView;
 import com.svop.message.Period;
-import com.svop.tables.Handbooks.TypeReys;
-import com.svop.tables.daily_schedule.DailyDirection;
 import com.svop.tables.journal.JournalProcedure;
 import com.svop.tables.journal.ProcedureJournalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,25 +23,15 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 @Service
-public class DailyPlaneOutputPdfService {
-    @Autowired @Qualifier("Daily")
-    ProcedureJournalService procedureJournalService;
-    public  ByteArrayInputStream generate(Period period, java.util.List<DailyScheduleView> dailyScheduleViewList) throws IOException, DocumentException {
+public class FlightSheduleOutputPdf {
+
+
+    public ByteArrayInputStream generate(Period period, java.util.List<FlightScheduleView> flightScheduleViews,String username) throws IOException, DocumentException {
         BaseFont times =
                 BaseFont.createFont(OutputPdfParams.FONT, OutputPdfParams.CHARSET, BaseFont.EMBEDDED);
         Document document = new Document(PageSize.A2);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
-            String username="AnonimUser";
-            String dateFoming="Не было проведения";
-            JournalProcedure journalProcedure = procedureJournalService.getLast();
-            if (journalProcedure!=null) {
-                username = journalProcedure.getName();
-                DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, new Locale("ru"));
-                dateFoming = dateFormat.format(journalProcedure.getDate());
-            }
-
-
             PdfWriter.getInstance(document, out);
             document.open();
             // Add Text to PDF file ->
@@ -53,7 +42,7 @@ public class DailyPlaneOutputPdfService {
             document.add(para);
             document.add(Chunk.NEWLINE);
 
-            Paragraph date = new Paragraph("Дата формирования - " + dateFoming, new Font(times, 18));
+            Paragraph date = new Paragraph("Дата формирования - " +dateFormat.format(new Date(System.currentTimeMillis())) , new Font(times, 18));
             para.setAlignment(Element.ALIGN_CENTER);
             document.add(date);
             document.add(Chunk.NEWLINE);
@@ -142,24 +131,24 @@ public class DailyPlaneOutputPdfService {
             typeVS.setPhrase(new Phrase("Тип ВС", headFont));
             table.addCell(typeVS);
 
-            PdfPCell Airline = new PdfPCell();
-            Airline.setNoWrap(true);
-            Airline.setHorizontalAlignment(Element.ALIGN_CENTER);
-            Airline.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            Airline.setBorderWidth(2);
-            Airline.setColspan(2);
-            Airline.setPhrase(new Phrase("Авиалиния", headFont));
-            table.addCell(Airline);
+            PdfPCell Status = new PdfPCell();
+            Status.setNoWrap(true);
+            Status.setHorizontalAlignment(Element.ALIGN_CENTER);
+            Status.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            Status.setBorderWidth(2);
+            Status.setColspan(2);
+            Status.setPhrase(new Phrase("Статус", headFont));
+            table.addCell(Status);
 
 
             //Теперь Тело таблицы
-            for (DailyScheduleView dailyScheduleView : dailyScheduleViewList) {
+            for (FlightScheduleView flightScheduleView : flightScheduleViews) {
                 PdfPCell bDay = new PdfPCell();
                 bDay.setNoWrap(true);
                 bDay.setHorizontalAlignment(Element.ALIGN_CENTER);
                 bDay.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 bDay.setBorderWidth(1);
-                bDay.setPhrase(new Phrase(dailyScheduleView.getDay(), bodyFont));
+                bDay.setPhrase(new Phrase(flightScheduleView.getDay(), bodyFont));
                 bDay.setColspan(2);
                 table.addCell(bDay);
 
@@ -169,7 +158,7 @@ public class DailyPlaneOutputPdfService {
                 bRoute.setHorizontalAlignment(Element.ALIGN_CENTER);
                 bRoute.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 bRoute.setBorderWidth(1);
-                bRoute.setPhrase(new Phrase(dailyScheduleView.getRout(), bodyFont));
+                bRoute.setPhrase(new Phrase(flightScheduleView.getRout(), bodyFont));
                 bRoute.setColspan(4);
                 table.addCell(bRoute);
 
@@ -178,7 +167,7 @@ public class DailyPlaneOutputPdfService {
                 bNomer.setHorizontalAlignment(Element.ALIGN_CENTER);
                 bNomer.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 bNomer.setBorderWidth(1);
-                bNomer.setPhrase(new Phrase(dailyScheduleView.getNomer(), bodyFont));
+                bNomer.setPhrase(new Phrase(flightScheduleView.getNomer(), bodyFont));
                 bNomer.setColspan(2);
                 table.addCell(bNomer);
 //12
@@ -189,7 +178,7 @@ public class DailyPlaneOutputPdfService {
                 bDirection.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 bDirection.setBorderWidth(1);
                 bDirection.setColspan(2);
-                bDirection.setPhrase(new Phrase(dailyScheduleView.getDirection(),bodyFont));
+                bDirection.setPhrase(new Phrase(flightScheduleView.getDirection(),bodyFont));
                 bDirection.setColspan(2);
                 table.addCell(bDirection);
 
@@ -199,7 +188,7 @@ public class DailyPlaneOutputPdfService {
                 bTimeDeporture.setHorizontalAlignment(Element.ALIGN_CENTER);
                 bTimeDeporture.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 bTimeDeporture.setBorderWidth(1);
-                bTimeDeporture.setPhrase(new Phrase(dailyScheduleView.getTimeDeporture(), bodyFont));
+                bTimeDeporture.setPhrase(new Phrase(flightScheduleView.getTimeDeporture(), bodyFont));
                 bTimeDeporture.setColspan(2);
                 table.addCell(bTimeDeporture);
 
@@ -208,7 +197,7 @@ public class DailyPlaneOutputPdfService {
                 bTimeprilet.setHorizontalAlignment(Element.ALIGN_CENTER);
                 bTimeprilet.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 bTimeprilet.setBorderWidth(1);
-                bTimeprilet.setPhrase(new Phrase(dailyScheduleView.getTimePrilet(), bodyFont));
+                bTimeprilet.setPhrase(new Phrase(flightScheduleView.getTimePrilet(), bodyFont));
                 bTimeprilet.setColspan(2);
                 table.addCell(bTimeprilet);
 
@@ -218,7 +207,7 @@ public class DailyPlaneOutputPdfService {
                 bType.setHorizontalAlignment(Element.ALIGN_CENTER);
                 bType.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 bType.setBorderWidth(1);
-                bType.setPhrase(new Phrase(dailyScheduleView.getType(),bodyFont));
+                bType.setPhrase(new Phrase(flightScheduleView.getType(),bodyFont));
                 bType.setColspan(2);
                 table.addCell(bType);
 
@@ -227,18 +216,18 @@ public class DailyPlaneOutputPdfService {
                 bTipVS.setHorizontalAlignment(Element.ALIGN_CENTER);
                 bTipVS.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 bTipVS.setBorderWidth(1);
-                bTipVS.setPhrase(new Phrase(dailyScheduleView.getTipVs(), bodyFont));
+                bTipVS.setPhrase(new Phrase(flightScheduleView.getTipVs(), bodyFont));
                 bTipVS.setColspan(2);
                 table.addCell(bTipVS);
 
-                PdfPCell bAirline = new PdfPCell();
-                bAirline.setNoWrap(true);
-                bAirline.setHorizontalAlignment(Element.ALIGN_CENTER);
-                bAirline.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                bAirline.setBorderWidth(1);
-                bAirline.setPhrase(new Phrase(dailyScheduleView.getAirline(), bodyFont));
-                bAirline.setColspan(2);
-                table.addCell(bAirline);
+                PdfPCell bStatus = new PdfPCell();
+                bStatus.setNoWrap(true);
+                bStatus.setHorizontalAlignment(Element.ALIGN_CENTER);
+                bStatus.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                bStatus.setBorderWidth(1);
+                bStatus.setPhrase(new Phrase(flightScheduleView.getStatus(), bodyFont));
+                bStatus.setColspan(2);
+                table.addCell(bStatus);
             }
             try {
                 document.add(table);
@@ -251,8 +240,4 @@ public class DailyPlaneOutputPdfService {
         }
         return new ByteArrayInputStream(out.toByteArray());
     }
-    }
-
-
-
-
+}

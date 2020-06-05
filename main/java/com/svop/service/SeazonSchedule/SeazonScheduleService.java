@@ -8,15 +8,15 @@ import com.svop.service.handbooks.RoutesService;
 import com.svop.service.secutity.UserService;
 import com.svop.tables.Handbooks.Reysy;
 import com.svop.tables.Handbooks.ReysyStatus;
-import com.svop.tables.Handbooks.TypeReys;
 import com.svop.tables.SeazonSchedule.SeazonSchedule;
 import com.svop.tables.SeazonSchedule.SeazonScheduleRepository;
-import com.svop.tables.journal.SeazonJournalProcedure;
-import com.svop.tables.journal.SeazonJournalRepository;
-import com.svop.tables.journal.SeazonProcedureJournalService;
+import com.svop.tables.journal.ProcedureJournalService;
+import com.svop.tables.journal.ProcedureRegistratorSeazon;
+import com.svop.tables.journal.TypeProcedure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +24,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.file.Path;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +36,8 @@ public class SeazonScheduleService implements SeazonScheduleInterface {
     @Autowired private RoutesService routesService;
     @Autowired private SeazonScheduleRepository sezonScheduleRepository;
     @Autowired private UserService userService;
-    @Autowired private SeazonProcedureJournalService seazonProcedureJournalService;
+    @Autowired @Qualifier("Seazon")
+    private ProcedureJournalService procedureJournalService;
     /**
      * ПРоцедура формирования сезонного расписания
      */
@@ -81,8 +81,8 @@ public class SeazonScheduleService implements SeazonScheduleInterface {
             seazonSchedule.setImg(reysy.getNomer_prilet().getAircompany().getLogo());
             seazonSchedule.setTypeReys(reysy.getType());
             sezonScheduleRepository.save(seazonSchedule);
-            seazonProcedureJournalService.save(SecurityContextHolder.getContext().getAuthentication().getName(),new Date(System.currentTimeMillis()));
         }
+        procedureJournalService.save(SecurityContextHolder.getContext().getAuthentication().getName(),new Date(System.currentTimeMillis()),TypeProcedure.Сезонное);
     }
 
     /**

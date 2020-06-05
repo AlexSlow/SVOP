@@ -23,4 +23,8 @@ public interface UserService {
     Page<User> findAll(@NotNull Pageable pageable);
     void deleteByIdIn(@NotNull List<Integer> idl);
     void setRoles(@NotNull User user, @NotNull Set<Role> roles);
+    List<User> findAll();
+    void save(@NotNull List<User> users);
+    List<User> find(@NotNull List<Integer> idList);
+
 }

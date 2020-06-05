@@ -92,8 +92,7 @@ public class DailyScheduleHttpController {
         if (period.getStart()==null)period.setStart(new Date(0));
         if (period.getEnd()==null)period.setEnd(new Date(System.currentTimeMillis()));
               List<DailyScheduleView> list= dailyDaoService.getDailyViewBetwinPeriod(period.getStart(),period.getEnd());
-              String name= SecurityContextHolder.getContext().getAuthentication().getName();
-              ByteArrayInputStream bis= dailyPlaneOutputPdfService.generate(period,list,name,new Date(System.currentTimeMillis()));
+              ByteArrayInputStream bis= dailyPlaneOutputPdfService.generate(period,list);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "inline; filename=DailyByPeriod.pdf");

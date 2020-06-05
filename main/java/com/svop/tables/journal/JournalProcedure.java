@@ -5,7 +5,7 @@ import java.sql.Date;
 
 @Entity
 @Table(name = "SeazonJournalProcedure")
-public class SeazonJournalProcedure {
+public class JournalProcedure {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     @Column(name="SeazonJournalProcedure_id")
@@ -15,6 +15,21 @@ public class SeazonJournalProcedure {
     private String name;
     @Column(name="SeazonJournalProcedure_date")
     private Date date;
+    @Column(name="SeazonJournalProcedure_type")
+    private TypeProcedure typeProcedure;
+
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public TypeProcedure getTypeProcedure() {
+        return typeProcedure;
+    }
+
+    public void setTypeProcedure(TypeProcedure typeProcedure) {
+        this.typeProcedure = typeProcedure;
+    }
 
     public Integer getId() {
         return id;
@@ -35,16 +50,12 @@ public class SeazonJournalProcedure {
     public Date getDate() {
         return date;
     }
-
-    public void setBegin(Date begin) {
-        this.date = begin;
+    public JournalProcedure() {
     }
 
-    public SeazonJournalProcedure() {
-    }
-
-    public SeazonJournalProcedure(String name, Date date) {
+    public JournalProcedure(String name, Date date,TypeProcedure typeProcedure) {
         this.name = name;
         this.date = date;
+        this.typeProcedure=typeProcedure;
     }
 }

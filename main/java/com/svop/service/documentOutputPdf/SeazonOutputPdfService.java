@@ -6,39 +6,38 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.svop.View.SeazonScheduleViews.SeazonScheduleView;
-import com.svop.tables.journal.SeazonJournalProcedure;
-import com.svop.tables.journal.SeazonProcedureJournalService;
-import org.apache.tomcat.jni.Local;
+import com.svop.tables.journal.JournalProcedure;
+import com.svop.tables.journal.ProcedureJournalService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.sql.Date;
 import java.text.DateFormat;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Stream;
 
 @Service
 public class SeazonOutputPdfService {
-@Autowired
-private SeazonProcedureJournalService seazonProcedureJournalService;
+@Autowired @Qualifier("Seazon")
+private ProcedureJournalService procedureJournalService;
     public ByteArrayInputStream generate(List<SeazonScheduleView> seazonScheduleViewList) throws IOException, DocumentException {
          BaseFont times =
-                BaseFont.createFont("c:\\windows\\fonts\\times.ttf","cp1251",BaseFont.EMBEDDED);
+                 BaseFont.createFont(OutputPdfParams.FONT, OutputPdfParams.CHARSET, BaseFont.EMBEDDED);
         Document document = new Document(PageSize.A3);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         String username="AnonimUser";
-        String dateFoming="Не было проведено";
+        String dateFoming="Не было проведения процедуры";
         try {
             PdfWriter.getInstance(document, out);
             document.open();
 
-            SeazonJournalProcedure seazonJournalProcedure=seazonProcedureJournalService.getLast();
-            username=seazonJournalProcedure.getName();
-            DateFormat dateFormat=DateFormat.getDateInstance(DateFormat.SHORT,new Locale("ru"));
-            dateFoming=dateFormat.format(seazonJournalProcedure.getDate());
+            JournalProcedure journalProcedure = procedureJournalService.getLast();
+            if (journalProcedure!=null) {
+                username = journalProcedure.getName();
+                DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, new Locale("ru"));
+                dateFoming = dateFormat.format(journalProcedure.getDate());
+            }
 
             // Add Text to PDF file ->
             Font font = new Font(times,18);

@@ -14,7 +14,7 @@ public class User {
     @Column(name="users_id")
     private Integer id;
     //@NotNull
-    @Column(name="username")
+    @Column(name="username",unique=true)
     private String username;
 
     @Column(name="password")
@@ -41,13 +41,19 @@ public class User {
 
 
     public User(){}
-    public User(String username, String password, Set<Permissions> permissions) {
+    public User(String username, String password) {
         this.username = username;
         this.password = password;
 
     }
 
-    public User(String username, String password, String locale, Set<Permissions> permissions) {
+    public User(String username, String password, Set<Role> roles) {
+        this.username = username;
+        this.password = password;
+        this.roles = roles;
+    }
+
+    public User(String username, String password, String locale) {
         this.username = username;
         this.password = password;
         this.locale = locale;

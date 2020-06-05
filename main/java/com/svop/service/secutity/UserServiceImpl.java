@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.util.*;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
  * @version 1.0
  */
 @Configuration
+@Transactional
 public class UserServiceImpl implements UserService {
 private static Logger logger= LoggerFactory.getLogger(UserServiceImpl.class.getName());
     @Autowired
@@ -114,5 +116,20 @@ private static Logger logger= LoggerFactory.getLogger(UserServiceImpl.class.getN
     public void setRoles(@NotNull User user, @NotNull Set<Role> roles) {
        user.setRoles(roles);
        userRepository.save(user);
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public void save(@NotNull List<User> users) {
+    userRepository.saveAll(users);
+    }
+
+    @Override
+    public List<User> find(@NotNull List<Integer> idList) {
+       return userRepository.findAllById(idList);
     }
 }

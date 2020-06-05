@@ -168,4 +168,11 @@ public class RoleServiceImpl implements RoleService {
         userService.setRoles(user,roles);
         logger.info("*****Конец сохранения пользователей и ролей*****");
     }
+
+    @Override
+    public Role getBaseRole() throws RuntimeException {
+        Optional<Role> role= roleRepository.findById(0);
+        if (role.isPresent()) return  role.get();
+        else throw new RuntimeException();
+    }
 }

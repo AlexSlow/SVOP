@@ -281,4 +281,12 @@ public class FlightSheduleDaoService implements FlightSheduleDaoServiceInterface
     public  void deleteList(List<FlightSchedule> flightSchedules){
         flightSheduleRepository.deleteAll(flightSchedules);
     }
+
+    @Override
+    public List<FlightScheduleView> findBetweenPeriod(Date begin, Date end) {
+        List<FlightSchedule> flightSchedules=flightSheduleRepository.findFlightSchedulesByDayBetweenOrderByDay(begin,end);
+        List<FlightScheduleView> flightScheduleViewList=new ArrayList<>();
+        flightSchedules.forEach(item->flightScheduleViewList.add(getView(item)));
+        return flightScheduleViewList;
+    }
 }

@@ -1,21 +1,36 @@
 package com.svop.controllers.dailySchedule;
 
+import com.itextpdf.text.DocumentException;
+import com.svop.View.DailyScheduleViews.DailyScheduleView;
+import com.svop.View.DailyScheduleViews.FlightScheduleView;
 import com.svop.exeptions.httpResponse.DeleteFromDBExeption;
+import com.svop.message.Period;
 import com.svop.other.HeadProcessing.Head_parser;
 import com.svop.other.HeadProcessing.PageFormatter;
 import com.svop.service.dailySchedule.FlightSheduleDaoService;
+import com.svop.service.documentOutputPdf.FlightSheduleOutputPdf;
 import com.svop.service.secutity.UserService;
+import com.svop.tables.daily_schedule.FlightSchedule;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.sql.Date;
 import java.util.List;
 
 @Controller
@@ -23,6 +38,7 @@ import java.util.List;
 public class FlightScheduleHttpControler {
     @Autowired private UserService userService;
     @Autowired private FlightSheduleDaoService flightSheduleDaoService;
+    @Autowired private FlightSheduleOutputPdf flightSheduleOutputPdf;
     @RequestMapping(value = "FlightShedule")
     public String open(Model model, @PageableDefault(sort = {"day"}, direction = Sort.Direction.DESC) Pageable page) {
         Head_parser head_parser = new Head_parser();
@@ -33,5 +49,30 @@ public class FlightScheduleHttpControler {
         pageFormatter.fillModel(model, page.getPageNumber());
         return "/html/DailySchedule/FlightShedule.html";
     }
+
+    @RequestMapping(value = "FlightSchedule/view")
+    public String open_document_forming_page(Model model) {
+        Head_parser head_parser = new Head_parser();
+        head_parser.setModel(userService, model);
+        return "/html/DailySchedule/FlightScheduleDocumentForming.html";
+    }
+
+    @RequestMapping(value = "FlightSchedule/pdf")
+    public ResponseEntity<InputStreamResource> getPdf(@ModelAttribute Period period) throws IOException, DocumentException {
+        //Сформировать расписание
+        if (period.getStart()==null)period.setStart(new Date(0));
+        if (period.getEnd()==null)period.setEnd(new Date(System.currentTimeMillis()));
+        List<FlightScheduleView> list= flightSheduleDaoService.findBetweenPeriod(period.getStart(),period.getEnd());
+        ByteArrayInputStream bis= flightSheduleOutputPdf.generate(period,list, SecurityContextHolder.getContext().getAuthentication().getName());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename=FlightShedule.pdf");
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(bis));
+    }
+
 
 }

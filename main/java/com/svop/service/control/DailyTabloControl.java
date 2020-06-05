@@ -48,13 +48,20 @@ public class DailyTabloControl  implements TabloControl {
         private Integer page= 0;
         private List<FlightScheduleLanguageView> flightScheduleLanguageViews;
         private Locale[] locales={new Locale("ru"),new Locale("en"),new Locale("ch")};
-        //Класс задачи. Она на основании данных будет получать список табло
+        private Map<String,String> HeadersStore=new HashMap<>();
+
+    public Map<String, String> getHeadersStore() {
+        return HeadersStore;
+    }
+
+    //Класс задачи. Она на основании данных будет получать список табло
         public class SchedulePlanFormingTask implements Runnable{
             @Override
             public void run() {
                 flightScheduleLanguageViews=flightSheduleDaoService.getActualFlightScheduleLanguageList(PageRequest.of(page,page_size),countries,locales[countries]);
                 Map<String,Object> response=new HashMap<>();
-                response.put("header",getHeader());
+                HeadersStore=getHeader();
+                response.put("header",HeadersStore);
                 response.put("body",flightScheduleLanguageViews);
                 simpMessageSendingOperations.convertAndSend("/topic/dailyTablo", response);
                 //Тут мы делаем выборку
@@ -127,7 +134,7 @@ public class DailyTabloControl  implements TabloControl {
     public Boolean isActive() {
             return isActive;
         }
-        public Map<String,String> getHeader()
+        private Map<String,String> getHeader()
         {
             Locale locale=locales[countries];
             Map headers=new HashMap();

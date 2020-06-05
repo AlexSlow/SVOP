@@ -49,19 +49,35 @@ public class SeazonTabloControl implements TabloControl {
     private PeriodicTrigger periodicTrigger;
     private ScheduledFuture scheduledFuture;
     //Указатель на страну и на страницу
-    private int countries=0;
-    private Integer page= 0;
+    private volatile int countries=0;
+    private volatile Integer page= 0;
     private List<SeazonScheduleLanguageView> seazonScheduleLanguageViews;
     private Locale[] locales={new Locale("ru"),new Locale("en"),new Locale("ch")};
-//Класс задачи. Она на основании данных будет получать список табло
+    private Map<String,String> HeadersStore=new HashMap<>();
+    private List<SeazonScheduleLanguageView> seazonScheduleLanguageViewsStore=new ArrayList<>();
+
+    public Map<String, String> getHeadersStore() {
+        return HeadersStore;
+    }
+
+
+    public List<SeazonScheduleLanguageView> getSeazonScheduleLanguageViewsStore() {
+        return seazonScheduleLanguageViewsStore;
+    }
+
+
+
+    //Класс задачи. Она на основании данных будет получать список табло
    public class SchedulePlanFormingTask implements Runnable{
 
         @Override
         public void run() {
             seazonScheduleLanguageViews=seazonScheduleService.getSeazonScheduleLanguageViews(PageRequest.of(page,page_size),countries);
             Map<String,Object> response=new HashMap<>();
-            response.put("header",getHeader());
+            HeadersStore=getHeader();
+            response.put("header",HeadersStore);
             response.put("body",seazonScheduleLanguageViews);
+
             simpMessageSendingOperations.convertAndSend("/topic/seazonTablo", response);
             //Тут мы делаем выборку
             //Если мы не прошли страны то
@@ -114,6 +130,8 @@ public class SeazonTabloControl implements TabloControl {
             {
                 if (!scheduledFuture.isCancelled()){scheduledFuture.cancel(true);}
             }
+            countries=0;
+            page=0;
         }
     this.isActive=isActive;
     }
@@ -152,7 +170,7 @@ public class SeazonTabloControl implements TabloControl {
     public Boolean isActive() {
         return isActive;
     }
-public Map<String,String> getHeader()
+private Map<String,String> getHeader()
 {
     Locale locale=locales[countries];
     Map headers=new HashMap();
@@ -170,6 +188,9 @@ public Map<String,String> getHeader()
     headers.put("time_prib",messageSource.getMessage("reysy.time_prib",null,locale));
     headers.put("vilet_days",messageSource.getMessage("reysy.vilet_days",null,locale));
     headers.put("tablo_head",messageSource.getMessage("sezon.tablo.head",null,locale));
+
+    System.out.println(countries+" "+page);
+    System.out.println(headers);
     return headers;
 }
 

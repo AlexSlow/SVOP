@@ -67,7 +67,7 @@ public class TabloSeazonRestController {
         {
             tabloInitResponse.setMessage("on");
             tabloInitResponse.setList(dailyTabloControl.getFlightScheduleLanguageViews());
-            tabloInitResponse.setHeaders(dailyTabloControl.getHeader());
+            tabloInitResponse.setHeaders(dailyTabloControl.getHeadersStore());
         }
         else  {
             tabloInitResponse.setMessage("off");
@@ -84,13 +84,11 @@ public class TabloSeazonRestController {
         {
             tabloInitResponse.setMessage("on");
         tabloInitResponse.setList(seazonTabloControl.getSeazonScheduleLanguageViews());
-        tabloInitResponse.setHeaders(seazonTabloControl.getHeader());
+        tabloInitResponse.setHeaders(seazonTabloControl.getHeadersStore());
     }
         else  {
             tabloInitResponse.setMessage("off");
         }
         return new ResponseEntity<>(tabloInitResponse,HttpStatus.OK);
     }
-
-
 }

@@ -26,5 +26,6 @@ public interface FlightSheduleDaoServiceInterface {
     public Optional<FlightSchedule> getFlightSheduleById(Integer id);
     public void saveAll(List<FlightSchedule> flightSchedules);
     void deleteList(List<FlightSchedule> flightSchedules);
+    List<FlightScheduleView> findBetweenPeriod(Date begin,Date end);
 
 }

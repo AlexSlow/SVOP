@@ -38,13 +38,13 @@ $("#modal_table tbody").empty();
 		 let ajax_object={};
 		 let id=$(this).children("td:eq(0)").text();
 		 ajax_object["id"]=id;
-		 ajax_object["day"]=Date.parse($(this).find("#day").val());
+		 ajax_object["day"]=Date.parse($(this).find(".day").val());
 		 
-		 ajax_object["deporture"]=$(this).find("#deporture").val();
-		 ajax_object["prilet"]=$(this).find("#prilet").val();
-		 ajax_object["comment"]=$(this).find("#comment").val();
-		  ajax_object["vs"]=$(this).find("#vs").val();
-		 ajax_object["status"]=$(this).find("#status").text();
+		 ajax_object["deporture"]=$(this).find(".deporture").val();
+		 ajax_object["prilet"]=$(this).find(".prilet").val();
+		 ajax_object["comment"]=$(this).find(".comment").val();
+		  ajax_object["vs"]=$(this).find(".vs").val();
+		 ajax_object["status"]=$(this).find(".status").text();
 		 let undoMoving=$(this).find(".checkboxClass").prop("checked");
 		 if (undoMoving==null) undoMoving=false;
 		 ajax_object["undoMoving"]=undoMoving;
@@ -95,8 +95,8 @@ $("#modal_table tbody").empty();
 	if (type!="Перемещенный")
 	{
 $("#modal_table tbody ").append("<tr><td class='d-none'>"+id+"</td><td>"+day+"</td><td>"+nomer+"</td>"+
-"<td>"+timeDep+"</td><td>"+timePril+"</td><td>"+vs+"</td><td><input type='date' id='day' /></td><td><input id='deporture' type='time'/></td><td><input id='prilet' type='time'/></td>"+
-"<td><input id='vs' type='text'/></td><td><input id='comment' type='text'/></td><td id='status' class='d-none'>"+type+"</td></tr>"); 
+"<td>"+timeDep+"</td><td>"+timePril+"</td><td>"+vs+"</td><td><input type='date' class='day' /></td><td><input class='deporture' type='time'/></td><td><input class='prilet' type='time'/></td>"+
+"<td><input class='vs' type='text'/></td><td><input class='comment' type='text'/></td><td class='status d-none'>"+type+"</td></tr>"); 
 	} 
 else
 {
@@ -109,8 +109,8 @@ else
 	
 	var d = new Date(dateMills);
 	$("#modal_table tbody ").append("<tr><td class='d-none'>"+id+"</td><td>"+day+"</td><td>"+nomer+"</td>"+
-"<td>"+timeDep+"</td><td>"+timePril+"</td><td>"+vs+"</td><td><input type='date' id='day' value='"+dateFormat(d)+"'/></td><td><input type='time' id='deporture' value='"+timeDeportureNext+"'/></td><td><input type='time' id='prilet' value='"+timePriletNext+"'/></td><td><input type='text' id='vs' value='"+vs+"' /></td>"+
-"<td><input id='comment' value='"+comment+"'  type='text'/></td>  <td id='status' class='d-none'>"+type+"</td> <td>Отменить перемещение <input class='checkboxClass'  type='checkbox'/></td></tr>"); 
+"<td>"+timeDep+"</td><td>"+timePril+"</td><td>"+vs+"</td><td><input type='date' class='day' value='"+dateFormat(d)+"'/></td><td><input type='time' class='deporture' value='"+timeDeportureNext+"'/></td><td><input type='time' class='prilet' value='"+timePriletNext+"'/></td><td><input type='text' class='vs' value='"+vs+"' /></td>"+
+"<td><input class='comment' value='"+comment+"'  type='text'/></td>  <td class='status d-none'>"+type+"</td> <td>Отменить перемещение <input class='checkboxClass'  type='checkbox'/></td></tr>"); 
 }
 }
 });

@@ -11,11 +11,14 @@ import com.svop.tables.SeazonSchedule.SeazonSchedule;
 import com.svop.tables.daily_schedule.Daily;
 import com.svop.tables.daily_schedule.DailyDirection;
 import com.svop.tables.daily_schedule.DailyRepository;
+import com.svop.tables.journal.ProcedureJournalService;
+import com.svop.tables.journal.TypeProcedure;
 import com.svop.tables.temp.TempReysy;
 import com.svop.tables.temp.TempReysyRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,10 +37,15 @@ public class DailySheduleService {
     private ReysyService reysyService;
     @Autowired
     TempReysyRepository tempReysyRepository;
+
+    @Autowired @Qualifier("Daily")
+    private ProcedureJournalService procedureJournalService;
+    private List<Daily> savedCollection=new ArrayList<>();
     private static final Logger logger= LoggerFactory.getLogger(DailySheduleService.class.getName());
     public synchronized void forming()
     {
         logger.info("Начало формирования ежедневного расписания");
+        savedCollection.clear();
         List<Reysy> reysyListRegular=reysyService.getAllActualReys(new Date(System.currentTimeMillis ()));
         //System.out.println(reysyListRegular);
         Calendar calendar=Calendar.getInstance();
@@ -123,7 +131,10 @@ public class DailySheduleService {
            }
         }
         tempReysyRepository.deleteAll();
+        //Сохранение
+        dailyRepository.saveAll(savedCollection);
         logger.info("Окончание формирования ежедневного расписания");
+        procedureJournalService.save(SecurityContextHolder.getContext().getAuthentication().getName(),new Date(System.currentTimeMillis()),TypeProcedure.Ежедневное);
     }
 
     public void save(Calendar day, Reysy reysy, DailyDirection direction)
@@ -154,11 +165,15 @@ public class DailySheduleService {
 
 
     logger.info("Проверка на наличие изменений");
+    System.out.println(reysy);
+    System.out.println(new Date(day.getTimeInMillis()));
+    System.out.println(direction);
        Optional<Daily> dailyOld=dailyRepository.findByReysAndDayAndDirection(reysy,new Date(day.getTimeInMillis()),direction);
         if (!dailyOld.isPresent())
         {
             logger.info("Запись отсутствует");
-            dailyRepository.save(daily);
+            //dailyRepository.save(daily);
+            savedCollection.add(daily);
 
         }else{
             logger.info("Запись найдена");
@@ -173,10 +188,12 @@ public class DailySheduleService {
                 daily.setId(dailyOld.get().getId());
                 if (reysy.getIzmen_otmen()!=ReysyStatus.Отменен)
                 daily.setIzmenOmen(ReysyStatus.Изменен);
-                dailyRepository.save(daily);
+                //dailyRepository.save(daily);
+                savedCollection.add(daily);
             }
         }
-        logger.info("Сохранено");
+        logger.info("Сохранено в коллекцию");
+
     }
     private boolean checkWorkDay(List<Integer> days,Integer day)
     {
