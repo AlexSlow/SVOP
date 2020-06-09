@@ -2,10 +2,12 @@ package com.svop.tables.Users;
 
 
 
+import org.hibernate.envers.Audited;
+
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
-
+@Audited
 @Entity
 @Table(name="usr")
 public class User {
@@ -34,7 +36,6 @@ public class User {
     public String getUsername() {
         return username;
     }
-
     public void setUsername(String username) {
         this.username = username;
     }

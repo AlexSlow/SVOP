@@ -1,15 +1,17 @@
 package com.svop.tables.Handbooks;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.svop.tables.Auditable;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.util.Objects;
-
+@Audited
 @Entity
 @Table(name = "routs")
-public class Routes {
+public class Routes extends Auditable<String> {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     @Column(name="routs_id")
@@ -96,7 +98,10 @@ public class Routes {
     @Override
     public String toString() {
         return "Routes{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", createdBy=" + createdBy +
+                ", creationDate=" + creationDate +
                 '}';
     }
 
@@ -105,15 +110,11 @@ public class Routes {
         if (this == o) return true;
         if (!(o instanceof Routes)) return false;
         Routes routes = (Routes) o;
-        return Objects.equals(getName(), routes.getName()) &&
-                Objects.equals(getPrilet(), routes.getPrilet()) &&
-                Objects.equals(getVilet(), routes.getVilet()) &&
-                Objects.equals(getArrival(), routes.getArrival()) &&
-                Objects.equals(getDeporture(), routes.getDeporture());
+        return Objects.equals(getName(), routes.getName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getPrilet(), getVilet(), getArrival(), getDeporture());
+        return Objects.hash(getName());
     }
 }

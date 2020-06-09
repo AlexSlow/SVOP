@@ -1,11 +1,13 @@
 package com.svop.tables.Users;
 
+import org.hibernate.envers.Audited;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.security.Permission;
 import java.util.Objects;
 import java.util.Set;
-
+@Audited
 @Entity
 @Table(name="role")
 public class Role implements Serializable {

@@ -4,21 +4,39 @@
             'X-Csrf-Token':token
         }
     });
+	//Подгрузить рейсы
+	getReysAjax(-1,service_api_getReys);
+	////Получить первый id
+	function getCheckedIdStoic(){
+	let id=-1;
+	$('#content_table input:checkbox:checked').each(function() {
+	id=$(this).val();
+	})
+	return id;
+	}
+	
+	////Получить коллекцию  id
+	function getCheckedIdArrayStoic(){
+	let idArray=[];
+	$('#content_table input:checkbox:checked').each(function() {
+	idArray.push($(this).val());
+	})
+	return idArray;
+	}
+	
+	
 	//------------------------------Нажатие на показ стойки для рейсов
 $('#showReys').on('click', function() {
 	// ПОлучить первый id
-	var id=-1;
-$('#content_table input:checkbox:checked').each(function() {
-	id=$(this).val();
-})
 //id - id стойки
+let id=getCheckedIdStoic();
 if (id!=-1){
  getReysAjax(id,service_api_getReys); 
 }
  
 });
 
-	//------------------------------Нажатие показать стойку
+//------------------------------Нажатие показать стойку
 $('#showStoic').on('click', function() {
 	var id=-1;
 $('#content_table input:checkbox:checked').each(function() {
@@ -36,11 +54,14 @@ if (id!=-1){
 
 	//------------------------------Нажатие связывание
 $('#bindReysAndStoic').on('click', function() {
-	// ПОлучить первый id
-
-let idStoic=$("#rightMenu #idSelectedStoic").val();
+	// ПОлучить коллекцию id
+//ПРоверить, выбрана ли стойка 
+let idStoicArray=getCheckedIdArrayStoic();
+if (idStoicArray.langth==0){
+ idStoic.push($("#rightMenu #idSelectedStoic").val());
+}
 let idReys= $('input[name=radio]:checked').val();
-bindStoicAndReys(idStoic,idReys,service_api_bindStoicReys);
+bindStoicAndReys(idStoicArray,idReys,service_api_bindStoicReys);
 
  
 });
@@ -85,7 +106,7 @@ function refreshStoicsTable(Stoic)
 	if (stoic.status){sts="Включен";}else{sts="Выключен";}
 	
 	$("#content_table tbody").append("<tr><td><input type='checkbox' id='ch"+stoic.id+"' value='"+stoic.id+"' name='ch[]' form='form'/></td>"+
-	"<td><a href='"+host+"/stoic/"+stoic.id+"' taget=_blank>"+stoic.nomer+"</a></td>"+
+	"<td><a href='"+host+"/svop/stoic/"+stoic.id+"' taget=_blank>"+stoic.nomer+"</a></td>"+
 	"<td><label for='ch"+stoic.id+"' >"+stoic.nomerReys+" </label></td>"+
 	"<td>"+sts+"</td></tr>");
 });
@@ -94,7 +115,7 @@ function refreshStoicsTable(Stoic)
 //--------------------------------------------------------------------- Запросы
 function getReysAjax(id,adress)
   { 
-  if (id==null) return;
+  if (id==null) id=-1;
   console.log("Получение стойки с id= "+id);
   $.ajax({
   type: "POST",

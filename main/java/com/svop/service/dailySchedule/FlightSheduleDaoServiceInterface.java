@@ -19,6 +19,7 @@ public interface FlightSheduleDaoServiceInterface {
     public void delete(List<Integer> id_list);
     public List<FlightScheduleView> getByDay(Date day);
     List<FlightScheduleView> getActulaByDay(Date day);
+    List<FlightScheduleView> getActulaViletReysByDay(Date day);
     public List<FlightSchedule> getFlightShedulesByDay(Date day);
     public List<FlightScheduleView> getFlightShedulesViewById(List<Integer> idl);
     public List<FlightSchedule> getFlightShedulesById(List<Integer> idl);

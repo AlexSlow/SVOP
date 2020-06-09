@@ -1,8 +1,10 @@
 package com.svop.tables.Users;
 
+import org.hibernate.envers.Audited;
+
 import javax.persistence.*;
 import java.io.Serializable;
-
+@Audited
 @Entity
 @Table(name="role_permissions")
 public class RolePermissions implements Serializable {

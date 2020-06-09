@@ -1,19 +1,18 @@
 package com.svop.service.dailySchedule;
-import com.svop.View.DailyScheduleViews.FlightScheduleView;
-import com.svop.View.DailyScheduleViews.StoicBindDto;
-import com.svop.View.DailyScheduleViews.StoicDto;
-import com.svop.View.DailyScheduleViews.StoicsAndFlightSheduleDto;
+import com.svop.View.DailyScheduleViews.*;
+import com.svop.exeptions.SvopDataBaseExeption;
 import com.svop.service.handbooks.RoutesService;
-import com.svop.tables.daily_schedule.FlightSchedule;
-import com.svop.tables.daily_schedule.Stoic;
-import com.svop.tables.daily_schedule.StoicRepository;
-import com.svop.tables.daily_schedule.StoicStatus;
+import com.svop.tables.daily_schedule.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.validation.constraints.NotNull;
 import java.sql.Date;
+import java.text.DateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,12 +44,15 @@ public class StoicDaoService implements StoicDaoInterface {
             DateTimeFormatter formatterRu = DateTimeFormatter.ofPattern("HH:mm", new Locale("ru"));
             stoicDto.setTimeViletRu(formatterRu.format(stoic.getFlightSchedule().getTimeDeporture()));
             stoicDto.setImg(stoic.getFlightSchedule().getDaily().getNomer().getAircompany().getLogoLage());
+            //Дата
+           stoicDto.setDay(stoic.getFlightSchedule().getDay());
+           stoicDto.setImgLittle(stoic.getFlightSchedule().getDaily().getNomer().getAircompany().getLogo());
         }
         return stoicDto;
     }
     @Override
-    public List<StoicDto> getStoicsDtoList(@NotNull List<Stoic> stoics){
-        List<StoicDto> stoicDtoList=new ArrayList<>(stoics.size());
+    public List<StoicDto> getStoicsDtoList(@NotNull Iterable<Stoic> stoics){
+        List<StoicDto> stoicDtoList=new ArrayList<>();
         stoics.forEach(stoic -> {stoicDtoList.add(stoicDtoFactory(stoic));});
         return stoicDtoList;
 
@@ -68,19 +70,19 @@ public class StoicDaoService implements StoicDaoInterface {
     }
 
     @Override
-    public List<StoicDto> getStoicsDtoListByIdList(@NotNull List<Integer> idList){
+    public List<StoicDto> getStoicsDtoListByIdList(@NotNull Iterable<Integer> idList){
         List<Stoic> stoicList=stoicRepository.findByIdInOrderByNomer(idList);
         return getStoicsDtoList(stoicList);
     };
     @Override
-    public  List<Stoic> stoicListFactory(List<StoicDto> stoicDtos)
+    public  List<Stoic> stoicListFactory(Iterable<StoicDto> stoicDtos)
     {
-       // List<Integer> idl=new ArrayList<>(stoicDtos.size());
-        List<Stoic> stoics=new ArrayList<>(stoicDtos.size());
+        List<Integer> idl=new ArrayList<>();
         stoicDtos.forEach(dto->{
-          //  idl.add(dto.getId()) ;
+            idl.add(dto.getId()) ;
         });
-        return null;
+        List<Stoic> stoics=stoicRepository.findByIdInOrderByNomer(idl);
+        return stoics;
 
     }
     private void findAndSet(Stoic stoic,List<Stoic> stoics,List<Stoic> save){
@@ -92,11 +94,16 @@ public class StoicDaoService implements StoicDaoInterface {
             }
         });
     }
+
+    /***
+     * Сохранить коллекцию, в которой отсутствуют графики полетов
+     * @param stoics
+     */
     @Override
-    public void saveWithoutFlightSchedule(List<Stoic> stoics)
+    public void saveWithoutFlightSchedule(Iterable<Stoic> stoics)
     {
         List<Stoic> saveList=new ArrayList<>();
-        List<Integer> id=new ArrayList<>(stoics.size());
+        List<Integer> id=new ArrayList<>();
         stoics.forEach(stoic->{
             id.add(stoic.getId());
         });
@@ -113,23 +120,29 @@ public class StoicDaoService implements StoicDaoInterface {
         stoicRepository.saveAll(saveList);
     }
 
+    /**
+     * Вывести с учетом стойки
+     * @param stoicId
+     * @return
+     * @throws Exception
+     */
     @Override
     public List<StoicsAndFlightSheduleDto> getFlightSheduleByStoics(Integer stoicId) throws Exception {
       Optional<Stoic> stoicOptional= stoicRepository.findById(stoicId);
-      if (stoicOptional.isPresent())
-      {
-       List<FlightScheduleView>  flightSchedules=flightSheduleDaoService.getActulaByDay(new Date(System.currentTimeMillis()));
-       if (flightSchedules==null) return new ArrayList<>();
-       if (flightSchedules.size()==0) return new ArrayList<>();
-       List<StoicsAndFlightSheduleDto> flightSheduleDtos=new ArrayList<>(flightSchedules.size());
+        List<FlightScheduleView>  flightSchedules=flightSheduleDaoService.getActulaViletReysByDay(new Date(System.currentTimeMillis()));
+        if (flightSchedules==null) return new ArrayList<>();
+        if (flightSchedules.size()==0) return new ArrayList<>();
+        List<StoicsAndFlightSheduleDto> flightSheduleDtos=new ArrayList<>(flightSchedules.size());
+        int idSelect=-1;
+      if (stoicOptional.isPresent()) {
           FlightSchedule selected= stoicOptional.get().getFlightSchedule();
-          int idSelect;
           if (selected==null) idSelect=-1;
           else idSelect=selected.getId();
+      }
 
-       flightSchedules.forEach(flightScheduleView -> {
+        for(FlightScheduleView flightScheduleView:flightSchedules)
+      {
            //Получить график для тог что бы проверить
-
            List<Stoic> stoic=stoicRepository.findByFlightScheduleIdOrderByNomer(flightScheduleView.getId());
            String stoikaStr="Не задан";
 
@@ -151,36 +164,36 @@ public class StoicDaoService implements StoicDaoInterface {
            }else{
                flightSheduleDtos.add(new StoicsAndFlightSheduleDto(flightScheduleView,false,stoikaStr,stoicId));
            }
-       });
+       }
        return flightSheduleDtos;
-      }else
-      {
-          throw  new Exception("Не найдена стойка");
-      }
+
     }
 
+    /**
+     * Вывести рейс на стойку
+     * @param stoicBindDto
+     * @throws Exception
+     */
     @Override
     public void bind(@NotNull StoicBindDto stoicBindDto) throws Exception {
-        Optional<Stoic> stoicOptional=stoicRepository.findById(stoicBindDto.getStoicId());
-        if (stoicOptional.isPresent())
+        List<Stoic> stoicList=stoicRepository.findAllById(stoicBindDto.getStoicId());
+        Optional<FlightSchedule> flightScheduleOptional = flightSheduleDaoService.getFlightSheduleById(stoicBindDto.getReysId());
+        if ((stoicList!=null)||(!flightScheduleOptional.isPresent()))
         {
-            Optional<FlightSchedule> flightScheduleOptional=flightSheduleDaoService.getFlightSheduleById(stoicBindDto.getReysId());
-            if (flightScheduleOptional.isPresent())
-            {
-                stoicOptional.get().setFlightSchedule(flightScheduleOptional.get());
-                stoicRepository.save(stoicOptional.get());
-                simpMessageSendingOperations.convertAndSend("/topic/stoic/"+stoicBindDto.getStoicId(),"ref");
-            }else {
-                throw  new Exception("Отстутствует рейс");
+            for(Stoic stoic:stoicList) {
+                    stoic.setFlightSchedule(flightScheduleOptional.get());
+                    simpMessageSendingOperations.convertAndSend("/topic/stoic/" + stoic.getId(), "ref");
+                }
+            stoicRepository.saveAll(stoicList);
             }
-
-            //Получение списка
-
-        }else  throw  new Exception("Отстутствует стойка");
+        else  throw  new SvopDataBaseExeption("Отстутствует стойка или рейс");
     }
-
+    /**
+     * Включить выключить стоки
+     * @param idl
+     */
     @Override
-    public void fire(@NotNull List<Integer> idl) {
+    public void fire(@NotNull Iterable<Integer> idl) {
         List<Stoic> stoics=stoicRepository.findByIdInOrderByNomer(idl);
         stoics.forEach(stoic -> {
                 if(stoic.getStatus()==null)
@@ -208,14 +221,57 @@ public class StoicDaoService implements StoicDaoInterface {
 
 
 }
-
     @Override
     public StoicDto getStoic(@NotNull Integer id) {
         return stoicDtoFactory((stoicRepository.findById(id).get()));
     }
 
     @Override
-    public void delete(List<Integer> id) {
+    public void delete(Iterable<Integer> id) {
         stoicRepository.deleteByIdIn(id);
+    }
+
+    @Override
+    @Cacheable(cacheNames = "informationStoics")
+    public List<StoicLanguageDto> getInformationAboutStoics(Pageable pageable, Locale locale) {
+        Page<Stoic> stoics=stoicRepository.findAllByFlightScheduleIsNotNull(pageable);
+        List<StoicDto> stoicDtoList=this.getStoicsDtoList(stoics);
+       // stoics.stream().filter(i->{return i.isStatus();});
+        return stoicLanguageDtoListFactory(stoicDtoList,locale);
+    }
+    public List<StoicLanguageDto> stoicLanguageDtoListFactory(@NotNull Iterable<StoicDto> stoicDto,Locale locale){
+        List<StoicLanguageDto> stoicLanguageDtos=new ArrayList<>();
+        stoicDto.forEach(stoic->{
+            stoicLanguageDtos.add(stoicLanguageDtoFactory(stoic,locale));
+        });
+        return stoicLanguageDtos;
+    }
+    /**
+     * Для информационного табло
+     * @param stoicDto
+     * @param locale
+     * @return
+     */
+    public StoicLanguageDto stoicLanguageDtoFactory(StoicDto stoicDto, Locale locale){
+        StoicLanguageDto stoicLanguageDto=new StoicLanguageDto();
+        stoicLanguageDto.setId(stoicDto.getId());
+        stoicLanguageDto.setImg(stoicDto.getImgLittle());
+        stoicLanguageDto.setNomer(stoicDto.getNomer());
+        stoicLanguageDto.setNomerReys(stoicDto.getNomerReys());
+        stoicLanguageDto.setStatus(stoicDto.isStatus());
+        stoicLanguageDto.setDay(stoicDto.getDay());
+        stoicLanguageDto.setTimeVilet(stoicDto.getTimeViletRu());
+
+        switch (locale.getLanguage().toLowerCase())
+        {
+            case "ru": stoicLanguageDto.setRoute(stoicDto.getRouteRu());
+            break;
+            case "en": stoicLanguageDto.setRoute(stoicDto.getRouteEn());
+            break;
+            case "ch": stoicLanguageDto.setRoute(stoicDto.getRouteEn());
+            break;
+            default: stoicLanguageDto.setRoute(stoicDto.getRouteRu());
+        }
+        return stoicLanguageDto;
     }
 }

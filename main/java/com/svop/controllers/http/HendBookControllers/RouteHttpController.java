@@ -1,4 +1,4 @@
-package com.svop.controllers.HendBookControllers;
+package com.svop.controllers.http.HendBookControllers;
 import com.svop.exeptions.httpResponse.DeleteFromDBExeption;
 import com.svop.other.HeadProcessing.Head_parser;
 import com.svop.other.HeadProcessing.PageFormatter;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller

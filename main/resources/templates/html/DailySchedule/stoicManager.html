@@ -54,18 +54,14 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
 <tbody>
 </tbody>
 </table>
-
 </div> 
-
 </div> 
 </div> 
 </div> 
 <form action="" method="POST" id="form">
 <div class="btn-group fixed-bottom m-auto">
-
-
  <input type="button" name="add" data-toggle="modal" data-target="#addModal" data-content="add" th:value="#{buttons.add_bt}"class="btn btn-primary"/>
-  <input type="button" name="redact" data-content="redact" th:value="#{buttons.red_bt}"  data-toggle="modal" data-target="#addModal" class="btn btn-primary"/>
+ <input type="button" name="redact" data-content="redact" th:value="#{buttons.red_bt}"  data-toggle="modal" data-target="#addModal" class="btn btn-primary"/>
  <input type="button" name="off_on" id="off_on" th:value="#{buttons.off_on}" class="btn btn-primary"/>
  <input type="button" name="showStoic" id="showStoic" th:value="#{buttons.showStoic}" class="btn btn-primary"/>
  <input type="button" name="showReys" id="showReys" th:value="#{buttons.showReys}" class="btn btn-primary"/>
@@ -77,6 +73,14 @@ id="maincheck"> <label for="maincheck" th:text="#{buttons.fire_all}"> Выдел
 <script src="/bootstrap/js/popper_min.js" ></script>
 <script src="/bootstrap/js/bootstrap.min.js"></script>
 <script src="/js/fire_check.js"></script>
+
+<script>
+var service_api_getReys=host+"/svop/api/stoic/getStoicsReys";  
+var service_api_bindStoicReys=host+"/svop/api/stoic/bindStoicReys"; 
+var service_api_fefresh=host+"/svop/api/stoic/getStoics"; 
+var service_api_fire=host+"/svop/api/stoic/fire"; 
+</script>
+
 <script src="/js/stoic_manager.js"></script>
 
 <div th:insert="/html/modal/base_modal.html"></div>
@@ -86,13 +90,7 @@ var head_add_title=[[#{modal.header_add}]];
 var head_red_title=[[#{modal.header_red}]];
   //csrf токены
 var token = $("meta[name='_csrf']").attr("content"); 
-var service_api_save=host+"/svop/api/stoic/";  
-var service_api_getReys=host+"/svop/api/stoic/getStoicsReys";  
-var service_api_bindStoicReys=host+"/svop/api/stoic/bindStoicReys"; 
-var service_api_fefresh=host+"/svop/api/stoic/getStoics"; 
-var service_api_fire=host+"/svop/api/stoic/fire"; 
 </script>
-
 <script>
  
 function getPage()

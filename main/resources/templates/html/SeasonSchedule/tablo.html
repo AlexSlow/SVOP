@@ -56,16 +56,27 @@ height: 100vh;
 	color:yellow;
 	border:solid 1pt yellow;
 	text-align: center;
-	vertical-align:middle;
 	border-collapse: collapse;
 	white-space: nowrap;
 	}
 </style>
-<div id="headTitle" style="text-align:center;color:yellow;font-size:34px; display:none;">
-<p id="head">
 
+<div id="headTitle" style="text-align:center;color:yellow;font-size:34px; display:none;">
+<p>
+<div id="content" class="container-fluid">
+        <div class="row" >
+		<div class="col-6">
+		<div id="head"></div>
+		</div>
+		<div class="col-6">
+		<div id="timeText"></div>
+		<div id="time"></div>
+		</div>
+		</div>
+		</div>
 </p>
-</div>
+
+
 <table class="table tableTablo TabloActive tabloWidth grid" id="content_table" style="width 100%;height:100%;display:none" >
 <thead>
 <tr>
@@ -75,7 +86,6 @@ height: 100vh;
 	<th  rowspan="2" id="rout" >Маршрут</th>	
 	<th  colspan="4" id="prilet">Прилет</th>
 	<th  colspan="4" id="vilet">Вылет</th>
-	<th rowspan="2" id="Logo" ></th>
   </tr>
   <tr>
   <th id="nomer_reys_p">Номер рейса</th>
@@ -96,19 +106,13 @@ height: 100vh;
 //Настройка клиента
 </script>
 </div>
-        </div>
+<input type="text" class="d-none" id="locale"/> 
+</div>
 
 </div>
 
  </div>
 
- 
- 
- 
- 
- 
- 
- 
 </body>
 
 </html>

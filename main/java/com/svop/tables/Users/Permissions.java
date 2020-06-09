@@ -2,12 +2,13 @@ package com.svop.tables.Users;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.security.Permission;
 import java.util.Set;
-
+@Audited
 @Entity
 @Table(name="permissions")
 public class Permissions implements Serializable {

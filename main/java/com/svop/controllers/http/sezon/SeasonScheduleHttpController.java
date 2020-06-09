@@ -1,7 +1,6 @@
-package com.svop.controllers.sezon;
+package com.svop.controllers.http.sezon;
 
 import com.itextpdf.text.DocumentException;
-import com.svop.Application;
 import com.svop.other.HeadProcessing.Head_parser;
 import com.svop.other.HeadProcessing.PageFormatter;
 import com.svop.service.SeazonSchedule.SeazonScheduleService;
@@ -10,8 +9,6 @@ import com.svop.service.documentOutputPdf.SeazonOutputPdfService;
 import com.svop.service.secutity.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -26,10 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 @Controller
 public class SeasonScheduleHttpController {

@@ -1,14 +1,16 @@
 package com.svop.tables.Handbooks;
 
+import com.svop.tables.Auditable;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.util.Objects;
-
+@Audited
 @Entity
 @Table(name = "reysy_nomer")
-public class NomerReys {
+public class NomerReys extends Auditable<String> {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     @Column(name="reysy_nomer_id")
@@ -68,7 +70,9 @@ public class NomerReys {
                 "id=" + id +
                 ", nomer='" + nomer + '\'' +
                 ", type=" + type +
-                ", aircompany=" + aircompany +
+                ", aircompany=" + aircompany.getId() +
+                ", createdBy=" + createdBy +
+                ", creationDate=" + creationDate +
                 '}';
     }
 

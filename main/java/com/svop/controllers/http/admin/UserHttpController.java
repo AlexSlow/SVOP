@@ -1,10 +1,9 @@
-package com.svop.controllers.admin;
+package com.svop.controllers.http.admin;
 
 import com.svop.exeptions.httpResponse.DeleteFromDBExeption;
 import com.svop.other.HeadProcessing.Head_parser;
 import com.svop.other.HeadProcessing.PageFormatter;
 import com.svop.service.secutity.UserService;
-import com.svop.tables.Users.RoleRepository;
 import com.svop.tables.Users.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;

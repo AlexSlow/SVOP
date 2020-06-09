@@ -1,6 +1,9 @@
 package com.svop.View.DailyScheduleViews;
 
+import java.sql.Date;
+
 public class StoicDto {
+    Date day;
     Integer id;
     String nomer;
     String nomerReys;
@@ -8,10 +11,25 @@ public class StoicDto {
     String routeEn;
     String routeCh;
     String timeViletRu;
-    String timeViletEn;
-    String timeViletCh;
     String img;
+    String imgLittle;
     boolean status;
+
+    public String getImgLittle() {
+        return imgLittle;
+    }
+
+    public void setImgLittle(String imgLittle) {
+        this.imgLittle = imgLittle;
+    }
+
+    public Date getDay() {
+        return day;
+    }
+
+    public void setDay(Date day) {
+        this.day = day;
+    }
 
     public StoicDto() {
         nomerReys="Не задан";
@@ -81,21 +99,6 @@ public class StoicDto {
         this.timeViletRu = timeViletRu;
     }
 
-    public String getTimeViletEn() {
-        return timeViletEn;
-    }
-
-    public void setTimeViletEn(String timeViletEn) {
-        this.timeViletEn = timeViletEn;
-    }
-
-    public String getTimeViletCh() {
-        return timeViletCh;
-    }
-
-    public void setTimeViletCh(String timeViletCh) {
-        this.timeViletCh = timeViletCh;
-    }
 
     public String getImg() {
         return img;
@@ -115,8 +118,6 @@ public class StoicDto {
                 ", routeEn='" + routeEn + '\'' +
                 ", routeCh='" + routeCh + '\'' +
                 ", timeViletRu='" + timeViletRu + '\'' +
-                ", timeViletEn='" + timeViletEn + '\'' +
-                ", timeViletCh='" + timeViletCh + '\'' +
                 ", img='" + img + '\'' +
                 ", status=" + status +
                 '}';

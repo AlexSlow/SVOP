@@ -1,8 +1,7 @@
-package com.svop.controllers.HendBookControllers;
+package com.svop.controllers.http.HendBookControllers;
 
 import com.svop.View.NomerReysView;
 import com.svop.View.ReysViewElement;
-import com.svop.exeptions.SvopDataBaseExeption;
 import com.svop.exeptions.httpResponse.DeleteFromDBExeption;
 import com.svop.other.HeadProcessing.Head_parser;
 import com.svop.other.HeadProcessing.PageFormatter;
@@ -19,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.repository.reactive.RxJava2CrudRepository;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

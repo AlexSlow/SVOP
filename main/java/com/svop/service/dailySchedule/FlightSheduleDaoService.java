@@ -3,12 +3,12 @@ package com.svop.service.dailySchedule;
 import com.svop.View.DailyScheduleViews.FlightScheduleLanguageView;
 import com.svop.View.DailyScheduleViews.FlightScheduleView;
 import com.svop.other.HeadProcessing.PageFormatter;
+import com.svop.service.control.DailyTabloStatusReysFactory;
+import com.svop.service.control.StatusFactory;
+import com.svop.service.control.StatusReysFormater;
 import com.svop.service.handbooks.RoutesService;
 import com.svop.service.secutity.UserService;
-import com.svop.tables.daily_schedule.Daily;
-import com.svop.tables.daily_schedule.FlightSheduleRepository;
-import com.svop.tables.daily_schedule.FlightSchedule;
-import com.svop.tables.daily_schedule.FlightSheduleStatus;
+import com.svop.tables.daily_schedule.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +45,8 @@ public class FlightSheduleDaoService implements FlightSheduleDaoServiceInterface
     {
         Page<FlightSchedule>  flightScheduleList=flightSheduleRepository.findByDayAndStatusOrderByDay(pageable,new Date(System.currentTimeMillis()),FlightSheduleStatus.Неизмененный);
         List<FlightScheduleLanguageView> languageViews=new ArrayList<>(flightScheduleList.getSize());
+        StatusReysFormater statusReysFormater=new DailyTabloStatusReysFactory().getFormater(locale);
+
         for(FlightSchedule flightSchedule:flightScheduleList)
         {
             FlightScheduleLanguageView flightScheduleLanguageView=new FlightScheduleLanguageView();
@@ -55,6 +57,8 @@ public class FlightSheduleDaoService implements FlightSheduleDaoServiceInterface
             flightScheduleLanguageView.setTimeDeporture(formatter.format(flightSchedule.getTimeDeporture()));
             flightScheduleLanguageView.setTimePrilet(formatter.format(flightSchedule.getTimePrilet()));
             flightScheduleLanguageView.setNomer(flightSchedule.getDaily().getNomer().getNomer());
+            flightScheduleLanguageView.setStatus(statusReysFormater.format(flightSchedule.getStatus()));
+            flightScheduleLanguageView.setLogo(flightSchedule.getDaily().getNomer().getAircompany().getLogo());
             languageViews.add(flightScheduleLanguageView);
         }
         return languageViews;
@@ -175,6 +179,22 @@ public class FlightSheduleDaoService implements FlightSheduleDaoServiceInterface
     }
 
     /**
+     * Для стоек регистрации
+     * @param day
+     * @return
+     */
+    @Override
+    public List<FlightScheduleView> getActulaViletReysByDay(Date day) {
+        List<FlightSchedule> flightScheduleList= flightSheduleRepository.findByDayAndStatusAndDaily_DirectionOrderByDay(day,FlightSheduleStatus.Неизмененный, DailyDirection.Вылет);
+        List<FlightScheduleView> flightScheduleViewList =new ArrayList<>(flightScheduleList.size());
+        for(FlightSchedule flightSchedule:flightScheduleList)
+        {
+            flightScheduleViewList.add(getView(flightSchedule));
+        }
+        return flightScheduleViewList;
+    }
+
+    /**
      *
      * @param day
      * @return
@@ -221,23 +241,14 @@ public class FlightSheduleDaoService implements FlightSheduleDaoServiceInterface
     @Override
     public void saveDaily(List<Daily> dailies,Date date)
     {
-        System.out.println("Сохранение");
         dailies.forEach(d->System.out.println(d.getId()+" "+d.getDay()));
-      //List<FlightSchedule> schedules=getFlightShedulesByDay(date);
-
         List<FlightSchedule> flightSchedulesforSave=new ArrayList<>();
-
-
         //Проверка на наличие в графике такой же записи
         List<Integer> id_condidats=dailies.stream().map(Daily::getId).collect(Collectors.toList());
-        System.out.println(id_condidats);
         List<FlightSchedule> flightSchedules=flightSheduleRepository.findAllByDailyIdIsIn(id_condidats);
         flightSchedules.forEach(d->System.out.println(d.getId()));
-
-
         for(Daily daily:dailies)
         {
-
             boolean find=false;
            for(FlightSchedule flightSchedule:flightSchedules) {
 
@@ -246,8 +257,6 @@ public class FlightSheduleDaoService implements FlightSheduleDaoServiceInterface
         if(!find) {flightSchedules.add(DailyIntoFlightShedule(daily));};
 
         }
-
-
         logger.info("Начало сохранения  графика полетов "+flightSchedules);
         flightSheduleRepository.saveAll(flightSchedules);
     }

@@ -3,6 +3,7 @@ package com.svop.tables.daily_schedule;
 import com.svop.tables.Handbooks.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.envers.NotAudited;
 
 import javax.persistence.*;
 import java.sql.Date;

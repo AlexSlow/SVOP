@@ -27,150 +27,28 @@ import java.util.concurrent.TimeUnit;
  */
 
 @Service
-public class SeazonTabloControl implements TabloControl {
-    private boolean  isActive;
-    //Время обновления
-    @Value("${svop.time_refresh}") private Integer refresh_time;
-    //Количество стран
-    @Value("${svop.countries_amount}") private Integer countries_amount;
-    private final  Integer page_size=10; //Размер страницы?
-    private int totalPage=0; //Число страниц
+public class SeazonTabloControl extends AbstractTabloControl {
 
     @Autowired
    private SeazonScheduleService seazonScheduleService;
     // Это пул потоков
-    @Autowired
-    @Qualifier("SeazonTablo")
-    private ThreadPoolTaskScheduler taskScheduler;
-    @Autowired
-    private SimpMessageSendingOperations simpMessageSendingOperations; //Упаравление брокером сообщений
     @Autowired private MessageSource messageSource; //Бундлы
-    //Триггер
-    private PeriodicTrigger periodicTrigger;
-    private ScheduledFuture scheduledFuture;
-    //Указатель на страну и на страницу
-    private volatile int countries=0;
-    private volatile Integer page= 0;
-    private List<SeazonScheduleLanguageView> seazonScheduleLanguageViews;
-    private Locale[] locales={new Locale("ru"),new Locale("en"),new Locale("ch")};
-    private Map<String,String> HeadersStore=new HashMap<>();
-    private List<SeazonScheduleLanguageView> seazonScheduleLanguageViewsStore=new ArrayList<>();
-
-    public Map<String, String> getHeadersStore() {
-        return HeadersStore;
-    }
 
 
-    public List<SeazonScheduleLanguageView> getSeazonScheduleLanguageViewsStore() {
-        return seazonScheduleLanguageViewsStore;
-    }
-
-
-
-    //Класс задачи. Она на основании данных будет получать список табло
-   public class SchedulePlanFormingTask implements Runnable{
-
-        @Override
-        public void run() {
-            seazonScheduleLanguageViews=seazonScheduleService.getSeazonScheduleLanguageViews(PageRequest.of(page,page_size),countries);
-            Map<String,Object> response=new HashMap<>();
-            HeadersStore=getHeader();
-            response.put("header",HeadersStore);
-            response.put("body",seazonScheduleLanguageViews);
-
-            simpMessageSendingOperations.convertAndSend("/topic/seazonTablo", response);
-            //Тут мы делаем выборку
-            //Если мы не прошли страны то
-            if (countries<countries_amount-1)
-            {
-                countries++;
-            }else
-            {
-                countries=0;
-
-                if (page==totalPage-1)
-                {
-                    page=0;
-                }else{
-                    page++;
-                }
-            }
-
-        }
-    }
-
-    public SeazonTabloControl()
-    {
-
-    }
-
-    /**
-     * Интерфейс работы с таблом. Активировать или выключить
-     * @param isActive
-     */
     @Override
-    public void active(boolean isActive) {
-
-        if (isActive)
-        {
-            if(this.isActive) return;
-            //ПОлучим число страниц
-            totalPage=0;
-            totalPage=seazonScheduleService.getPageAmount(PageRequest.of(0,page_size));
-            //System.out.println(totalPage);
-            if (periodicTrigger==null) {
-                periodicTrigger = new PeriodicTrigger(refresh_time, TimeUnit.SECONDS);
-            }
-                scheduledFuture= taskScheduler.schedule(new SchedulePlanFormingTask(),periodicTrigger);
-
-        }else
-        {
-            //periodicTrigger=null;
-            if (scheduledFuture!=null)
-            {
-                if (!scheduledFuture.isCancelled()){scheduledFuture.cancel(true);}
-            }
-            countries=0;
-            page=0;
-        }
-    this.isActive=isActive;
+    public List<?> getScheduleLanguageViews() {
+        return seazonScheduleService.getSeazonScheduleLanguageViews(PageRequest.of(page,page_size),countries);
     }
-
-
-
-    public SeazonTabloControl(Boolean isActive) {
-        this.isActive = isActive;
+    public SeazonTabloControl(@Autowired  @Qualifier("SeazonTablo") ThreadPoolTaskScheduler taskScheduler) {
+        super(taskScheduler, "/topic/seazonTablo");
     }
-
-    public List<SeazonScheduleLanguageView> getSeazonScheduleLanguageViews() {
-
-        return  seazonScheduleLanguageViews;
-    }
-
-    public void setSeazonScheduleLanguageViews(List<SeazonScheduleLanguageView> seazonScheduleLanguageViews) {
-        this.seazonScheduleLanguageViews = seazonScheduleLanguageViews;
-    }
-
     @Override
     public String toString() {
-        return "SeazonTabloControl{" +
-                "isActive=" + isActive +
-                ", refresh_minutes=" + refresh_time +
-                ", countries_amount=" + countries_amount +
-                ", page_size=" + page_size +
-                ", seazonScheduleService=" + seazonScheduleService +
-                ", taskScheduler=" + taskScheduler +
-                ", periodicTrigger=" + periodicTrigger +
-                ", countries=" + countries +
-                ", page=" + page +
-                ", seazonScheduleLanguageViews=" + seazonScheduleLanguageViews +
-                '}';
+        return super.toString();
     }
 
-    public Boolean isActive() {
-        return isActive;
-    }
-private Map<String,String> getHeader()
+        @Override
+        protected Map<String,String> getHeader()
 {
     Locale locale=locales[countries];
     Map headers=new HashMap();
@@ -188,9 +66,8 @@ private Map<String,String> getHeader()
     headers.put("time_prib",messageSource.getMessage("reysy.time_prib",null,locale));
     headers.put("vilet_days",messageSource.getMessage("reysy.vilet_days",null,locale));
     headers.put("tablo_head",messageSource.getMessage("sezon.tablo.head",null,locale));
-
-    System.out.println(countries+" "+page);
-    System.out.println(headers);
+    headers.put("currentTime",messageSource.getMessage("other.current_time",null,locale));
+    headers.put("locale",locale.getLanguage().toLowerCase());
     return headers;
 }
 

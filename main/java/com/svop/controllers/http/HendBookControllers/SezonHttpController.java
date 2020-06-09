@@ -1,9 +1,8 @@
-package com.svop.controllers.HendBookControllers;
+package com.svop.controllers.http.HendBookControllers;
 
 import com.svop.other.HeadProcessing.Head_parser;
 import com.svop.other.HeadProcessing.PageFormatter;
 import com.svop.service.secutity.UserService;
-import com.svop.tables.Handbooks.Airporty;
 import com.svop.tables.Handbooks.Sezon;
 import com.svop.tables.Handbooks.SezonRepository;
 import org.springframework.beans.factory.annotation.Autowired;

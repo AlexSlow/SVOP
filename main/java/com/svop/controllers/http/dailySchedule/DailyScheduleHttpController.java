@@ -1,4 +1,4 @@
-package com.svop.controllers.dailySchedule;
+package com.svop.controllers.http.dailySchedule;
 import com.itextpdf.text.DocumentException;
 import com.svop.View.DailyScheduleViews.DailyScheduleView;
 import com.svop.message.Period;
@@ -18,7 +18,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -135,6 +134,7 @@ public class DailyScheduleHttpController {
         model.addAttribute("stoics",stoicDaoService.findDtoAll());
         return "/html/DailySchedule/stoicManager.html ";
     }
+
 
     @RequestMapping(value="stoic/{stoic}")
     public String openStoicPage(@PathVariable("stoic") Stoic stoic, Model model) {

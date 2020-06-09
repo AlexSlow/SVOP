@@ -16,6 +16,7 @@ public interface FlightSheduleRepository extends JpaRepository<FlightSchedule,In
     List<FlightSchedule> findByDayOrderByDay(Date date);
     Page<FlightSchedule> findByDayAndStatusOrderByDay(Pageable pageable,Date date,FlightSheduleStatus status);
     List<FlightSchedule> findByDayAndStatusOrderByDay(Date date,FlightSheduleStatus status);
+    List<FlightSchedule> findByDayAndStatusAndDaily_DirectionOrderByDay(Date date,FlightSheduleStatus status,DailyDirection direction);
     List<FlightSchedule> findAllByDailyIdIsIn(List<Integer> idl);
     void deleteByIdIn(List<Integer> ids);
     List<FlightSchedule> findFlightSchedulesByDayBetweenOrderByDay(Date start,Date end);

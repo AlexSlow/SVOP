@@ -1,4 +1,4 @@
-package com.svop.controllers.HendBookControllers;
+package com.svop.controllers.http.HendBookControllers;
 
 import com.svop.View.AircompanyView;
 import com.svop.exeptions.httpResponse.DeleteFromDBExeption;
@@ -7,7 +7,6 @@ import com.svop.other.HeadProcessing.PageFormatter;
 import com.svop.service.handbooks.AircompaniesService;
 import com.svop.service.secutity.UserService;
 import com.svop.tables.Handbooks.Aircompany;
-import com.svop.tables.Handbooks.Airporty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -19,11 +18,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller

@@ -1,17 +1,19 @@
 package com.svop.tables.Handbooks;
 
+import com.svop.tables.Auditable;
+import org.hibernate.envers.Audited;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
-
+@Audited
 @Entity
 @Table(name = "airporty")
-public class Airporty implements Serializable {
+public class Airporty  extends Auditable<String> {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     @Column(name="airporty_id")
     private Integer id;
-
     @Column(name="airporty_name_rus")
     private String nameRu;
     @Column(name="airporty_name_eng")
@@ -100,6 +102,8 @@ public class Airporty implements Serializable {
                 ", gmt='" + gmt + '\'' +
                 ", icao='" + icao + '\'' +
                 ", iata='" + iata + '\'' +
+                ", createdBy=" + createdBy +
+                ", creationDate=" + creationDate +
                 '}';
     }
 

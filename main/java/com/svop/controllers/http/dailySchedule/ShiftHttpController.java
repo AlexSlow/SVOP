@@ -1,4 +1,4 @@
-package com.svop.controllers.dailySchedule;
+package com.svop.controllers.http.dailySchedule;
 
 import com.svop.other.HeadProcessing.Head_parser;
 import com.svop.other.HeadProcessing.PageFormatter;

@@ -105,14 +105,14 @@ $("#StoicText").text(titleRu+message.nomer);
 $("#NomerText").text(ReysRu+message.nomerReys);
 $("#RoutText").text(getLastAirport(message.routeRu)+" / "+getLastAirport(message.routeEn));
 console.log(message.timeViletRu);
-date=new Date(message.timeViletRu);
-console.log(date);
-date.setMinutes(date.getMinutes() - TimeBeforePosadka);
-$("#TimeText").text(EndPosadkaTeks+date);	
+//date=new Date(message.timeViletRu);
+//console.log(date);
+//date.setMinutes(date.getMinutes() - TimeBeforePosadka);
+//$("#TimeText").text(EndPosadkaTeks+date);	
+$("#TimeText").text(message.timeViletRu);
 }
 function getLastAirport(route)
 {
-	
 	let ports=route.split("—");
 	return ports[ports.length-1];
 }

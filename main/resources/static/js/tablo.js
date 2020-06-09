@@ -114,7 +114,7 @@ function setHeaders(message) {
 	$("#rout").text(message["rout"]);
 	$("#prilet").text(message["prilet"]);
 	$("#vilet").text(message["vilet"]);
-	$("#Logo").text(message["logo"]);
+	//$("#Logo").text(message["logo"]);
 	$("#nomer_reys_p").text(message["nomer_reys"]);
 	$("#prilet_days").text(message["prilet_days"]);
 	
@@ -127,6 +127,8 @@ function setHeaders(message) {
 	$("#time_otpravl_v").text(message["time_otpravl"]);
 	$("#time_prib_v").text(message["time_prib"]);
 	$("#head").text(message["tablo_head"]);
+	$("#timeText").text(message["currentTime"]);
+	$("#locale").text(message["locale"]);
 }
 function showReys(message) {
 	$("#filter_table").empty();
@@ -135,17 +137,32 @@ function showReys(message) {
 //Переформируем таблицу
 $("#filter_table").append("<tr></tr>");
 $("#filter_table tr:last-child").append("<td>"+sezonSchedule.aircompany+"</td>");	
+$("#filter_table tr:last-child td:last-child").addClass("align-middle");
 $("#filter_table tr:last-child").append("<td>"+sezonSchedule.periodStart+"</td>");	
-$("#filter_table tr:last-child").append("<td>"+sezonSchedule.periodEnd+"</td>");	
+$("#filter_table tr:last-child td:last-child").addClass("align-middle");
+$("#filter_table tr:last-child").append("<td>"+sezonSchedule.periodEnd+"</td>");
+$("#filter_table tr:last-child td:last-child").addClass("align-middle");	
 $("#filter_table tr:last-child").append("<td>"+sezonSchedule.rout+"</td>");
-$("#filter_table tr:last-child").append("<td>"+sezonSchedule.nomerPrilet+"</td>");	
+$("#filter_table tr:last-child td:last-child").addClass("align-middle");
+$("#filter_table tr:last-child").append("<td>"+sezonSchedule.nomerPrilet+" "+"<img src='"+sezonSchedule.img+"'/></td>");
+$("#filter_table tr:last-child td:last-child").addClass("align-middle");
 $("#filter_table tr:last-child").append("<td>"+sezonSchedule.priletDays+"</td>");	
-$("#filter_table tr:last-child").append("<td>"+sezonSchedule.prilet_time_otpravl+"</td>");	  
+$("#filter_table tr:last-child td:last-child").addClass("align-middle");
+$("#filter_table tr:last-child").append("<td>"+sezonSchedule.prilet_time_otpravl+"</td>");	
+$("#filter_table tr:last-child td:last-child").addClass("align-middle");  
 $("#filter_table tr:last-child").append("<td>"+sezonSchedule.prilet_time_prib+"</td>");	
+$("#filter_table tr:last-child td:last-child").addClass("align-middle");
 $("#filter_table tr:last-child").append("<td>"+sezonSchedule.nomerVilet+"</td>");	
-$("#filter_table tr:last-child").append("<td>"+sezonSchedule.viletDays+"</td>");	
-$("#filter_table tr:last-child").append("<td>"+sezonSchedule.vilet_time_otpravl+"</td>");	  
-$("#filter_table tr:last-child").append("<td>"+sezonSchedule.vilet_time_prib+"</td>");	
-$("#filter_table tr:last-child").append("<td><img src='"+sezonSchedule.img+"'/></td>");	
+$("#filter_table tr:last-child td:last-child").addClass("align-middle");
+$("#filter_table tr:last-child").append("<td>"+sezonSchedule.viletDays+"</td>");
+$("#filter_table tr:last-child td:last-child").addClass("align-middle");	
+$("#filter_table tr:last-child").append("<td>"+sezonSchedule.vilet_time_otpravl+"</td>");	 
+$("#filter_table tr:last-child td:last-child").addClass("align-middle"); 
+$("#filter_table tr:last-child").append("<td>"+sezonSchedule.vilet_time_prib+"</td>");
+$("#filter_table tr:last-child td:last-child").addClass("align-middle");	
+//$("#filter_table tr:last-child").append("<td><img src='"+sezonSchedule.img+"'/></td>");	
 });
 }
+setInterval(() => {
+	let date=new Date();
+$("#time").text(date.toLocaleTimeString("ru"))}, 1000);

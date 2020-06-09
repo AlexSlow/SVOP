@@ -72,9 +72,10 @@ max-width:50em;
 		<div class="dropdown-menu" id="1">
 		<a class="dropdown-item" th:href="@{/svop/SeasonSchedule/control}"  th:text="#{menu.tablo_sezon_control}">Управление таблом сезонного расписания</a>
 		<a class="dropdown-item" th:href="@{/svop/DailySchedule/control}"  th:text="#{menu.tablo_daily_control}">Управление таблом суточного расписания</a>
+		<a class="dropdown-item" th:href="@{/svop/FlightSchedule/manager}"  th:text="#{menu.tabloinfo.manager}">Управление информационным таблом</a>
 		<a class="dropdown-item" th:href="@{/svop/SeasonSchedule/tablo}"  th:text="#{menu.tablo_sezon}">Табло сезонного расписания</a>
 		<a class="dropdown-item" th:href="@{/svop/DailySchedule/tablo}"  th:text="#{menu.tablo_dayly}">Суточное расписание</a>
-		<a class="dropdown-item" th:href="@{/svop/DailySchedule/tablo}"  th:text="#{menu.tablo_info}">Информационное табло</a>
+		<a class="dropdown-item" th:href="@{/svop/FlightSchedule/tablo}"  th:text="#{menu.tablo_info}">Информационное табло</a>
 		<a class="dropdown-item" th:href="@{/svop/DailySchedule/stoicsManager}"  th:text="#{menu.receptions}">Стойки</a>
 		</div>
 		<a class="dropdown-item submenu" href="#"  th:text="#{menu.admin}">Администрирование</a>
@@ -83,11 +84,12 @@ max-width:50em;
 				<a class="dropdown-item submenu" href="#"  th:text="#{menu.journal}">Журнал</a>
 		<div class="dropdown-menu" id="2">
 			<a class="dropdown-item" href="#"  th:text="#{menu.log}">Лог</a>
-			<a class="dropdown-item" href="#"  th:text="#{menu.routs}">Маршруты</a>
-			<a class="dropdown-item" href="#"  th:text="#{menu.airport}">Аэрапорты</a>
-			<a class="dropdown-item" href="#"  th:text="#{menu.aircompany}">Авиакомпании</a>
-			<a class="dropdown-item" href="#"   th:text="#{menu.nomer_reys}">Номера рейсов</a>
-					<a class="dropdown-item" href="#"  th:text="#{menu.log_procedures}">Процедуры</a>
+			<a class="dropdown-item" th:href="@{/svop/journal/routs}"  th:text="#{menu.routs}">Маршруты</a>
+			<a class="dropdown-item" th:href="@{/svop/journal/airport}"  th:text="#{menu.airport}">Аэрапорты</a>
+			<a class="dropdown-item" th:href="@{/svop/journal/aircompany}"  th:text="#{menu.aircompany}">Авиакомпании</a>
+			<a class="dropdown-item" th:href="@{/svop/journal/nomer_reys}"   th:text="#{menu.nomer_reys}">Номера рейсов</a>
+			<a class="dropdown-item" th:href="@{/svop/journal/sezons}"  th:text="#{menu.sezons}">Сезоны</a>
+			<a class="dropdown-item" th:href="@{/svop/journal/reysy}"  th:text="#{reysy.title}">Рейсы</a>
 			<a class="dropdown-item" th:href="@{/svop/admin/recovery}"  th:text="#{menu.rollback}">Востановление системы</a>
 		</div>
 		

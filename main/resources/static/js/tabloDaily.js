@@ -110,6 +110,10 @@ function setHeaders(message) {
 	$("#nomer").text(message["nomer"]);
 	$("#time_otpravl").text(message["timeDeporture"]);
 	$("#time_prib").text(message["timePrilet"]);
+	$("#status").text(message["status"]);
+	$("#head").text(message["tablo_head"]);
+	$("#timeText").text(message["currentTime"]);
+	$("#locale").text(message["locale"]);
 }
 function showReys(message) {
 	$("#filter_table").empty();
@@ -118,9 +122,20 @@ function showReys(message) {
 //Переформируем таблицу
 $("#filter_table").append("<tr></tr>");
 $("#filter_table tr:last-child").append("<td>"+sezonSchedule.day+"</td>");	
-$("#filter_table tr:last-child").append("<td>"+sezonSchedule.rout+"</td>");	
-$("#filter_table tr:last-child").append("<td>"+sezonSchedule.nomer+"</td>");	
+$("#filter_table tr:last-child td:last-child").addClass("align-middle");
+$("#filter_table tr:last-child").append("<td >"+sezonSchedule.rout+"</td>");	
+$("#filter_table tr:last-child td:last-child").addClass("align-middle");
+$("#filter_table tr:last-child").append("<td>"+sezonSchedule.nomer+" "+"<img src='"+sezonSchedule.logo+"'/></td>");	
+$("#filter_table tr:last-child td:last-child").addClass("align-middle");
 $("#filter_table tr:last-child").append("<td>"+sezonSchedule.timeDeporture+"</td>");
-$("#filter_table tr:last-child").append("<td>"+sezonSchedule.timePrilet+"</td>");		
+$("#filter_table tr:last-child td:last-child").addClass("align-middle");
+$("#filter_table tr:last-child").append("<td>"+sezonSchedule.timePrilet+"</td>");
+$("#filter_table tr:last-child td:last-child").addClass("align-middle");	
+$("#filter_table tr:last-child").append("<td>"+sezonSchedule.status+"</td>");
+$("#filter_table tr:last-child td:last-child").addClass("align-middle");	
 });
 }
+
+setInterval(() => {
+	let date=new Date();
+$("#time").text(date.toLocaleTimeString("ru"))}, 1000);

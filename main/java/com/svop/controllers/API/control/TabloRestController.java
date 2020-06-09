@@ -1,37 +1,30 @@
 package com.svop.controllers.API.control;
 
-import com.svop.View.SeazonScheduleViews.SeazonScheduleLanguageView;
 import com.svop.exeptions.response.SvopMessage;
 import com.svop.message.Success;
 import com.svop.message.tabloSeazon.TabloControleMessage;
 import com.svop.message.tabloSeazon.TabloInitResponse;
-import com.svop.service.SeazonSchedule.SeazonScheduleService;
 import com.svop.service.control.DailyTabloControl;
+import com.svop.service.control.InformaitionTabloControl;
 import com.svop.service.control.SeazonTabloControl;
-import com.svop.tables.Handbooks.Airporty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @RestController
 @RequestMapping(value="/svop/api/tablo",headers = {"Content-type=application/json"})
-public class TabloSeazonRestController {
-    private static Logger logger= LoggerFactory.getLogger(TabloSeazonRestController.class);
+public class TabloRestController {
+    private static Logger logger= LoggerFactory.getLogger(TabloRestController.class);
     @Autowired private SeazonTabloControl seazonTabloControl;
     @Autowired private DailyTabloControl dailyTabloControl;
+    @Autowired private InformaitionTabloControl informaitionTabloControl;
     @Autowired
     private SimpMessageSendingOperations simpMessageSendingOperations; //Упаравление брокером сообщений
     @ResponseBody
@@ -41,8 +34,8 @@ public class TabloSeazonRestController {
         logger.info("Табло перешло в состояние "+message);
         seazonTabloControl.active(message.isActive());
         if (seazonTabloControl.isActive())
-            simpMessageSendingOperations.convertAndSend("/topic/seazonTablo", "on");
-        else  simpMessageSendingOperations.convertAndSend("/topic/seazonTablo", "off");
+            simpMessageSendingOperations.convertAndSend(seazonTabloControl.getTopic(), "on");
+        else  simpMessageSendingOperations.convertAndSend(seazonTabloControl.getTopic(), "off");
         return new ResponseEntity<>(new Success("Успех"), HttpStatus.OK);
     }
 
@@ -53,8 +46,20 @@ public class TabloSeazonRestController {
         logger.info(" Суточное Табло перешло в состояние "+message);
         dailyTabloControl.active(message.isActive());
         if (dailyTabloControl.isActive())
-            simpMessageSendingOperations.convertAndSend("/topic/dailyTablo", "on");
-        else  simpMessageSendingOperations.convertAndSend("/topic/dailyTablo", "off");
+            simpMessageSendingOperations.convertAndSend(dailyTabloControl.getTopic(), "on");
+        else  simpMessageSendingOperations.convertAndSend(dailyTabloControl.getTopic(), "off");
+        return new ResponseEntity<>(new Success("Успех"), HttpStatus.OK);
+    }
+
+    @ResponseBody
+    @RequestMapping(value="/TabloInfo")
+    public ResponseEntity<SvopMessage> setInfoStatus(@RequestBody TabloControleMessage message) {
+
+        logger.info(" Суточное Табло перешло в состояние "+message);
+        informaitionTabloControl.active(message.isActive());
+        if (informaitionTabloControl.isActive())
+            simpMessageSendingOperations.convertAndSend(informaitionTabloControl.getTopic(), "on");
+        else  simpMessageSendingOperations.convertAndSend(informaitionTabloControl.getTopic(), "off");
         return new ResponseEntity<>(new Success("Успех"), HttpStatus.OK);
     }
 
@@ -66,7 +71,7 @@ public class TabloSeazonRestController {
         if (dailyTabloControl.isActive())
         {
             tabloInitResponse.setMessage("on");
-            tabloInitResponse.setList(dailyTabloControl.getFlightScheduleLanguageViews());
+            tabloInitResponse.setList(dailyTabloControl.getScheduleLanguageViews());
             tabloInitResponse.setHeaders(dailyTabloControl.getHeadersStore());
         }
         else  {
@@ -74,6 +79,25 @@ public class TabloSeazonRestController {
         }
         return new ResponseEntity<>(tabloInitResponse,HttpStatus.OK);
     }
+
+
+    @ResponseBody
+    @RequestMapping(value="/control/TabloInfoStatus")
+    public ResponseEntity<TabloInitResponse> getInfoStatus() {
+        logger.info("Получение статуса " + informaitionTabloControl.isActive());
+        TabloInitResponse tabloInitResponse = new TabloInitResponse();
+        if (informaitionTabloControl.isActive())
+        {
+            tabloInitResponse.setMessage("on");
+            tabloInitResponse.setList(informaitionTabloControl.getScheduleLanguageViews());
+            tabloInitResponse.setHeaders(informaitionTabloControl.getHeadersStore());
+        }
+        else  {
+            tabloInitResponse.setMessage("off");
+        }
+        return new ResponseEntity<>(tabloInitResponse,HttpStatus.OK);
+    }
+
 
     @ResponseBody
     @RequestMapping(value="/control/status")
@@ -83,7 +107,7 @@ public class TabloSeazonRestController {
         if (seazonTabloControl.isActive())
         {
             tabloInitResponse.setMessage("on");
-        tabloInitResponse.setList(seazonTabloControl.getSeazonScheduleLanguageViews());
+        tabloInitResponse.setList(seazonTabloControl.getScheduleLanguageViews());
         tabloInitResponse.setHeaders(seazonTabloControl.getHeadersStore());
     }
         else  {

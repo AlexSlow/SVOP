@@ -1,8 +1,10 @@
 package com.svop.tables.Handbooks;
 
+import com.svop.tables.Auditable;
 import com.svop.tables.temp.TempReysy;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -10,10 +12,10 @@ import java.sql.Time;
 import java.time.LocalTime;
 import java.util.Objects;
 
-
+@Audited
 @Entity
 @Table(name = "reysy")
-public class Reysy {
+public class Reysy extends Auditable<String> {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     @Column(name="reysy_id")
@@ -238,9 +240,9 @@ public class Reysy {
     public String toString() {
         return "Reysy{" +
                 "id=" + id +
-                ", nomer_prilet=" + nomer_prilet +
-                ", nomer_vilet=" + nomer_vilet +
-                ", rout=" + rout +
+                ", nomer_prilet=" + nomer_prilet.getId() +
+                ", nomer_vilet=" + nomer_vilet.getId() +
+                ", rout=" + rout.getId()+
                 ", period_start=" + period_start +
                 ", period_end=" + period_end +
                 ", prilet_days='" + prilet_days + '\'' +
@@ -282,6 +284,6 @@ public class Reysy {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getNomer_prilet(), getNomer_vilet(), getRout(), getPeriod_start(), getPeriod_end(), getPrilet_days(), getPrilet_time_otpravl(), getPrilet_time_prib(), getVilet_days(), getVilet_time_otpravl(), getVilet_time_prib(), getTip_vs(), getIzmen_otmen(), getOsnovanie_izmen_otmen(), getType(), getAirline());
+        return Objects.hash(/*getNomer_prilet(), getNomer_vilet(),*/ getRout(), getPeriod_start(), getPeriod_end(), getPrilet_days(), getPrilet_time_otpravl(), getPrilet_time_prib(), getVilet_days(), getVilet_time_otpravl(), getVilet_time_prib(), getTip_vs(), getIzmen_otmen(), getOsnovanie_izmen_otmen(), getType(), getAirline());
     }
 }

@@ -34,15 +34,13 @@ public class StoicRestController {
     public ResponseEntity getReys(@RequestBody Integer id) {
         try {
             List<StoicsAndFlightSheduleDto> list= stoicDaoService.getFlightSheduleByStoics(id);
-            return new ResponseEntity<List<StoicsAndFlightSheduleDto>>(list,
+            return new ResponseEntity<>(list,
                     HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity("Ошибка",
                     HttpStatus.OK);
         }
-
-
     }
 
     @ResponseBody
@@ -53,7 +51,9 @@ public class StoicRestController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return getReys(stoicBindDto.getStoicId());
+        if ((stoicBindDto.getStoicId()!=null)&&(stoicBindDto.getStoicId().size()==1))
+            return getReys(stoicBindDto.getStoicId().get(0));
+        return getReys(-1);
     }
 
     @ResponseBody

@@ -7,6 +7,15 @@ public class FlightScheduleLanguageView {
         private String timePrilet;
         private String day;
         private String status;
+        private String logo;
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
 
     public FlightScheduleLanguageView() {
     }

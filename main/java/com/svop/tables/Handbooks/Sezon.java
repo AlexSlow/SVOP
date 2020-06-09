@@ -1,12 +1,15 @@
 package com.svop.tables.Handbooks;
 
+import com.svop.tables.Auditable;
+import org.hibernate.envers.Audited;
+
 import javax.persistence.*;
 import java.sql.Date;
 
-
+@Audited
 @Entity
 @Table(name = "sezon")
-public class Sezon {
+public class Sezon extends Auditable<String> {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     @Column(name="sezon_id")
@@ -20,6 +23,18 @@ public class Sezon {
     private Date end;
 
     public Sezon() {
+    }
+
+    @Override
+    public String toString() {
+        return "Sezon{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", begin=" + begin +
+                ", end=" + end +
+                ", createdBy=" + createdBy +
+                ", creationDate=" + creationDate +
+                '}';
     }
 
     public Integer getId() {

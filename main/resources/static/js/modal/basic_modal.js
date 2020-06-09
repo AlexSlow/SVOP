@@ -7,10 +7,11 @@
 var Headers = new Map(); // Заголовки главной таблицы
 var Names = new Map(); //Атрибуты name заголовков главной таблицы, они не зависят от языка
 var is_null_map = new Map(); //валидация не пустых элементов
+var Column_ignored=[];
 var content;
 $('#addModal').on('show.bs.modal', function (event) {
 clean();
-//Получим ширину таблици из анотации
+//Получим ширину таблицы из анотации
 let minwidth=$("#content_table thead").attr('data-minwidth');
 if (minwidth!=null)
 {
@@ -32,6 +33,8 @@ Headers.set($(this).text(),$(this).attr('data-type'));
 Names.set($(this).text(),$(this).attr('name'));
 is_null_map.set($(this).text(),$(this).attr('data-notnull'));
 $("#modal_table thead tr").append("<th>"+$(this).text()+"</th>");
+}else{
+	Column_ignored.push($(this).index()); //Сохранить индекс игнорированных колонок
 }
 }
 });
@@ -49,10 +52,6 @@ $("#modal_table thead tr").append("<th>"+$(this).text()+"</th>");
 	$("#modal_table tbody tr:last-child").append("<td><input class='form-control'   name='"+name+"' data-notnull='"+is_null+"' type='"+val+"'+  /></td>");
 }
   }
-  
-  
-  
-  
   else
   {
   //Добавим колонку под id 
@@ -68,16 +67,31 @@ $("#modal_table thead tr").append("<th>"+$(this).text()+"</th>");
 	let data=[];
 	
 	$(this).children("td").each(function(){
-	
-	
-$(this).children("label").each(function(){
-	//Получение полей
-	data.push($(this).text());
+		//Получить индекс
+		let index=$(this).index();
+		let findIndex=false;
+		Column_ignored.forEach( function (id)
+{
+  // действия, которые будут выполняться для каждого элемента массива
+  // index - это текущий индекс элемента массива (число)
+  // value - это значение текущего элемента массива
+  
+  //выведем индекс и значение массива в консоль
+ if (id==index) findIndex=true;
+});
+		if (findIndex==false) {
+			//console.log("Индекс прошел "+index);
+		if (index!=0){
+			data.push($(this).children().text());
+			//console.log($(this).children());
+		}
+		}
 	});
-	});
+	
 	//Вставим строку
 	 $("#modal_table tbody ").append("<tr></tr>");
 	 $("#modal_table tbody tr:last-child ").append("<td>"+"<input class='d-none' value='"+id+"' type='text'/></td>");
+	 console.log(data);
 	 let i=0;
 	for (let key of Headers.keys()) {
 	let name=Names.get(key);
@@ -155,6 +169,7 @@ $(this).children("label").each(function(){
    $("#modal_table thead").empty();
    Headers.clear();
    Names.clear();
+   Column_ignored=[];
    is_null_map.clear();
    $("#modal_error").text("");
    }
@@ -188,10 +203,6 @@ $(this).children("label").each(function(){
 	   //console.log("true");
 	   return is_error;
    }
-   
-   
-  
-   
    function send_request(ajax_array,adress)
   { 
  
@@ -211,9 +222,7 @@ $(this).children("label").each(function(){
     // Your error handling logic here..
 }
 });
-
    }
-   
    function $_GET(key) {
     var p = window.location.search;
     p = p.match(new RegExp(key + '=([^&=]+)'));

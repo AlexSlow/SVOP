@@ -1,0 +1,105 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta http-equiv="Content-type" Content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta th:name="_csrf" th:content="${_csrf?.token}"/>
+<meta th:name="_csrf_header" th:content="${_csrf?.headerName}"/>
+
+<title th:text="#{flightShedule.tablo.info}">
+Формирование ежедневного расписания
+</title>
+<link rel="stylesheet" href="/bootstrap/css/bootstrap.css"/>
+<script src="/js/parametrs.js"></script>
+</head>
+<style>
+body{
+background-color:black;
+}
+#tablo{
+width:100%
+height:100%;
+}
+</style>
+
+<body>
+<script src="/js/jquery/jquery-3.3.1.min.js"></script>
+<script src="/bootstrap/js/popper_min.js" ></script>
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+<script src="/js/jquery/sockjs-min.js"></script>
+<script src="/js/jquery/stomp.min.js"></script>
+
+<script>
+</script>
+
+
+
+ <div id="content" class="container-fluid">
+        <div class="row" >
+		<div class="col-12">
+		<script>var tablo=true;</script>
+<div id="tablo" class="tabloWidth tabloBlack">
+
+<style>
+
+.tabloWidth{
+width: 100vw; 
+height: 100vh;
+}
+.tabloBlack{
+	background-color:black;
+	}
+	.TabloActive{
+	background-color: #800080;
+	}
+	.tableTablo{
+	color:yellow;
+	border:solid 1pt yellow;
+	text-align: center;
+	border-collapse: collapse;
+	white-space: nowrap;
+	}
+	tbody tr, tbody tr td{
+	 vertical-align:middle;
+	 }
+</style>
+<div id="headTitle" style="text-align:center;color:yellow;font-size:34px; display:none;">
+<p>
+<div id="content" class="container-fluid">
+        <div class="row" >
+		<div class="col-6">
+		<div id="head"></div>
+		</div>
+		<div class="col-6">
+		<div id="timeText"></div>
+		<div id="time"></div>
+		</div>
+		</div>
+		</div>
+</p>
+</div>
+<table class="table tableTablo TabloActive tabloWidth grid" id="content_table" style="width 100%;display:none; vertical-align:middle" >
+<thead>
+<tr>
+	<th   th:text="#{daily.day}" id="day">День</th>
+	<th   th:text="#{reysy.rout}" id="rout">Маршрут</th>
+	<th   th:text="#{nomer_reys.nomer}" id="nomer">Номер</th>
+	<th th:text="#{reception}" id="nomerStoic" >Стойка</th>
+	<th th:text="#{reysy.time_otpravl}" id="time_otpravl">Время Отправления</th>
+	<th th:text="#{flightSchedule.type}" id="status">Статус</th>
+  </tr>
+</thead >
+<tbody id="filter_table">
+</tbody>
+</table>
+<script src="/js/TabloInfo.js">
+//Настройка клиента
+</script>
+</div>
+</div>
+</div>
+ </div>
+<input type="text" class="d-none" id="locale"/> 
+</body>
+
+</html>

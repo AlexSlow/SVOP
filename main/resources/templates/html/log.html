@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta http-equiv="Content-type" Content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta th:name="_csrf" th:content="${_csrf?.token}"/>
+<meta th:name="_csrf_header" th:content="${_csrf?.headerName}"/>
+
+<title>Лог
+</title>
+<link rel="stylesheet" href="/bootstrap/css/bootstrap.css"/>
+<script src="/js/parametrs.js"></script>
+</head>
+
+<body>
+<script src="/js/jquery/jquery-3.3.1.min.js"></script>
+<script src="/bootstrap/js/popper_min.js" ></script>
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+
+ <div id="content" class="container-fluid">
+        <div class="row" >
+		<div class="col-auto">
+<table>
+<tr th:each="row : ${body}">
+<td th:each="coll : ${row}" th:text="${coll}"></td>
+</tr>
+</table>
+		</div>
+		</div>
+		</div>
+		</body>
+
+</html>

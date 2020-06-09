@@ -1,15 +1,17 @@
 package com.svop.tables.Handbooks;
 
 import com.svop.View.AircompanyView;
+import com.svop.tables.Auditable;
+import org.hibernate.envers.Audited;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
-
+@Audited
 @Entity
 @Table(name = "aircompany")
-public class Aircompany {
+public class Aircompany extends Auditable<String> {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     @Column(name="aircompany_id")
